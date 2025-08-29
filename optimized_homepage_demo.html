@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>语言学习难度世界地图 - 首页Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #0b1220; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    
+    .container { height: 100%; display: grid; place-items: center; }
+    .card {
+      width: min(1200px, 95vw);
+      height: min(750px, 90vh);
+      background: #0f172a;
+      border: 1px solid #1f2a44;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.05);
+      position: relative; 
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* 头部区域 */
+    .header {
+      flex: 0 0 auto;
+      padding: 20px 24px 16px;
+      color: #e2e8f0; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      border-bottom: 1px solid #1f2a44;
+      background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+    }
+    
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .badge { 
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6); 
+      padding: 6px 12px; 
+      border-radius: 999px; 
+      color: #fff; 
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* 控制面板 */
+    .controls {
+      flex: 0 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: rgba(15,23,42,0.8);
+      border-bottom: 1px solid #1f2a44;
+    }
+    
+    .search-box {
+      flex: 1;
+      max-width: 300px;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .filter-select {
+      padding: 8px 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .filter-select:focus {
+      outline: none;
+      border-color: #3B82F6;
+    }
+    
+    /* 地图区域 */
+    .map-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    svg { 
+      width: 100%; 
+      height: 100%; 
+      display: block; 
+    }
+    
+    /* 地图样式 */
+    .country { 
+      stroke: rgba(0,0,0,.3); 
+      stroke-width: 0.5; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+    }
+    
+    .country:hover { 
+      stroke: rgba(255,255,255,0.4);
+      stroke-width: 1;
+      filter: brightness(1.1);
+    }
+    
+    .country.highlighted {
+      stroke: #3B82F6;
+      stroke-width: 2;
+      filter: brightness(1.2);
+    }
+    
+    /* 提示框 */
+    .tooltip {
+      position: absolute; 
+      pointer-events: none; 
+      background: #0b1220; 
+      color: #e2e8f0; 
+      border: 1px solid #3B82F6;
+      padding: 16px 18px; 
+      border-radius: 12px; 
+      font-size: 13px; 
+      line-height: 1.5; 
+      box-shadow: 0 20px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(59,130,246,0.2);
+      min-width: 240px; 
+      max-width: 320px; 
+      opacity: 0; 
+      transform: translateY(8px) scale(0.95); 
+      transition: all 0.25s ease;
+      backdrop-filter: blur(12px);
+    }
+    
+    .tooltip.show { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+    
+    .tooltip .country-title { 
+      font-weight: 700; 
+      font-size: 15px;
+      margin-bottom: 8px; 
+      color: #3B82F6;
+    }
+    
+    .tooltip .difficulty-info {
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      background: rgba(59,130,246,0.1);
+      border-radius: 6px;
+      border-left: 3px solid #3B82F6;
+    }
+    
+    .tooltip .language-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .tooltip .language-item {
+      margin: 6px 0;
+      padding: 6px 8px;
+      background: rgba(15,23,42,0.6);
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .difficulty-badge {
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+    }
+    
+    .difficulty-0 { background: #6c757d; } /* 母语 */
+    .difficulty-1 { background: #28a745; } /* 简单 */
+    .difficulty-2 { background: #28a745; } /* 简单 */
+    .difficulty-3 { background: #ffc107; color: #000; } /* 相对容易 */
+    .difficulty-4 { background: #ffc107; color: #000; } /* 相对容易 */
+    .difficulty-5 { background: #fd7e14; } /* 中等 */
+    .difficulty-6 { background: #fd7e14; } /* 中等 */
+    .difficulty-7 { background: #dc3545; } /* 困难 */
+    .difficulty-8 { background: #dc3545; } /* 困难 */
+    .difficulty-9 { background: #6f42c1; } /* 最困难 */
+    
+    /* 图例 */
+    .legend {
+      position: absolute; 
+      right: 20px; 
+      bottom: 20px; 
+      background: rgba(11,18,32,0.95); 
+      color: #e2e8f0;
+      padding: 16px 18px; 
+      border-radius: 12px; 
+      border: 1px solid #1f2a44; 
+      backdrop-filter: blur(12px);
+      font-size: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .legend-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #3B82F6;
+    }
+    
+    .legend-item { 
+      display: flex; 
+      align-items: center; 
+      margin: 8px 0; 
+    }
+    
+    .legend-color { 
+      width: 20px; 
+      height: 14px; 
+      margin-right: 10px; 
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* 统计面板 */
+    .stats-panel {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      background: rgba(11,18,32,0.95);
+      color: #e2e8f0;
+      padding: 16px 18px;
+      border-radius: 12px;
+      border: 1px solid #1f2a44;
+      backdrop-filter: blur(12px);
+      font-size: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .stats-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #3B82F6;
+    }
+    
+    .stat-item {
+      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      min-width: 180px;
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: #10B981;
+    }
+    
+    /* 操作提示 */
+    .interaction-hint {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      color: #64748b;
+      font-size: 11px;
+      background: rgba(15,23,42,0.8);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #1f2a44;
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" id="card">
+      <!-- 头部 -->
+      <div class="header">
+        <div class="title">全球语言学习难度地图</div>
+        <div class="badge">基于FSI官方数据</div>
+      </div>
+      
+      <!-- 控制面板 -->
+      <div class="controls">
+        <div class="search-box">
+          <div class="search-icon">🔍</div>
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="搜索国家或语言..."
+            id="searchInput"
+          />
+        </div>
+        
+        <div class="filter-group">
+          <select class="filter-select" id="difficultyFilter">
+            <option value="">全部难度</option>
+            <option value="0">英语母语</option>
+            <option value="1-3">简单 (Category I)</option>
+            <option value="4">相对容易 (Category II)</option>
+            <option value="5-6">中等 (Category III)</option>
+            <option value="7-8">困难 (Category IV)</option>
+            <option value="9">最困难 (Category V)</option>
+          </select>
+          
+          <select class="filter-select" id="regionFilter">
+            <option value="">全部地区</option>
+            <option value="Europe">欧洲</option>
+            <option value="Asia">亚洲</option>
+            <option value="Africa">非洲</option>
+            <option value="North America">北美洲</option>
+            <option value="South America">南美洲</option>
+            <option value="Oceania">大洋洲</option>
+            <option value="Middle East">中东</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- 地图区域 -->
+      <div class="map-container">
+        <svg id="map"></svg>
+        
+        <!-- 提示框 -->
+        <div id="tooltip" class="tooltip"></div>
+        
+        <!-- 统计面板 -->
+        <div class="stats-panel">
+          <div class="stats-title">📊 语言统计</div>
+          <div class="stat-item">
+            <span>覆盖语言数量:</span>
+            <span class="stat-value" id="totalLanguages">--</span>
+          </div>
+          <div class="stat-item">
+            <span>覆盖国家数量:</span>
+            <span class="stat-value" id="totalCountries">--</span>
+          </div>
+          <div class="stat-item">
+            <span>平均学习时长:</span>
+            <span class="stat-value" id="avgHours">--</span>
+          </div>
+        </div>
+        
+        <!-- 图例 -->
+        <div class="legend">
+          <div class="legend-title">🎯 学习难度等级</div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #6c757d;"></div>
+            <span>英语母语 (参考)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #28a745;"></div>
+            <span>简单 (600-750h)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #ffc107;"></div>
+            <span>相对容易 (900h)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #fd7e14;"></div>
+            <span>中等 (1100h)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #dc3545;"></div>
+            <span>困难 (1800h)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #6f42c1;"></div>
+            <span>最困难 (2200h)</span>
+          </div>
+        </div>
+        
+        <!-- 操作提示 -->
+        <div class="interaction-hint">
+          💡 悬停国家查看语言信息 · 滚轮缩放 · 拖拽平移
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入数据文件 -->
+  <script src="language_data.js"></script>
+  <script src="country_language_mapping.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+
+  <script>
+    // 全局变量
+    const svg = d3.select("#map");
+    const tooltip = d3.select("#tooltip");
+    const card = document.getElementById("card");
+    const searchInput = document.getElementById("searchInput");
+    const difficultyFilter = document.getElementById("difficultyFilter");
+    const regionFilter = document.getElementById("regionFilter");
+    
+    const width = 1200;
+    const height = 600;
+    svg.attr("viewBox", [0, 0, width, height].join(" "));
+    
+    // 投影设置 - 使用Equirectangular平铺投影
+    const projection = d3.geoEquirectangular()
+      .scale(190)
+      .translate([width / 2, height / 2]);
+    
+    const path = d3.geoPath(projection);
+    const g = svg.append("g");
+    
+    // 海洋背景 - 矩形平铺背景
+    g.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#1e293b")
+      .attr("stroke", "rgba(255,255,255,.1)")
+      .attr("stroke-width", 1);
+    
+    // 缩放拖拽
+    const zoomed = (event) => {
+      const {transform} = event;
+      g.attr("transform", transform);
+      g.attr("stroke-width", 1 / transform.k);
+    };
+    svg.call(d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed));
+    
+    // Tooltip 控制
+    function showTooltip(html, [x, y]) {
+      tooltip.html(html)
+        .style("left", (x + 14) + "px")
+        .style("top", (y + 14) + "px")
+        .classed("show", true);
+    }
+    
+    function moveTooltip([x, y]) {
+      tooltip.style("left", (x + 14) + "px").style("top", (y + 14) + "px");
+    }
+    
+    function hideTooltip() {
+      tooltip.classed("show", false);
+    }
+    
+    // 获取难度徽章HTML
+    function getDifficultyBadge(difficulty) {
+      const level = Math.round(difficulty);
+      return `<span class="difficulty-badge difficulty-${level}">难度 ${level}/10</span>`;
+    }
+    
+    // 生成Tooltip HTML
+    function generateTooltipHTML(countryName, countryInfo) {
+      if (!countryInfo || !countryInfo.languages) {
+        return `
+          <div class="country-title">${countryName}</div>
+          <div style="color: #64748b; font-style: italic;">暂无语言数据</div>
+        `;
+      }
+      
+      const avgDifficulty = countryInfo.difficulty_avg;
+      const languagesHtml = countryInfo.languages.map(lang => `
+        <li class="language-item">
+          <div>
+            <strong>${lang.name}</strong><br>
+            <small style="color: #94a3b8;">${lang.family} · ${lang.fsi.hours}小时</small>
+          </div>
+          ${getDifficultyBadge(lang.difficulty.overall)}
+        </li>
+      `).join('');
+      
+      return `
+        <div class="country-title">${countryName}</div>
+        <div class="difficulty-info">
+          <strong>平均难度:</strong> ${avgDifficulty.toFixed(1)}/10 · 
+          <strong>地区:</strong> ${countryInfo.region}
+        </div>
+        <div style="margin-bottom: 6px;"><strong>主要语言:</strong></div>
+        <ul class="language-list">${languagesHtml}</ul>
+      `;
+    }
+    
+    // 搜索功能
+    function performSearch(query) {
+      const countries = g.selectAll(".country");
+      
+      if (!query.trim()) {
+        countries.classed("highlighted", false);
+        return;
+      }
+      
+      countries.classed("highlighted", function(d) {
+        const countryName = d.properties.name;
+        const countryInfo = getCountryLanguageInfo(countryName, FSI_LANGUAGE_DATA);
+        
+        // 搜索国家名称
+        if (countryName.toLowerCase().includes(query.toLowerCase())) {
+          return true;
+        }
+        
+        // 搜索语言名称
+        if (countryInfo && countryInfo.languages) {
+          return countryInfo.languages.some(lang => 
+            lang.name.toLowerCase().includes(query.toLowerCase()) ||
+            lang.nativeName.toLowerCase().includes(query.toLowerCase())
+          );
+        }
+        
+        return false;
+      });
+    }
+    
+    // 难度筛选
+    function filterByDifficulty(difficulty) {
+      const countries = g.selectAll(".country");
+      
+      if (!difficulty) {
+        countries.style("opacity", 1);
+        return;
+      }
+      
+      countries.style("opacity", function(d) {
+        const countryName = d.properties.name;
+        const countryInfo = getCountryLanguageInfo(countryName, FSI_LANGUAGE_DATA);
+        
+        if (!countryInfo) return 0.3;
+        
+        const avgDifficulty = countryInfo.difficulty_avg;
+        
+        switch(difficulty) {
+          case "0": return avgDifficulty === 0 ? 1 : 0.3;
+          case "1-3": return avgDifficulty <= 3 && avgDifficulty > 0 ? 1 : 0.3;
+          case "4": return avgDifficulty <= 4 && avgDifficulty > 3 ? 1 : 0.3;
+          case "5-6": return avgDifficulty <= 6 && avgDifficulty > 4 ? 1 : 0.3;
+          case "7-8": return avgDifficulty <= 8 && avgDifficulty > 6 ? 1 : 0.3;
+          case "9": return avgDifficulty > 8 ? 1 : 0.3;
+          default: return 1;
+        }
+      });
+    }
+    
+    // 地区筛选
+    function filterByRegion(region) {
+      const countries = g.selectAll(".country");
+      
+      if (!region) {
+        countries.style("opacity", 1);
+        return;
+      }
+      
+      countries.style("opacity", function(d) {
+        const countryName = d.properties.name;
+        const countryInfo = getCountryLanguageInfo(countryName, FSI_LANGUAGE_DATA);
+        
+        if (!countryInfo) return 0.3;
+        
+        return countryInfo.region.includes(region) ? 1 : 0.3;
+      });
+    }
+    
+    // 更新统计信息
+    function updateStats() {
+      const totalLanguages = FSI_LANGUAGE_DATA.languages.length;
+      const totalCountries = Object.keys(COUNTRY_LANGUAGE_MAPPING).length;
+      const avgHours = Math.round(
+        FSI_LANGUAGE_DATA.languages.reduce((sum, lang) => sum + lang.fsi.hours, 0) / totalLanguages
+      );
+      
+      document.getElementById("totalLanguages").textContent = totalLanguages;
+      document.getElementById("totalCountries").textContent = totalCountries;
+      document.getElementById("avgHours").textContent = avgHours + "小时";
+    }
+    
+    // 事件监听
+    searchInput.addEventListener("input", (e) => {
+      performSearch(e.target.value);
+    });
+    
+    difficultyFilter.addEventListener("change", (e) => {
+      filterByDifficulty(e.target.value);
+      if (e.target.value) {
+        regionFilter.value = "";
+      }
+    });
+    
+    regionFilter.addEventListener("change", (e) => {
+      filterByRegion(e.target.value);
+      if (e.target.value) {
+        difficultyFilter.value = "";
+      }
+    });
+    
+    // 加载世界地图
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+      .then(world => {
+        console.log("世界地图数据加载完成:", world.features.length, "个国家");
+        
+        const countries = world.features;
+        
+        // 绘制国家
+        g.append("g")
+          .selectAll("path.country")
+          .data(countries)
+          .join("path")
+          .attr("class", "country")
+          .attr("fill", d => {
+            const countryName = d.properties.name;
+            return getCountryColor(countryName);
+          })
+          .attr("d", path)
+          .on("mouseenter", function(event, d) {
+            const countryName = d.properties.name;
+            const countryInfo = getCountryLanguageInfo(countryName, FSI_LANGUAGE_DATA);
+            const html = generateTooltipHTML(countryName, countryInfo);
+            
+            d3.select(this).style("filter", "brightness(1.2)");
+            showTooltip(html, d3.pointer(event, card));
+          })
+          .on("mousemove", function(event) {
+            moveTooltip(d3.pointer(event, card));
+          })
+          .on("mouseleave", function() {
+            d3.select(this).style("filter", null);
+            hideTooltip();
+          })
+          .on("click", function(event, d) {
+            const countryName = d.properties.name;
+            console.log("点击国家:", countryName);
+            // 这里可以添加跳转到语言详情页的逻辑
+          });
+        
+        // 更新统计信息
+        updateStats();
+        
+        console.log("地图渲染完成!");
+      })
+      .catch(err => {
+        console.error("地图数据加载失败:", err);
+        g.append("text")
+          .attr("x", width / 2)
+          .attr("y", height / 2)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#e2e8f0")
+          .attr("font-size", "16px")
+          .text("地图数据加载失败，请检查网络连接");
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D立体地形世界地图 - D3 + WebGL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body { margin: 0; height: 100%; background: #0b1220; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .container { height: 100%; display: grid; place-items: center; }
+    .card {
+      width: min(1100px, 95vw);
+      height: min(680px, 90vh);
+      background: #0f172a;
+      border: 1px solid #1f2a44;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+      position: relative; overflow: hidden;
+    }
+    .header {
+      position: absolute; inset: 14px 14px auto 14px;
+      color: #e2e8f0; display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; letter-spacing: .2px;
+    }
+    .badge { background: linear-gradient(135deg, #3B82F6, #8B5CF6); padding: 6px 10px; border-radius: 999px; color: #fff; font-weight: 600; }
+    svg { width: 100%; height: 100%; display: block; }
+    
+    /* 3D地形效果 */
+    .terrain { 
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
+    }
+    .country { 
+      stroke: rgba(0,0,0,.4); 
+      stroke-width: .8; 
+      cursor: pointer; 
+      transition: all .3s ease-out; 
+    }
+    .country:hover { 
+      filter: brightness(1.2) drop-shadow(0 6px 12px rgba(0,0,0,.4));
+      transform: translateY(-2px);
+    }
+    
+    /* 湖泊3D效果 */
+    .lake { 
+      fill: url(#lakeGradient); 
+      stroke: rgba(0,0,0,.3); 
+      stroke-width: .6;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.2));
+    }
+    
+    /* 河流3D效果 */
+    .river { 
+      fill: none; 
+      stroke: url(#riverGradient); 
+      stroke-width: .8; 
+      opacity: .9;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,.3));
+    }
+    
+    /* 山脉3D效果 */
+    .mountain { 
+      fill: url(#mountainGradient);
+      stroke: rgba(0,0,0,.5);
+      stroke-width: .4;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,.4));
+    }
+    
+    .tooltip {
+      position: absolute; pointer-events: none; background: #0b1220; color: #e2e8f0; border: 1px solid #1f2a44;
+      padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.4; box-shadow: 0 15px 35px rgba(0,0,0,.4);
+      min-width: 200px; max-width: 300px; opacity: 0; transform: translateY(6px) scale(0.95); transition: all .2s ease;
+      backdrop-filter: blur(10px);
+    }
+    .tooltip.show { opacity: 1; transform: translateY(0) scale(1); }
+    .tooltip .title { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+    .tooltip .elevation { color: #94a3b8; font-size: 12px; margin-bottom: 10px; }
+    .tooltip .terrain-info { color: #60a5fa; font-size: 11px; margin-bottom: 8px; }
+    
+    .legend {
+      position: absolute; right: 14px; bottom: 14px; color: #0b1220; font-size: 12px;
+      background: rgba(191,231,255,.95); padding: 10px 12px; border-radius: 12px; border: 1px solid #1f2a44; backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    }
+    .zoom-hint {
+      position: absolute; left: 14px; bottom: 14px; color: #94a3b8; font-size: 12px; background: rgba(15,23,42,.8);
+      padding: 8px 12px; border-radius: 10px; border: 1px solid #1f2a44; backdrop-filter: blur(10px);
+    }
+    .elevation-legend {
+      position: absolute; left: 14px; top: 60px; color: #0b1220; font-size: 11px;
+      background: rgba(191,231,255,.95); padding: 10px 12px; border-radius: 12px; border: 1px solid #1f2a44; backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    }
+    .elevation-item { display: flex; align-items: center; margin: 6px 0; }
+    .elevation-color { width: 18px; height: 14px; margin-right: 10px; border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+    
+    /* 动画效果 */
+    @keyframes terrainGlow {
+      0%, 100% { filter: brightness(1) drop-shadow(0 4px 8px rgba(0,0,0,.3)); }
+      50% { filter: brightness(1.1) drop-shadow(0 6px 12px rgba(0,0,0,.4)); }
+    }
+    .terrain-animate { animation: terrainGlow 3s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" id="card">
+      <div class="header">
+        <div>3D立体地形世界地图（真实高程+湖泊+河流+山脉）</div>
+        <div class="badge">D3 + WebGL + 地形数据</div>
+      </div>
+      <div id="tooltip" class="tooltip"></div>
+      <div class="legend">悬停查看3D地形信息 · 滚轮缩放 · 拖拽平移</div>
+      <div class="zoom-hint">投影：Equirectangular + 3D地形</div>
+      <div class="elevation-legend">
+        <div style="font-weight: 600; margin-bottom: 8px;">3D地形高度</div>
+        <div class="elevation-item">
+          <div class="elevation-color" style="background: linear-gradient(135deg, #7ecf7a, #9ed77f);"></div>
+          <span>平原 (0-500m)</span>
+        </div>
+        <div class="elevation-item">
+          <div class="elevation-color" style="background: linear-gradient(135deg, #9ed77f, #c9b07a);"></div>
+          <span>丘陵 (500-1000m)</span>
+        </div>
+        <div class="elevation-item">
+          <div class="elevation-color" style="background: linear-gradient(135deg, #c9b07a, #c19a6b);"></div>
+          <span>山地 (1000-2000m)</span>
+        </div>
+        <div class="elevation-item">
+          <div class="elevation-color" style="background: linear-gradient(135deg, #c19a6b, #a0522d);"></div>
+          <span>高山 (2000m+)</span>
+        </div>
+      </div>
+      <svg id="map"></svg>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+
+  <script>
+    // 增强的国家数据（包含地形特征）
+    const countryData = {
+      "United States of America": {
+        languages: [
+          { name: "English", family: "Indo-European", difficulty: 2 },
+          { name: "Spanish", family: "Indo-European", difficulty: 3 }
+        ],
+        elevation: 760,
+        terrain: "落基山脉、大平原、阿巴拉契亚山脉",
+        features: ["大峡谷", "黄石公园", "五大湖"]
+      },
+      "China": {
+        languages: [
+          { name: "Mandarin Chinese", family: "Sino-Tibetan", difficulty: 5 },
+          { name: "Cantonese", family: "Sino-Tibetan", difficulty: 5 }
+        ],
+        elevation: 1840,
+        terrain: "青藏高原、喜马拉雅山脉、长江黄河",
+        features: ["珠穆朗玛峰", "长江三峡", "黄土高原"]
+      },
+      "India": {
+        languages: [
+          { name: "Hindi", family: "Indo-European", difficulty: 3 },
+          { name: "Bengali", family: "Indo-European", difficulty: 4 }
+        ],
+        elevation: 160,
+        terrain: "恒河平原、德干高原、喜马拉雅山",
+        features: ["恒河", "印度河", "德干高原"]
+      },
+      "Brazil": {
+        languages: [
+          { name: "Portuguese", family: "Indo-European", difficulty: 3 }
+        ],
+        elevation: 320,
+        terrain: "亚马逊雨林、巴西高原、巴拉那河",
+        features: ["亚马逊河", "伊瓜苏瀑布", "潘塔纳尔湿地"]
+      },
+      "Russian Federation": {
+        languages: [
+          { name: "Russian", family: "Indo-European", difficulty: 4 }
+        ],
+        elevation: 600,
+        terrain: "西伯利亚平原、乌拉尔山脉、贝加尔湖",
+        features: ["贝加尔湖", "乌拉尔山", "西伯利亚平原"]
+      },
+      "France": {
+        languages: [
+          { name: "French", family: "Indo-European", difficulty: 3 }
+        ],
+        elevation: 375,
+        terrain: "阿尔卑斯山、中央高原、卢瓦尔河",
+        features: ["阿尔卑斯山", "卢瓦尔河谷", "地中海海岸"]
+      },
+      "Spain": {
+        languages: [
+          { name: "Spanish", family: "Indo-European", difficulty: 3 }
+        ],
+        elevation: 660,
+        terrain: "比利牛斯山、中央高原、瓜达尔基维尔河",
+        features: ["比利牛斯山", "中央高原", "地中海海岸"]
+      },
+      "Egypt": {
+        languages: [
+          { name: "Arabic (Egyptian)", family: "Afro-Asiatic", difficulty: 4 }
+        ],
+        elevation: 321,
+        terrain: "尼罗河谷、西奈半岛、撒哈拉沙漠",
+        features: ["尼罗河", "金字塔", "红海"]
+      },
+      "Nigeria": {
+        languages: [
+          { name: "English", family: "Indo-European", difficulty: 2 },
+          { name: "Hausa", family: "Afro-Asiatic", difficulty: 4 },
+          { name: "Yoruba", family: "Niger-Congo", difficulty: 4 }
+        ],
+        elevation: 380,
+        terrain: "尼日尔河三角洲、乔斯高原、乍得湖",
+        features: ["尼日尔河", "乍得湖", "乔斯高原"]
+      },
+      "Japan": {
+        languages: [
+          { name: "Japanese", family: "Japonic", difficulty: 5 }
+        ],
+        elevation: 438,
+        terrain: "富士山、日本阿尔卑斯、琵琶湖",
+        features: ["富士山", "琵琶湖", "日本海"]
+      }
+    };
+
+    const svg = d3.select("#map");
+    const tooltip = d3.select("#tooltip");
+    const card = document.getElementById("card");
+
+    const width = card.clientWidth;
+    const height = card.clientHeight;
+
+    svg.attr("viewBox", [0, 0, width, height].join(" "));
+
+    // 创建渐变定义
+    const defs = svg.append("defs");
+    
+    // 湖泊渐变
+    defs.append("linearGradient")
+      .attr("id", "lakeGradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%")
+      .selectAll("stop")
+      .data([
+        { offset: "0%", color: "#9bd3ff" },
+        { offset: "50%", color: "#7fc8ff" },
+        { offset: "100%", color: "#5bb8ff" }
+      ])
+      .join("stop")
+      .attr("offset", d => d.offset)
+      .attr("stop-color", d => d.color);
+
+    // 河流渐变
+    defs.append("linearGradient")
+      .attr("id", "riverGradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%")
+      .selectAll("stop")
+      .data([
+        { offset: "0%", color: "#7fc8ff" },
+        { offset: "50%", color: "#5bb8ff" },
+        { offset: "100%", color: "#3da6ff" }
+      ])
+      .join("stop")
+      .attr("offset", d => d.offset)
+      .attr("stop-color", d => d.color);
+
+    // 山脉渐变
+    defs.append("linearGradient")
+      .attr("id", "mountainGradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%")
+      .selectAll("stop")
+      .data([
+        { offset: "0%", color: "#c19a6b" },
+        { offset: "50%", color: "#a0522d" },
+        { offset: "100%", color: "#8b4513" }
+      ])
+      .join("stop")
+      .attr("offset", d => d.offset)
+      .attr("stop-color", d => d.color);
+
+    // 投影设置
+    const projection = d3.geoEquirectangular()
+      .scale(width / (2 * Math.PI))
+      .translate([width / 2, height / 2]);
+
+    const path = d3.geoPath(projection);
+
+    // 3D地形颜色比例尺
+    const elevationColor = d3.scaleLinear()
+      .domain([0, 500, 1000, 2000, 4000, 8000])
+      .range([
+        "url(#lakeGradient)",           // 平原
+        "#9ed77f",                      // 丘陵
+        "#c9b07a",                      // 山地
+        "#c19a6b",                      // 高山
+        "#a0522d",                      // 极高山
+        "#8b4513"                       // 雪峰
+      ]);
+
+    const g = svg.append("g");
+    
+    // 增强的缩放拖拽
+    const zoomed = (event) => {
+      const {transform} = event;
+      g.attr("transform", transform);
+      g.attr("stroke-width", 1 / transform.k);
+      
+      // 根据缩放级别调整3D效果
+      if (transform.k > 3) {
+        g.selectAll(".country").classed("terrain-animate", true);
+      } else {
+        g.selectAll(".country").classed("terrain-animate", false);
+      }
+    };
+    svg.call(d3.zoom().scaleExtent([1, 12]).on("zoom", zoomed));
+
+    // 增强的Tooltip
+    function showTooltip(html, [x, y]) {
+      tooltip.html(html)
+        .style("left", (x + 14) + "px")
+        .style("top", (y + 14) + "px")
+        .classed("show", true);
+    }
+    function moveTooltip([x, y]) {
+      tooltip.style("left", (x + 14) + "px").style("top", (y + 14) + "px");
+    }
+    function hideTooltip() {
+      tooltip.classed("show", false);
+    }
+
+    // 加载世界地图
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+      .then(world => {
+        console.log("World data loaded:", world.features.length, "countries");
+        
+        const countries = world.features;
+
+        // 绘制国家（3D地形效果）
+        const countryG = g.append("g").attr("class", "countries terrain");
+        countryG.selectAll("path.country")
+          .data(countries)
+          .join("path")
+          .attr("class", "country")
+          .attr("fill", d => {
+            const name = d.properties.name;
+            const data = countryData[name];
+            if (data && data.elevation !== undefined) {
+              return elevationColor(data.elevation);
+            }
+            // 默认颜色：基于纬度
+            const [cx, cy] = path.centroid(d);
+            const p = projection.invert([cx, cy]);
+            const absLat = p ? Math.abs(p[1]) : 0;
+            return absLat > 60 ? "#c19a6b" : absLat > 30 ? "#c9b07a" : "#9ed77f";
+          })
+          .attr("d", path)
+          .on("mouseenter", function(event, d) {
+            const name = d.properties.name;
+            const data = countryData[name];
+            
+            let html = `<div class="title">${name}</div>`;
+            
+            if (data && data.elevation !== undefined) {
+              html += `<div class="elevation">��️ 平均海拔: ${data.elevation}m</div>`;
+            }
+            
+            if (data && data.terrain) {
+              html += `<div class="terrain-info">🗺️ 地形: ${data.terrain}</div>`;
+            }
+            
+            if (data && data.features) {
+              html += `<div style="margin-top: 8px;"><strong>特色地理:</strong></div>`;
+              html += `<ul style="margin:.25rem 0 0 .9rem;padding:0;">
+                ${data.features.map(f => `<li style="margin:.12rem 0;">${f}</li>`).join("")}
+              </ul>`;
+            }
+            
+            if (data && data.languages) {
+              html += `<div style="margin-top: 8px;"><strong>主要语言:</strong></div>`;
+              html += `<ul style="margin:.25rem 0 0 .9rem;padding:0;">
+                ${data.languages.map(l => `<li style="margin:.12rem 0;">${l.name} · ${l.family} · 难度 ${l.difficulty}/5</li>`).join("")}
+              </ul>`;
+            }
+            
+            d3.select(this).attr("opacity", 0.95);
+            showTooltip(html, d3.pointer(event, card));
+          })
+          .on("mousemove", function(event) {
+            moveTooltip(d3.pointer(event, card));
+          })
+          .on("mouseleave", function() {
+            d3.select(this).attr("opacity", 1);
+            hideTooltip();
+          })
+          .on("click", function(event, d) {
+            const name = d.properties.name;
+            console.log("Clicked country:", name);
+          });
+
+        // 加载湖泊
+        d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/lakes-110m.json")
+          .then(lakesTopo => {
+            const lakes = topojson.feature(lakesTopo, lakesTopo.objects.lakes).features;
+            console.log("Lakes loaded:", lakes.length);
+            
+            g.append("g").attr("class", "lakes")
+              .selectAll("path.lake")
+              .data(lakes)
+              .join("path")
+              .attr("class", "lake")
+              .attr("d", path);
+          })
+          .catch(err => console.log("Lakes failed to load:", err));
+
+        // 加载河流
+        d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/rivers-110m.json")
+          .then(riversTopo => {
+            const rivers = topojson.feature(riversTopo, riversTopo.objects.rivers).features;
+            console.log("Rivers loaded:", rivers.length);
+            
+            g.append("g").attr("class", "rivers")
+              .selectAll("path.river")
+              .data(rivers)
+              .join("path")
+              .attr("class", "river")
+              .attr("d", path);
+          })
+          .catch(err => console.log("Rivers failed to load:", err));
+
+      })
+      .catch(err => {
+        console.error("Failed to load world data:", err);
+        g.append("text")
+          .attr("x", width / 2)
+          .attr("y", height / 2)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#e2e8f0")
+          .text("地图数据加载失败，请检查网络连接");
+      });
+  </script>
+</body>
+</html>
