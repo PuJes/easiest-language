@@ -1,29 +1,29 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   /* 主色调 - 基于项目设计规范 */
-  --primary: #3B82F6;      /* 蓝色 - 信任、专业 */
-  --secondary: #8B5CF6;    /* 紫色 - 创新、智慧 */
-  --accent: #10B981;       /* 绿色 - 成长、成功 */
-  
+  --primary: #3b82f6; /* 蓝色 - 信任、专业 */
+  --secondary: #8b5cf6; /* 紫色 - 创新、智慧 */
+  --accent: #10b981; /* 绿色 - 成长、成功 */
+
   /* 背景色 */
-  --background: #0b1220;   /* 深色背景 */
-  --foreground: #e2e8f0;   /* 浅色前景 */
-  --card-bg: #0f172a;      /* 卡片背景 */
-  --border: #1f2a44;       /* 边框色 */
-  
+  --background: #0b1220; /* 深色背景 */
+  --foreground: #e2e8f0; /* 浅色前景 */
+  --card-bg: #0f172a; /* 卡片背景 */
+  --border: #1f2a44; /* 边框色 */
+
   /* FSI难度配色 */
-  --fsi-native: #6c757d;   /* 母语 - 灰色 */
-  --fsi-easy: #28a745;     /* 容易 - 绿色 */
+  --fsi-native: #6c757d; /* 母语 - 灰色 */
+  --fsi-easy: #28a745; /* 容易 - 绿色 */
   --fsi-moderate: #ffc107; /* 中等 - 黄色 */
-  --fsi-medium: #fd7e14;   /* 较难 - 橙色 */
-  --fsi-hard: #dc3545;     /* 困难 - 红色 */
-  --fsi-hardest: #6f42c1;  /* 最难 - 紫色 */
-  
+  --fsi-medium: #fd7e14; /* 较难 - 橙色 */
+  --fsi-hard: #dc3545; /* 困难 - 红色 */
+  --fsi-hardest: #6f42c1; /* 最难 - 紫色 */
+
   /* 渐变色 */
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
   --gradient-success: linear-gradient(135deg, var(--accent), #059669);
-  --gradient-hero: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+  --gradient-hero: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
 }
 
 @theme inline {
@@ -34,16 +34,18 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
   --color-border: var(--border);
-  
+
   --color-fsi-native: var(--fsi-native);
   --color-fsi-easy: var(--fsi-easy);
   --color-fsi-moderate: var(--fsi-moderate);
   --color-fsi-medium: var(--fsi-medium);
   --color-fsi-hard: var(--fsi-hard);
   --color-fsi-hardest: var(--fsi-hardest);
-  
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 }
 
 /* 移除暗色模式自动切换，使用固定深色主题 */
@@ -123,12 +125,16 @@ body {
 
 /* 卡片悬停效果基础样式 */
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* 渐变文字效果 */
@@ -146,7 +152,9 @@ body {
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {

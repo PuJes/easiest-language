@@ -1,0 +1,5 @@
+### 示例：本地站点首页
+GET http://localhost:3000/
+
+### 示例：Next.js 健康检查（可根据需要扩展）
+GET http://localhost:3000/api/health

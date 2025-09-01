@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // ESLint 集成
+    "esbenp.prettier-vscode", // Prettier 格式化
+    "bradlc.vscode-tailwindcss", // Tailwind 智能提示
+    "dsznajder.es7-react-js-snippets", // React 片段
+    "humao.rest-client" // REST Client 进行 API 测试
+  ]
+}

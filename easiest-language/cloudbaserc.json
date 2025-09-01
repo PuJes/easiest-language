@@ -1,0 +1,19 @@
+{
+  "envId": "your-env-id",
+  "framework": {
+    "name": "@cloudbase/framework-plugin-nextjs",
+    "plugins": {
+      "client": {
+        "use": "@cloudbase/framework-plugin-nextjs",
+        "inputs": {
+          "buildCommand": "npm run build",
+          "outputPath": ".next",
+          "installCommand": "npm ci",
+          "runtime": "Nodejs18.15",
+          "entry": "server.js"
+        }
+      }
+    }
+  },
+  "region": "ap-shanghai"
+}
