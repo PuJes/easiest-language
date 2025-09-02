@@ -1,4 +1,4 @@
-import type { LanguageData } from '../types';
+import type { LanguageData } from '../../../types';
 
 /**
  * 根据FSI类别生成默认的难度评分

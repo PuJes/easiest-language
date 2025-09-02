@@ -20,7 +20,7 @@ function generateFSIDetails(category: number) {
  * 基于美国外国语学院官方分类和学习时长标准
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T05:12:34.054Z
+ * 最后更新时间: 2025-09-02T06:36:51.152Z
  */
 export const FSI_LANGUAGE_DATA: LanguageData = {
   languages: [
@@ -61,7 +61,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
         'family': 'Indo-European',
         'subfamily': 'Romance',
         'writingSystem': 'Latin',
-        'speakers': 500000000,
+        'speakers': 548000000,
         'flagEmoji': '🇪🇸',
         'color': '#28a745'
     },
@@ -775,7 +775,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
         'family': 'Sino-Tibetan',
         'subfamily': 'Sinitic',
         'writingSystem': 'Chinese Characters',
-        'speakers': 918000000,
+        'speakers': 1180000000,
         'flagEmoji': '🇨🇳',
         'color': '#6f42c1'
     },
@@ -880,7 +880,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
         'family': 'Indo-European',
         'subfamily': 'Germanic',
         'writingSystem': 'Latin',
-        'speakers': 1500000000,
+        'speakers': 1370000000,
         'flagEmoji': '🇺🇸',
         'color': '#6c757d'
     },

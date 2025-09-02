@@ -130,7 +130,7 @@ function LanguageEditorSection() {
   >([]);
   const [selectedId, setSelectedId] = useState<string>('');
   const [editForm, setEditForm] = useState<LanguageEditForm | null>(null);
-  const [activeTab, setActiveTab] = useState<'basics' | 'fsi' | 'difficulty' | 'resources'>(
+  const [activeTab, setActiveTab] = useState<'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture'>(
     'basics'
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -183,6 +183,16 @@ function LanguageEditorSection() {
       const success = editor.updateLanguageComplete(selectedId, editForm);
 
       if (success) {
+        // 如果当前是文化信息标签页，需要单独保存文化信息
+        if (activeTab === 'culture') {
+          await saveCultureInfo(selectedId, {
+            overview: editForm.culturalOverview,
+            businessUse: editForm.businessUse,
+            entertainment: editForm.entertainment,
+            cuisine: editForm.cuisine,
+          });
+        }
+
         setHasChanges(false);
         // 刷新语言列表以反映最新数据
         const updatedLanguages = editor.getAllLanguagesSummary();
@@ -200,6 +210,36 @@ function LanguageEditorSection() {
       alert(`Save failed: ${error}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // 保存文化信息的函数
+  const saveCultureInfo = async (languageId: string, cultureInfo: any) => {
+    try {
+      const response = await fetch('/api/admin/save-culture-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          languageId,
+          cultureInfo,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('文化信息保存成功:', result);
+        // 可以显示成功消息
+        alert(`文化信息保存成功！\n备份路径: ${result.backupPath}`);
+      } else {
+        console.error('文化信息保存失败:', result.message);
+        alert(`文化信息保存失败: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('保存文化信息时出错:', error);
+      alert(`保存文化信息时出错: ${error}`);
     }
   };
 
@@ -353,16 +393,17 @@ function LanguageEditorSection() {
           {/* 标签页导航 */}
           <div className="border-b border-gray-200">
             <nav className="px-6 -mb-px flex space-x-8">
-              {[
-                { id: 'basics', label: '基础信息' },
-                { id: 'fsi', label: 'FSI难度' },
-                { id: 'difficulty', label: '详细评分' },
-                { id: 'resources', label: '学习资源' },
-              ].map((tab) => (
+                        {[
+            { id: 'basics', label: '基础信息' },
+            { id: 'fsi', label: 'FSI难度' },
+            { id: 'difficulty', label: '详细评分' },
+            { id: 'resources', label: '学习资源' },
+            { id: 'culture', label: '文化信息' },
+          ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() =>
-                    setActiveTab(tab.id as 'basics' | 'fsi' | 'difficulty' | 'resources')
+                    setActiveTab(tab.id as 'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture')
                   }
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
@@ -384,6 +425,22 @@ function LanguageEditorSection() {
               <DifficultyTab editForm={editForm} updateForm={updateForm} />
             )}
             {activeTab === 'resources' && <ResourcesTab selectedId={selectedId} />}
+            {activeTab === 'culture' && (
+              <CultureTab 
+                editForm={editForm} 
+                updateForm={updateForm}
+                onSaveCulture={async () => {
+                  if (!selectedId) return;
+                  await saveCultureInfo(selectedId, {
+                    overview: editForm.culturalOverview,
+                    businessUse: editForm.businessUse,
+                    entertainment: editForm.entertainment,
+                    cuisine: editForm.cuisine,
+                  });
+                }}
+                isLoading={isLoading}
+              />
+            )}
           </div>
         </div>
       )}
@@ -1092,6 +1149,168 @@ function EditResourceForm({
 }
 
 /**
+ * 文化信息标签页
+ */
+function CultureTab({
+  editForm,
+  updateForm,
+  onSaveCulture,
+  isLoading,
+}: {
+  editForm: LanguageEditForm;
+  updateForm: (updates: Partial<LanguageEditForm>) => void;
+  onSaveCulture: () => Promise<void>;
+  isLoading: boolean;
+}) {
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-medium text-gray-900">文化信息</h3>
+        <button
+          onClick={onSaveCulture}
+          disabled={isLoading}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+        >
+          {isLoading ? '保存中...' : '💾 保存文化信息'}
+        </button>
+      </div>
+      
+      {/* 文化概述 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">文化概述 *</label>
+        <textarea
+          value={editForm.culturalOverview}
+          onChange={(e) => updateForm({ culturalOverview: e.target.value })}
+          rows={4}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="描述这种语言的文化特色、历史背景和重要价值..."
+        />
+      </div>
+
+      {/* 商务用途 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">商务用途描述 *</label>
+        <textarea
+          value={editForm.businessUse}
+          onChange={(e) => updateForm({ businessUse: e.target.value })}
+          rows={3}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="描述这种语言在商务环境中的价值和重要性..."
+        />
+      </div>
+
+      {/* 娱乐文化 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">娱乐文化形式</label>
+        <div className="space-y-2">
+          {editForm.entertainment.map((item, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                type="text"
+                value={item}
+                onChange={(e) => {
+                  const newEntertainment = [...editForm.entertainment];
+                  newEntertainment[index] = e.target.value;
+                  updateForm({ entertainment: newEntertainment });
+                }}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="如: 传统音乐、电影文化、文学特色..."
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const newEntertainment = editForm.entertainment.filter((_, i) => i !== index);
+                  updateForm({ entertainment: newEntertainment });
+                }}
+                className="px-3 py-2 text-red-600 hover:text-red-800"
+              >
+                删除
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              const newEntertainment = [...editForm.entertainment, ''];
+              updateForm({ entertainment: newEntertainment });
+            }}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            + 添加娱乐形式
+          </button>
+        </div>
+      </div>
+
+      {/* 饮食文化 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">饮食文化特色</label>
+        <div className="space-y-2">
+          {editForm.cuisine.map((item, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                type="text"
+                value={item}
+                onChange={(e) => {
+                  const newCuisine = [...editForm.cuisine];
+                  newCuisine[index] = e.target.value;
+                  updateForm({ cuisine: newCuisine });
+                }}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="如: 传统美食、地方特色、饮品文化..."
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const newCuisine = editForm.cuisine.filter((_, i) => i !== index);
+                  updateForm({ cuisine: newCuisine });
+                }}
+                className="px-3 py-2 text-red-600 hover:text-red-800"
+              >
+                删除
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              const newCuisine = [...editForm.cuisine, ''];
+              updateForm({ cuisine: newCuisine });
+            }}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            + 添加饮食特色
+          </button>
+        </div>
+      </div>
+
+      {/* 提示信息 */}
+      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-blue-800">文化信息编辑提示</h3>
+            <div className="mt-2 text-sm text-blue-700">
+              <ul className="list-disc pl-5 space-y-1">
+                <li>文化概述应该包含语言的历史背景、文化特色和重要价值</li>
+                <li>商务用途描述应该说明这种语言在商业环境中的重要性</li>
+                <li>娱乐文化形式包括音乐、电影、文学、艺术等文化表达方式</li>
+                <li>饮食文化特色包括传统美食、地方特色和饮品文化</li>
+                <li><strong>重要：</strong>编辑完成后请点击"💾 保存文化信息"按钮保存更改</li>
+                <li>保存的文化信息会立即在前端语言详情页面中显示</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * 批量操作区域
  */
 function BulkOperationsSection() {
@@ -1136,41 +1355,203 @@ function BulkOperationsSection() {
  * 数据导出区域
  */
 function DataExportSection() {
-  const handleExport = (format: 'json' | 'csv') => {
-    // 这里实现数据导出逻辑
-    console.log(`Exporting data as ${format}`);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<any>(null);
+
+  const handleExport = async (format: 'json' | 'excel') => {
+    setIsExporting(true);
+    try {
+      if (format === 'json') {
+        // JSON导出逻辑（保持原有功能）
+        const { getAllLanguages } = await import('@/lib/data/data-adapters');
+        const languages = getAllLanguages();
+        const dataStr = JSON.stringify(languages, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `languages-data-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } else if (format === 'excel') {
+        // Excel导出逻辑
+        const { exportLanguagesToExcel } = await import('@/lib/utils/excel-utils');
+        exportLanguagesToExcel();
+      }
+      
+      alert(`${format.toUpperCase()}文件导出成功！`);
+    } catch (error) {
+      console.error('导出失败:', error);
+      alert(`导出失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    setImportResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/import-excel', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      setImportResult(result);
+
+      if (result.success) {
+        alert('Excel文件导入成功！');
+      } else {
+        alert(`导入失败: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('导入失败:', error);
+      alert(`导入失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    } finally {
+      setIsImporting(false);
+      // 清空文件输入
+      event.target.value = '';
+    }
+  };
+
+  const handleGenerateTemplate = async () => {
+    try {
+      const { generateExcelTemplate } = await import('@/lib/utils/excel-utils');
+      generateExcelTemplate();
+      alert('Excel模板文件已生成！');
+    } catch (error) {
+      console.error('生成模板失败:', error);
+      alert(`生成模板失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-6">数据导出</h2>
+      <h2 className="text-2xl font-bold mb-6">数据导出与导入</h2>
 
       <div className="space-y-6">
         {/* 导出格式选择 */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">选择导出格式</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">导出数据</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-lg p-4">
-              <h4 className="font-medium text-gray-900 mb-2">JSON格式</h4>
+              <h4 className="font-medium text-gray-900 mb-2">📄 JSON格式</h4>
               <p className="text-sm text-gray-600 mb-4">完整的数据结构，适合程序处理和备份</p>
               <button
                 onClick={() => handleExport('json')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                disabled={isExporting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
               >
-                导出JSON
+                {isExporting ? '导出中...' : '导出JSON'}
               </button>
             </div>
 
             <div className="border border-gray-200 rounded-lg p-4">
-              <h4 className="font-medium text-gray-900 mb-2">CSV格式</h4>
-              <p className="text-sm text-gray-600 mb-4">表格格式，适合Excel处理和数据分析</p>
+              <h4 className="font-medium text-gray-900 mb-2">📊 Excel格式</h4>
+              <p className="text-sm text-gray-600 mb-4">包含所有语言数据的Excel文件，包含4个工作表</p>
               <button
-                onClick={() => handleExport('csv')}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                onClick={() => handleExport('excel')}
+                disabled={isExporting}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-green-300 transition-colors"
               >
-                导出CSV
+                {isExporting ? '导出中...' : '导出Excel'}
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* Excel导入功能 */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">导入数据</h3>
+          <div className="border border-gray-200 rounded-lg p-4">
+            <div className="mb-4">
+              <h4 className="font-medium text-gray-900 mb-2">📥 从Excel文件导入</h4>
+              <p className="text-sm text-gray-600 mb-4">
+                支持导入包含基础信息、FSI详情、学习资源和文化信息的Excel文件
+              </p>
+              
+              <div className="flex gap-4 items-center">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleImport}
+                  disabled={isImporting}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                />
+                <button
+                  onClick={handleGenerateTemplate}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  📋 下载模板
+                </button>
+              </div>
+            </div>
+
+            {/* 导入结果显示 */}
+            {importResult && (
+              <div className={`mt-4 p-4 rounded-md ${
+                importResult.success ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+              }`}>
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    {importResult.success ? (
+                      <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="ml-3">
+                    <h3 className={`text-sm font-medium ${
+                      importResult.success ? 'text-green-800' : 'text-red-800'
+                    }`}>
+                      {importResult.success ? '导入成功' : '导入失败'}
+                    </h3>
+                    <div className={`mt-2 text-sm ${
+                      importResult.success ? 'text-green-700' : 'text-red-700'
+                    }`}>
+                      <p>{importResult.message}</p>
+                      {importResult.summary && (
+                        <div className="mt-2">
+                          <p>导入统计:</p>
+                          <ul className="list-disc pl-5">
+                            <li>基础信息: {importResult.summary.basicInfo} 条</li>
+                            <li>FSI详情: {importResult.summary.fsiDetails} 条</li>
+                            <li>学习资源: {importResult.summary.learningResources} 条</li>
+                            <li>文化信息: {importResult.summary.cultureInfo} 条</li>
+                          </ul>
+                        </div>
+                      )}
+                      {importResult.errors && importResult.errors.length > 0 && (
+                        <div className="mt-2">
+                          <p>错误详情:</p>
+                          <ul className="list-disc pl-5">
+                            {importResult.errors.map((error: string, index: number) => (
+                              <li key={index}>{error}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

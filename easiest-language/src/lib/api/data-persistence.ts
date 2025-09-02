@@ -35,6 +35,11 @@ export interface DataPersistence {
    * 从备份恢复数据
    */
   restoreFromBackup(backupPath: string): Promise<boolean>;
+
+  /**
+   * 获取所有备份列表
+   */
+  getBackupList(): Promise<Array<{ path: string; timestamp: string; description: string }>>;
 }
 
 /**

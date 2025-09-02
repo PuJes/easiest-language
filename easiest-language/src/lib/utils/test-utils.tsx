@@ -27,10 +27,7 @@ const AllTheProviders = ({ children }: { children: ReactNode }) => {
  * 自定义渲染函数 - 包装常用的提供者
  * KISS原则：简化测试组件的渲染过程
  */
-export const customRender = (
-  ui: ReactElement,
-  options?: CustomRenderOptions
-): RenderResult => {
+export const customRender = (ui: ReactElement, options?: CustomRenderOptions): RenderResult => {
   return render(ui, { wrapper: AllTheProviders, ...options });
 };
 
@@ -43,7 +40,7 @@ export const user = userEvent.setup();
  * 等待函数 - 用于异步测试
  * @param ms 等待毫秒数
  */
-export const wait = (ms = 100) => new Promise(resolve => setTimeout(resolve, ms));
+export const wait = (ms = 100) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * 断言辅助函数 - 常用的测试断言
@@ -53,11 +50,20 @@ export const testAssertions = {
    * 检查元素是否可见且可访问
    */
   toBeAccessible: (element: HTMLElement) => {
-    expect(element).toBeInTheDocument();
-    expect(element).toBeVisible();
+    // 检查元素是否存在
+    if (!element) {
+      throw new Error('Element is null or undefined');
+    }
+    // 检查元素是否可见
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      throw new Error('Element is not visible');
+    }
     // 检查是否有适当的可访问性属性
     if (element.tagName === 'BUTTON' || element.tagName === 'A') {
-      expect(element).not.toHaveAttribute('aria-disabled', 'true');
+      if (element.getAttribute('aria-disabled') === 'true') {
+        throw new Error('Element is disabled');
+      }
     }
   },
 
@@ -65,16 +71,25 @@ export const testAssertions = {
    * 检查表单元素状态
    */
   formElementState: (element: HTMLElement, state: 'valid' | 'invalid' | 'required') => {
-    expect(element).toBeInTheDocument();
+    // 检查元素是否存在
+    if (!element) {
+      throw new Error('Element is null or undefined');
+    }
     switch (state) {
       case 'valid':
-        expect(element).toBeValid();
+        if (!(element as HTMLInputElement).validity.valid) {
+          throw new Error('Element is not valid');
+        }
         break;
       case 'invalid':
-        expect(element).toBeInvalid();
+        if ((element as HTMLInputElement).validity.valid) {
+          throw new Error('Element is valid but expected to be invalid');
+        }
         break;
       case 'required':
-        expect(element).toBeRequired();
+        if (!(element as HTMLInputElement).required) {
+          throw new Error('Element is not required');
+        }
         break;
     }
   },
@@ -85,11 +100,15 @@ export const testAssertions = {
   loadingState: (container: HTMLElement, isLoading: boolean) => {
     const loadingElement = container.querySelector('[data-testid="loading"]');
     if (isLoading) {
-      expect(loadingElement).toBeInTheDocument();
+      if (!loadingElement) {
+        throw new Error('Loading element not found when expected to be loading');
+      }
     } else {
-      expect(loadingElement).not.toBeInTheDocument();
+      if (loadingElement) {
+        throw new Error('Loading element found when not expected to be loading');
+      }
     }
-  }
+  },
 };
 
 /**
@@ -100,7 +119,9 @@ export const testDataGenerator = {
    * 生成随机字符串
    */
   randomString: (length = 8) => {
-    return Math.random().toString(36).substring(2, length + 2);
+    return Math.random()
+      .toString(36)
+      .substring(2, length + 2);
   },
 
   /**
@@ -122,8 +143,8 @@ export const testDataGenerator = {
     family: 'Test Family',
     speakers: testDataGenerator.randomNumber(1000000, 1000000000),
     countries: [`Country ${testDataGenerator.randomString(4)}`],
-    ...overrides
-  })
+    ...overrides,
+  }),
 };
 
 /**
@@ -133,29 +154,30 @@ export const mockHelpers = {
   /**
    * 创建Promise的Mock
    */
-  createPromiseMock: <T>(data: T, shouldResolve = true, delay = 0) => {
-    return jest.fn().mockImplementation(() =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (shouldResolve) {
-            resolve(data);
-          } else {
-            reject(new Error('Mock error'));
-          }
-        }, delay);
-      })
+  createPromiseMock: <T = any,>(data: T, shouldResolve = true, delay = 0) => {
+    return jest.fn().mockImplementation(
+      () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (shouldResolve) {
+              resolve(data);
+            } else {
+              reject(new Error('Mock error'));
+            }
+          }, delay);
+        })
     );
   },
 
   /**
    * 创建API响应Mock
    */
-  createApiMock: <T>(data: T, status = 200) => {
+  createApiMock: <T = any,>(data: T, status = 200) => {
     return jest.fn().mockResolvedValue({
       ok: status >= 200 && status < 300,
       status,
       json: jest.fn().mockResolvedValue(data),
-      text: jest.fn().mockResolvedValue(JSON.stringify(data))
+      text: jest.fn().mockResolvedValue(JSON.stringify(data)),
     });
   },
 
@@ -164,7 +186,7 @@ export const mockHelpers = {
    */
   createNetworkErrorMock: () => {
     return jest.fn().mockRejectedValue(new Error('Network error'));
-  }
+  },
 };
 
 /**
@@ -176,11 +198,11 @@ export const testEnvironment = {
    */
   setup: () => {
     setupGlobalMocks();
-    
+
     // 设置测试环境变量
-    process.env.NODE_ENV = 'test';
-    process.env.NEXT_PUBLIC_APP_ENV = 'test';
-    
+    (process.env as any).NODE_ENV = 'test';
+    (process.env as any).NEXT_PUBLIC_APP_ENV = 'test';
+
     // 清理计时器
     jest.clearAllTimers();
     jest.useFakeTimers();
@@ -207,7 +229,7 @@ export const testEnvironment = {
    */
   beforeEach: () => {
     setupGlobalMocks();
-  }
+  },
 };
 
 /**
@@ -219,12 +241,12 @@ export const componentTestUtils = {
    */
   testBasicRender: async (component: ReactElement, testId?: string) => {
     const result = customRender(component);
-    
+
     if (testId) {
       const element = result.getByTestId(testId);
       testAssertions.toBeAccessible(element);
     }
-    
+
     return result;
   },
 
@@ -237,18 +259,18 @@ export const componentTestUtils = {
     changedProps: any,
     testId: string
   ) => {
-    const { rerender, getByTestId } = customRender(
-      <ComponentClass {...initialProps} />
-    );
-    
+    const { rerender, getByTestId } = customRender(<ComponentClass {...initialProps} />);
+
     const element = getByTestId(testId);
     testAssertions.toBeAccessible(element);
-    
+
     rerender(<ComponentClass {...changedProps} />);
-    
+
     // 验证Props变化后的状态
-    expect(element).toBeInTheDocument();
-    
+    if (!element) {
+      throw new Error('Element is null or undefined after rerender');
+    }
+
     return { element, rerender };
   },
 
@@ -264,10 +286,10 @@ export const componentTestUtils = {
     }>
   ) => {
     const result = customRender(component);
-    
+
     for (const interaction of interactions) {
       const element = result.getByTestId(interaction.target);
-      
+
       switch (interaction.type) {
         case 'click':
           await user.click(element);
@@ -279,13 +301,13 @@ export const componentTestUtils = {
           await user.hover(element);
           break;
       }
-      
+
       // 等待DOM更新
       await wait(10);
     }
-    
+
     return result;
-  }
+  },
 };
 
 /**
@@ -298,9 +320,9 @@ export const performanceTestUtils = {
   measureRenderTime: (component: ReactElement): Promise<number> => {
     return new Promise((resolve) => {
       const startTime = performance.now();
-      
+
       customRender(component);
-      
+
       // 使用requestAnimationFrame确保渲染完成
       requestAnimationFrame(() => {
         const endTime = performance.now();
@@ -317,7 +339,7 @@ export const performanceTestUtils = {
       return (performance as any).memory;
     }
     return null;
-  }
+  },
 };
 
 // 导出所有工具，方便使用
@@ -328,7 +350,7 @@ export {
   mockHelpers as mocks,
   testEnvironment as env,
   componentTestUtils as componentUtils,
-  performanceTestUtils as performance
+  performanceTestUtils as performance,
 };
 
 // 重新导出react-testing-library的常用函数

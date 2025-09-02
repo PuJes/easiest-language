@@ -5,7 +5,7 @@ import type { LearningResource } from '../types';
  * 为每种语言提供推荐的学习资源
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T06:36:51.157Z
+ * 最后更新时间: 2025-09-02T05:15:50.777Z
  */
 export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> = {
   'ar': [
@@ -22,7 +22,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.lqtoronto.com/madinah-arabic/',
       'description': 'Classical Arabic learning textbook with comprehensive grammar and vocabulary',
       'free': true
-    }
+    },
   ],
   'de': [
     {
@@ -38,7 +38,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.germanpod101.com',
       'description': 'Systematic German audio program with structured lessons and native pronunciation',
       'free': false
-    }
+    },
   ],
   'el': [
     {
@@ -47,7 +47,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.greekpod101.com',
       'description': 'Systematic Greek language podcast with ancient and modern Greek lessons',
       'free': false
-    }
+    },
   ],
   'en': [
     {
@@ -63,7 +63,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.bbc.co.uk/learningenglish',
       'description': 'Free online English learning platform with news, grammar, and vocabulary lessons',
       'free': true
-    }
+    },
   ],
   'es': [
     {
@@ -86,7 +86,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://conjuguemos.com',
       'description': 'Interactive Spanish verb conjugation practice with customizable exercises',
       'free': true
-    }
+    },
   ],
   'fi': [
     {
@@ -95,7 +95,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.finnishpod101.com',
       'description': 'Comprehensive Finnish language podcast with grammar explanations and cultural insights',
       'free': false
-    }
+    },
   ],
   'fr': [
     {
@@ -111,7 +111,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://conjuguemos.com/list/verb/french',
       'description': 'Interactive French verb conjugation practice with customizable exercises',
       'free': true
-    }
+    },
   ],
   'he': [
     {
@@ -120,7 +120,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.hebrewpod101.com',
       'description': 'Comprehensive Hebrew language podcast with biblical and modern Hebrew content',
       'free': false
-    }
+    },
   ],
   'hi': [
     {
@@ -129,7 +129,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.hindipod101.com',
       'description': 'Structured Hindi language podcast with native speakers and cultural context',
       'free': false
-    }
+    },
   ],
   'id': [
     {
@@ -138,7 +138,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.indonesianpod101.com',
       'description': 'Structured Indonesian language podcast with native speakers and vocabulary',
       'free': false
-    }
+    },
   ],
   'it': [
     {
@@ -153,7 +153,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'type': 'app',
       'description': 'Interactive Italian learning app with grammar explanations for beginners',
       'free': false
-    }
+    },
   ],
   'ja': [
     {
@@ -175,7 +175,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://apps.ankiweb.net',
       'description': 'Spaced repetition flashcard app for Japanese kanji and vocabulary learning',
       'free': true
-    }
+    },
   ],
   'ko': [
     {
@@ -191,7 +191,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://talktomeinkorean.com',
       'description': 'Popular Korean learning website with free lessons and cultural content',
       'free': true
-    }
+    },
   ],
   'nl': [
     {
@@ -200,7 +200,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.dutchpod101.com',
       'description': 'Comprehensive Dutch language podcast with practical lessons and cultural context',
       'free': false
-    }
+    },
   ],
   'pl': [
     {
@@ -209,7 +209,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.polishpod101.com',
       'description': 'Comprehensive Polish language podcast with grammar explanations and cultural context',
       'free': false
-    }
+    },
   ],
   'pt': [
     {
@@ -225,7 +225,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.portuguesepod101.com',
       'description': 'Systematic Portuguese audio lessons with native speakers and grammar',
       'free': false
-    }
+    },
   ],
   'ru': [
     {
@@ -241,7 +241,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.duolingo.com/course/ru/en',
       'description': 'Gamified Russian learning app with bite-sized lessons and exercises',
       'free': true
-    }
+    },
   ],
   'th': [
     {
@@ -250,7 +250,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.thaipod101.com',
       'description': 'Comprehensive Thai language podcast with pronunciation guides and cultural insights',
       'free': false
-    }
+    },
   ],
   'tr': [
     {
@@ -259,7 +259,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.turkishpod101.com',
       'description': 'Structured Turkish language podcast with native speakers and conversation skills',
       'free': false
-    }
+    },
   ],
   'vi': [
     {
@@ -268,7 +268,7 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'url': 'https://www.vietnamesepod101.com',
       'description': 'Systematic Vietnamese language podcast with native speakers and vocabulary',
       'free': false
-    }
+    },
   ],
   'zh': [
     {
@@ -289,8 +289,8 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'type': 'app',
       'description': 'Comprehensive Chinese dictionary app with handwriting recognition and examples',
       'free': true
-    }
-  ]
+    },
+  ],
 };
 
 export default LEARNING_RESOURCES_BY_LANGUAGE;

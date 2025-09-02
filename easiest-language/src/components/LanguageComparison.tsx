@@ -247,7 +247,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
                 className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{lang.flag}</span>
+                  <span className="text-2xl">{lang.flagEmoji}</span>
                   {lang.name}
                 </div>
               </th>
@@ -382,7 +382,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
                     className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{lang.flag}</span>
+                      <span className="text-2xl">{lang.flagEmoji}</span>
                       <span className="font-medium text-gray-900 dark:text-white">{lang.name}</span>
                     </div>
                     <FSIBadge category={lang.fsi.category} size="sm" showLabel />
@@ -417,7 +417,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
                     <div key={lang.id} className="space-y-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className="text-lg">{lang.flag}</span>
+                          <span className="text-lg">{lang.flagEmoji}</span>
                           <span className="font-medium text-gray-900 dark:text-white">
                             {lang.name}
                           </span>

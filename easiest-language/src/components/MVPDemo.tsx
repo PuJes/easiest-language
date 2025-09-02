@@ -39,8 +39,7 @@ const MVPDemo: React.FC = () => {
       if (!search) return true;
       const keyword = search.toLowerCase();
       return (
-        lang.name.toLowerCase().includes(keyword) ||
-        lang.nativeName.toLowerCase().includes(keyword)
+        lang.name.toLowerCase().includes(keyword) || lang.nativeName.toLowerCase().includes(keyword)
       );
     });
 
@@ -71,7 +70,7 @@ const MVPDemo: React.FC = () => {
       alert('Please select at least 2 languages for comparison');
       return;
     }
-    
+
     // 构建URL参数，将选中的语言ID用逗号分隔
     const languageIds = selectedLanguages.join(',');
     // 使用Next.js路由跳转到对比页面，并传递语言ID参数
@@ -133,7 +132,11 @@ const MVPDemo: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <StatsDashboard languages={filteredLanguages} className="mb-6" />
+            <StatsDashboard
+              languages={languages}
+              filteredLanguages={filteredLanguages}
+              className="mb-6"
+            />
 
             {/* 快速筛选 */}
             <motion.div
@@ -164,7 +167,9 @@ const MVPDemo: React.FC = () => {
                   >
                     {languages
                       .filter((l) =>
-                        [l.name, l.nativeName].some((t) => t.toLowerCase().includes(search.toLowerCase()))
+                        [l.name, l.nativeName].some((t) =>
+                          t.toLowerCase().includes(search.toLowerCase())
+                        )
                       )
                       .slice(0, 5)
                       .map((l) => (

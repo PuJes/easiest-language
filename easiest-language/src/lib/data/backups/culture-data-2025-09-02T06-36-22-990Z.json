@@ -1,0 +1,33 @@
+{
+  "test": {
+    "overview": "这是一个测试语言的文化概述",
+    "businessUse": "这是一个测试语言的商务用途描述",
+    "entertainment": [
+      "测试音乐",
+      "测试电影"
+    ],
+    "cuisine": [
+      "测试美食",
+      "测试饮品"
+    ]
+  },
+  "es": {
+    "overview": "es is a fascinating language with unique cultural characteristics. Learning it opens doors to new perspectives and cultural experiences.",
+    "businessUse": "es can be valuable for international business, especially in regions where it's widely spoken.",
+    "entertainment": [
+      "Local Music",
+      "Traditional Arts",
+      "Cultural Festivals",
+      "Local Cinema",
+      "Traditional Games",
+      "点点滴滴的点点滴滴"
+    ],
+    "cuisine": [
+      "Traditional Dishes",
+      "Local Specialties",
+      "Street Food",
+      "Regional Cuisine",
+      "Local Beverages"
+    ]
+  }
+}

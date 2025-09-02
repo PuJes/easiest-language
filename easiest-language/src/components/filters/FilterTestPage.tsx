@@ -18,88 +18,113 @@ const mockLanguages: Language[] = [
     name: 'Spanish',
     nativeName: 'Español',
     family: 'Indo-European',
-    region: 'Europe',
-    fsi: { category: 1 as FSICategory, hours: 600, description: 'Easy' },
-    difficulty: { overall: 3, reasoning: 'Simple grammar' },
+    subfamily: 'Romance',
+    writingSystem: 'Latin',
+    fsi: { 
+      category: 1 as FSICategory, 
+      hours: 600, 
+      description: 'Easy',
+      details: { grammar: 2, vocabulary: 3, pronunciation: 2, writing: 1, cultural: 2 }
+    },
+    difficulty: { overall: 3, grammar: 3, pronunciation: 2, vocabulary: 3 },
     speakers: 500000000,
     countries: ['Spain', 'Mexico', 'Argentina'],
-    highlights: ['Easy pronunciation', 'Romance language'],
     flagEmoji: '🇪🇸',
-    script: 'Latin',
+    color: '#28a745',
   },
   {
     id: 'chinese',
     name: 'Chinese',
     nativeName: '中文',
     family: 'Sino-Tibetan',
-    region: 'Asia',
-    fsi: { category: 5 as FSICategory, hours: 2200, description: 'Very Hard' },
-    difficulty: { overall: 9, reasoning: 'Complex writing system' },
+    subfamily: 'Sinitic',
+    writingSystem: 'Chinese Characters',
+    fsi: { 
+      category: 5 as FSICategory, 
+      hours: 2200, 
+      description: 'Very Hard',
+      details: { grammar: 5, vocabulary: 5, pronunciation: 5, writing: 5, cultural: 5 }
+    },
+    difficulty: { overall: 9, grammar: 6, pronunciation: 8, vocabulary: 10 },
     speakers: 1400000000,
     countries: ['China', 'Taiwan', 'Singapore'],
-    highlights: ['Tonal language', 'Logographic script'],
     flagEmoji: '🇨🇳',
-    script: 'Chinese',
+    color: '#6f42c1',
   },
   {
     id: 'french',
     name: 'French',
     nativeName: 'Français',
     family: 'Indo-European',
-    region: 'Europe',
-    fsi: { category: 2 as FSICategory, hours: 900, description: 'Medium' },
-    difficulty: { overall: 5, reasoning: 'Complex grammar' },
+    subfamily: 'Romance',
+    writingSystem: 'Latin',
+    fsi: { 
+      category: 2 as FSICategory, 
+      hours: 900, 
+      description: 'Medium',
+      details: { grammar: 3, vocabulary: 3, pronunciation: 3, writing: 2, cultural: 3 }
+    },
+    difficulty: { overall: 5, grammar: 6, pronunciation: 4, vocabulary: 5 },
     speakers: 280000000,
     countries: ['France', 'Canada', 'Belgium'],
-    highlights: ['Romance language', 'Nasal sounds'],
     flagEmoji: '🇫🇷',
-    script: 'Latin',
+    color: '#28a745',
   },
   {
     id: 'japanese',
     name: 'Japanese',
     nativeName: '日本語',
     family: 'Japonic',
-    region: 'Asia',
-    fsi: { category: 4 as FSICategory, hours: 1800, description: 'Hard' },
-    difficulty: { overall: 8, reasoning: 'Complex writing system' },
+    subfamily: 'Sinitic',
+    writingSystem: 'Chinese Characters',
+    fsi: { 
+      category: 4 as FSICategory, 
+      hours: 1800, 
+      description: 'Hard',
+      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 }
+    },
+    difficulty: { overall: 8, grammar: 8, pronunciation: 7, vocabulary: 10 },
     speakers: 125000000,
     countries: ['Japan'],
-    highlights: ['Three writing systems', 'Honorific system'],
     flagEmoji: '🇯🇵',
-    script: 'Japanese',
+    color: '#6f42c1',
   },
   {
     id: 'arabic',
     name: 'Arabic',
     nativeName: 'العربية',
     family: 'Afro-Asiatic',
-    region: 'Africa',
-    fsi: { category: 4 as FSICategory, hours: 1800, description: 'Hard' },
-    difficulty: { overall: 8, reasoning: 'Right-to-left script' },
+    subfamily: 'Semitic',
+    writingSystem: 'Arabic',
+    fsi: { 
+      category: 4 as FSICategory, 
+      hours: 1800, 
+      description: 'Hard',
+      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 }
+    },
+    difficulty: { overall: 8, grammar: 8, pronunciation: 7, vocabulary: 7 },
     speakers: 400000000,
     countries: ['Saudi Arabia', 'Egypt', 'Morocco'],
-    highlights: ['Right-to-left', 'Semitic language'],
     flagEmoji: '🇸🇦',
-    script: 'Arabic',
-    rtl: true,
+    color: '#dc3545',
   },
 ];
 
 export const FilterTestPage: React.FC = () => {
   const {
     filterState,
-    updateFilter,
+    setFSICategories,
+    setLanguageFamilies,
+    setRegions,
+    setSearchQuery,
     resetFilters,
-    applyFilters,
-    hasActiveFilters,
-    activeFilterCount,
-  } = useAdvancedFilter();
+    getFilterStats,
+  } = useAdvancedFilter(mockLanguages);
 
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
   // 应用筛选
-  const filteredLanguages = applyFilters(mockLanguages).languages;
+  const filteredLanguages = getFilterStats().filteredLanguages;
 
   // 统计数据
   const fsiCounts = mockLanguages.reduce(
@@ -115,16 +140,36 @@ export const FilterTestPage: React.FC = () => {
       acc[lang.family] = (acc[lang.family] || 0) + 1;
       return acc;
     },
-    {} as Record<LanguageFamily, number>
+    {} as Record<string, number>
   );
 
   const regionCounts = mockLanguages.reduce(
     (acc, lang) => {
-      acc[lang.region] = (acc[lang.region] || 0) + 1;
+      // 根据国家推断区域
+      const region = getRegionFromCountries(lang.countries);
+      acc[region] = (acc[region] || 0) + 1;
       return acc;
     },
-    {} as Record<GeographicRegion, number>
+    {} as Record<string, number>
   );
+
+  // 辅助函数：根据国家推断区域
+  function getRegionFromCountries(countries: string[]): string {
+    const regionMap: Record<string, string> = {
+      'Spain': 'Europe', 'France': 'Europe', 'Germany': 'Europe',
+      'China': 'Asia', 'Japan': 'Asia', 'Taiwan': 'Asia', 'Singapore': 'Asia',
+      'Saudi Arabia': 'Middle East', 'Egypt': 'Middle East', 'Morocco': 'Middle East',
+      'Mexico': 'North America', 'Argentina': 'South America',
+      'Canada': 'North America', 'Belgium': 'Europe'
+    };
+    
+    for (const country of countries) {
+      if (regionMap[country]) {
+        return regionMap[country];
+      }
+    }
+    return 'Other';
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -134,8 +179,16 @@ export const FilterTestPage: React.FC = () => {
           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
             <span>总语言数: {mockLanguages.length}</span>
             <span>筛选后: {filteredLanguages.length}</span>
-            <span>活跃筛选: {activeFilterCount}</span>
-            {hasActiveFilters && (
+            <span>活跃筛选: {Object.keys(filterState).filter(key => 
+              Array.isArray(filterState[key as keyof typeof filterState]) 
+                ? (filterState[key as keyof typeof filterState] as any[]).length > 0
+                : filterState[key as keyof typeof filterState] !== ''
+            ).length}</span>
+            {Object.keys(filterState).some(key => 
+              Array.isArray(filterState[key as keyof typeof filterState]) 
+                ? (filterState[key as keyof typeof filterState] as any[]).length > 0
+                : filterState[key as keyof typeof filterState] !== ''
+            ) && (
               <button
                 onClick={resetFilters}
                 className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
@@ -154,7 +207,7 @@ export const FilterTestPage: React.FC = () => {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">智能搜索</h2>
               <SmartSearchFilter
                 searchQuery={filterState.searchQuery}
-                onSearchChange={(query) => updateFilter({ searchQuery: query })}
+                onSearchChange={setSearchQuery}
                 languages={mockLanguages}
                 onSearchResults={setSearchResults}
                 showSuggestions={true}
@@ -172,7 +225,7 @@ export const FilterTestPage: React.FC = () => {
               <FSICategoryFilter
                 selectedCategories={filterState.fsiCategories}
                 availableCategories={[0, 1, 2, 3, 4, 5]}
-                onChange={(categories) => updateFilter({ fsiCategories: categories })}
+                onChange={setFSICategories}
               />
             </div>
 
@@ -181,7 +234,7 @@ export const FilterTestPage: React.FC = () => {
               <LanguageFamilyFilter
                 selectedFamilies={filterState.languageFamilies}
                 availableFamilies={['Indo-European', 'Sino-Tibetan', 'Japonic', 'Afro-Asiatic']}
-                onChange={(families) => updateFilter({ languageFamilies: families })}
+                onChange={setLanguageFamilies}
                 familyCounts={familyCounts}
                 showSearch={true}
                 maxVisible={4}
@@ -193,7 +246,7 @@ export const FilterTestPage: React.FC = () => {
               <GeographicRegionFilter
                 selectedRegions={filterState.regions}
                 availableRegions={['Europe', 'Asia', 'Africa']}
-                onChange={(regions) => updateFilter({ regions })}
+                onChange={setRegions}
                 regionCounts={regionCounts}
                 viewMode="list"
               />
@@ -250,7 +303,7 @@ export const FilterTestPage: React.FC = () => {
                           <span className="font-medium">家族:</span> {language.family}
                         </p>
                         <p>
-                          <span className="font-medium">区域:</span> {language.region}
+                          <span className="font-medium">区域:</span> {getRegionFromCountries(language.countries)}
                         </p>
                         <p>
                           <span className="font-medium">学习时长:</span> {language.fsi.hours}小时
@@ -266,14 +319,12 @@ export const FilterTestPage: React.FC = () => {
                       </div>
 
                       <div className="mt-3 flex flex-wrap gap-1">
-                        {language.highlights.slice(0, 2).map((highlight) => (
-                          <span
-                            key={highlight}
-                            className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                          >
-                            {highlight}
-                          </span>
-                        ))}
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          FSI {language.fsi.category}
+                        </span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          {language.family}
+                        </span>
                       </div>
                     </div>
                   ))}

@@ -11,13 +11,21 @@ const ReactECharts = dynamic(() => import('echarts-for-react'), {
 });
 
 interface StatsDashboardProps {
-  languages: Language[];
+  languages: Language[]; // 所有语言数据
+  filteredLanguages?: Language[]; // 筛选后的语言数据（可选）
   className?: string;
 }
 
-const StatsDashboard: React.FC<StatsDashboardProps> = ({ languages, className = '' }) => {
+const StatsDashboard: React.FC<StatsDashboardProps> = ({
+  languages,
+  filteredLanguages,
+  className = '',
+}) => {
+  // 使用筛选后的语言数据进行统计计算，如果没有筛选则使用所有语言
+  const displayLanguages = filteredLanguages || languages;
+
   // 计算难度分布
-  const difficultyDistribution = languages.reduce(
+  const difficultyDistribution = displayLanguages.reduce(
     (acc, lang) => {
       const category = lang.fsi.category;
       acc[category] = (acc[category] || 0) + 1;
@@ -28,14 +36,14 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ languages, className = 
 
   // 计算平均学习时间
   const averageLearningTime = Math.round(
-    languages.reduce((sum, lang) => {
+    displayLanguages.reduce((sum, lang) => {
       if (lang.fsi.category === 0) return sum;
       return sum + lang.fsi.hours;
-    }, 0) / languages.filter((lang) => lang.fsi.category !== 0).length
+    }, 0) / displayLanguages.filter((lang) => lang.fsi.category !== 0).length
   );
 
   // 最受欢迎的语言家族
-  const familyCounts = languages.reduce(
+  const familyCounts = displayLanguages.reduce(
     (acc, lang) => {
       acc[lang.family] = (acc[lang.family] || 0) + 1;
       return acc;
@@ -140,6 +148,14 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ languages, className = 
           <span className="text-gray-600 dark:text-gray-300">Total Languages</span>
           <span className="text-2xl font-bold text-blue-600">{languages.length}</span>
         </motion.div>
+
+        {/* 如果存在筛选，显示筛选结果数量 */}
+        {filteredLanguages && filteredLanguages.length !== languages.length && (
+          <motion.div className="flex items-center justify-between" whileHover={{ scale: 1.02 }}>
+            <span className="text-gray-600 dark:text-gray-300">Filtered Results</span>
+            <span className="text-lg font-semibold text-green-600">{filteredLanguages.length}</span>
+          </motion.div>
+        )}
 
         <motion.div className="flex items-center justify-between" whileHover={{ scale: 1.02 }}>
           <span className="text-gray-600 dark:text-gray-300">Avg. Study Time</span>

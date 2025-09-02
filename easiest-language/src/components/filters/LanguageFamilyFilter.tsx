@@ -5,20 +5,20 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { LanguageFamily } from '../../lib/types/language';
+// import { LanguageFamily } from '../../lib/types/language';
 
 interface LanguageFamilyFilterProps {
   /** 当前选中的语言家族 */
-  selectedFamilies: LanguageFamily[];
+  selectedFamilies: string[];
 
   /** 可用的语言家族选项 */
-  availableFamilies: LanguageFamily[];
+  availableFamilies: string[];
 
   /** 选择变化回调 */
-  onChange: (families: LanguageFamily[]) => void;
+  onChange: (families: string[]) => void;
 
   /** 各家族的语言数量统计 */
-  familyCounts?: Record<LanguageFamily, number>;
+  familyCounts?: Record<string, number>;
 
   /** 是否禁用 */
   disabled?: boolean;
@@ -37,7 +37,7 @@ interface LanguageFamilyFilterProps {
  * 语言家族信息配置
  */
 const LANGUAGE_FAMILY_INFO: Record<
-  LanguageFamily,
+  string,
   {
     label: string;
     description: string;
@@ -178,7 +178,7 @@ export const LanguageFamilyFilter: React.FC<LanguageFamilyFilterProps> = ({
   /**
    * 处理单个家族的选择/取消选择
    */
-  const handleFamilyToggle = (family: LanguageFamily) => {
+  const handleFamilyToggle = (family: string) => {
     if (disabled) return;
 
     const isSelected = selectedFamilies.includes(family);
@@ -210,7 +210,7 @@ export const LanguageFamilyFilter: React.FC<LanguageFamilyFilterProps> = ({
   /**
    * 处理键盘事件
    */
-  const handleKeyDown = (event: React.KeyboardEvent, family: LanguageFamily) => {
+  const handleKeyDown = (event: React.KeyboardEvent, family: string) => {
     if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
       handleFamilyToggle(family);

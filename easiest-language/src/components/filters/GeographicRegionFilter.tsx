@@ -5,20 +5,20 @@
  */
 
 import React, { useState } from 'react';
-import { GeographicRegion } from '../../lib/types/language';
+// import { GeographicRegion } from '../../lib/types/language';
 
 interface GeographicRegionFilterProps {
   /** 当前选中的地理区域 */
-  selectedRegions: GeographicRegion[];
+  selectedRegions: string[];
 
   /** 可用的地理区域选项 */
-  availableRegions: GeographicRegion[];
+  availableRegions: string[];
 
   /** 选择变化回调 */
-  onChange: (regions: GeographicRegion[]) => void;
+  onChange: (regions: string[]) => void;
 
   /** 各区域的语言数量统计 */
-  regionCounts?: Record<GeographicRegion, number>;
+  regionCounts?: Record<string, number>;
 
   /** 是否禁用 */
   disabled?: boolean;
@@ -34,7 +34,7 @@ interface GeographicRegionFilterProps {
  * 地理区域信息配置
  */
 const GEOGRAPHIC_REGION_INFO: Record<
-  GeographicRegion,
+  string,
   {
     label: string;
     description: string;
@@ -108,7 +108,7 @@ export const GeographicRegionFilter: React.FC<GeographicRegionFilterProps> = ({
   /**
    * 处理单个区域的选择/取消选择
    */
-  const handleRegionToggle = (region: GeographicRegion) => {
+  const handleRegionToggle = (region: string) => {
     if (disabled) return;
 
     const isSelected = selectedRegions.includes(region);
@@ -141,7 +141,7 @@ export const GeographicRegionFilter: React.FC<GeographicRegionFilterProps> = ({
   /**
    * 处理键盘事件
    */
-  const handleKeyDown = (event: React.KeyboardEvent, region: GeographicRegion) => {
+  const handleKeyDown = (event: React.KeyboardEvent, region: string) => {
     if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
       handleRegionToggle(region);

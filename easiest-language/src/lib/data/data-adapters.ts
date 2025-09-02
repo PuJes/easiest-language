@@ -6,6 +6,7 @@
 import { Language, FSIInfo, LanguageDifficulty, FSICategory } from '../types';
 import { FSI_LANGUAGE_DATA } from './languages';
 import { LEARNING_RESOURCES_BY_LANGUAGE } from './learning-resources';
+import { getCultureInfo } from './culture-data';
 
 /**
  * 根据FSI类别生成默认的详细难度评分
@@ -220,7 +221,7 @@ export function getLanguageDetailData(id: string): ExtendedLanguageDetail | null
     ...baseLanguage,
     // 格式化speakers数据为详细结构
     speakers: {
-      native: formatSpeakerCount(Math.floor(baseLanguage.speakers * 0.7)), // 估算母语使用者为总数的70%
+      native: formatSpeakerCount(calculateNativeSpeakers(baseLanguage.speakers, baseLanguage.id)), // 根据语言类型计算母语使用者
       total: formatSpeakerCount(baseLanguage.speakers),
       rank: calculateSpeakerRank(baseLanguage.speakers), // 根据使用人数计算排名
     },
@@ -240,25 +241,8 @@ export function getLanguageDetailData(id: string): ExtendedLanguageDetail | null
       culturalRichness: 4, // 默认文化丰富度
       onlinePresence: Math.min(5, baseLanguage.speakers > 100000000 ? 5 : 3), // 基于使用人数
     },
-    // 生成组件需要的culture数据
-    culture: {
-      overview: `${baseLanguage.name} is a fascinating language with unique cultural characteristics. Learning it opens doors to new perspectives and cultural experiences.`,
-      businessUse: `${baseLanguage.name} can be valuable for international business, especially in regions where it's widely spoken.`,
-      entertainment: [
-        'Local Music',
-        'Traditional Arts',
-        'Cultural Festivals',
-        'Local Cinema',
-        'Traditional Games',
-      ],
-      cuisine: [
-        'Traditional Dishes',
-        'Local Specialties',
-        'Street Food',
-        'Regional Cuisine',
-        'Local Beverages',
-      ],
-    },
+    // 使用真实的文化信息数据
+    culture: getCultureInfo(id),
   };
 }
 
@@ -277,33 +261,99 @@ function formatSpeakerCount(count: number): string {
 }
 
 /**
+ * 根据语言类型计算母语使用者数量
+ */
+function calculateNativeSpeakers(totalSpeakers: number, languageId: string): number {
+  // 不同语言的母语使用者比例不同
+  const nativeRatios: { [key: string]: number } = {
+    'zh': 0.95, // 中文主要是母语使用者
+    'en': 0.25, // 英语很多是第二语言使用者
+    'es': 0.85, // 西班牙语主要是母语使用者
+    'hi': 0.90, // 印地语主要是母语使用者
+    'ar': 0.80, // 阿拉伯语主要是母语使用者
+    'pt': 0.85, // 葡萄牙语主要是母语使用者
+    'bn': 0.90, // 孟加拉语主要是母语使用者
+    'ru': 0.85, // 俄语主要是母语使用者
+    'ja': 0.95, // 日语主要是母语使用者
+    'pa': 0.90, // 旁遮普语主要是母语使用者
+    'de': 0.80, // 德语主要是母语使用者
+    'ko': 0.95, // 韩语主要是母语使用者
+    'fr': 0.60, // 法语很多是第二语言使用者
+    'tr': 0.90, // 土耳其语主要是母语使用者
+    'vi': 0.95, // 越南语主要是母语使用者
+    'it': 0.90, // 意大利语主要是母语使用者
+    'th': 0.95, // 泰语主要是母语使用者
+    'ur': 0.85, // 乌尔都语主要是母语使用者
+    'pl': 0.95, // 波兰语主要是母语使用者
+    'fa': 0.90, // 波斯语主要是母语使用者
+  };
+  
+  const ratio = nativeRatios[languageId] || 0.80; // 默认80%
+  return Math.floor(totalSpeakers * ratio);
+}
+
+/**
  * 根据使用人数计算全球排名
  */
 function calculateSpeakerRank(speakers: number): number {
-  // 简化实现：基于使用人数给出大致排名
-  if (speakers >= 1000000000) return 1; // 中文
-  if (speakers >= 500000000) return 2; // 英语、西班牙语等
-  if (speakers >= 250000000) return 3; // 阿拉伯语、葡萄牙语等
-  if (speakers >= 100000000) return 4; // 俄语、日语等
-  if (speakers >= 50000000) return 5; // 德语、法语等
-  if (speakers >= 10000000) return 6; // 其他主要语言
-  return 7; // 较小语言
+  // 更精确的排名计算
+  if (speakers >= 1100000000) return 1; // 中文
+  if (speakers >= 1300000000) return 1; // 英语
+  if (speakers >= 500000000) return 3; // 西班牙语、印地语等
+  if (speakers >= 300000000) return 4; // 阿拉伯语、孟加拉语等
+  if (speakers >= 200000000) return 5; // 葡萄牙语、俄语等
+  if (speakers >= 100000000) return 6; // 日语、德语等
+  if (speakers >= 50000000) return 7; // 法语、意大利语等
+  if (speakers >= 10000000) return 8; // 其他主要语言
+  return 9; // 较小语言
 }
 
 /**
  * 根据国家列表推断大陆
  */
 function getLanguageContinents(countries: string[]): string[] {
-  // 简化实现，实际项目中可以建立完整的国家-大陆映射
+  // 更完整的国家-大陆映射
   const continentMap: { [key: string]: string } = {
-    Spain: 'Europe',
-    Mexico: 'North America',
-    France: 'Europe',
-    Germany: 'Europe',
-    China: 'Asia',
-    Japan: 'Asia',
-    Italy: 'Europe',
-    Brazil: 'South America',
+    // 欧洲
+    'Spain': 'Europe', 'France': 'Europe', 'Germany': 'Europe', 'Italy': 'Europe',
+    'United Kingdom': 'Europe', 'Poland': 'Europe', 'Romania': 'Europe', 'Netherlands': 'Europe',
+    'Sweden': 'Europe', 'Norway': 'Europe', 'Denmark': 'Europe', 'Finland': 'Europe',
+    'Greece': 'Europe', 'Czech Republic': 'Europe', 'Slovakia': 'Europe', 'Croatia': 'Europe',
+    'Bulgaria': 'Europe', 'Latvia': 'Europe', 'Lithuania': 'Europe', 'Slovenia': 'Europe',
+    'Ukraine': 'Europe', 'Estonia': 'Europe', 'Hungary': 'Europe', 'Austria': 'Europe',
+    'Switzerland': 'Europe', 'Belgium': 'Europe', 'Portugal': 'Europe', 'Ireland': 'Europe',
+    'San Marino': 'Europe', 'Vatican City': 'Europe', 'Liechtenstein': 'Europe', 'Luxembourg': 'Europe',
+    'Andorra': 'Europe', 'Cyprus': 'Europe', 'Moldova': 'Europe', 'Belarus': 'Europe',
+    'Kazakhstan': 'Europe', 'Kyrgyzstan': 'Europe', 'Russia': 'Europe',
+    
+    // 亚洲
+    'China': 'Asia', 'Japan': 'Asia', 'South Korea': 'Asia', 'North Korea': 'Asia',
+    'India': 'Asia', 'Thailand': 'Asia', 'Vietnam': 'Asia', 'Indonesia': 'Asia',
+    'Malaysia': 'Asia', 'Singapore': 'Asia', 'Philippines': 'Asia', 'Taiwan': 'Asia',
+    'Hong Kong': 'Asia', 'Macau': 'Asia', 'Bangladesh': 'Asia', 'Pakistan': 'Asia',
+    'Sri Lanka': 'Asia', 'Mongolia': 'Asia', 'Turkey': 'Asia', 'Iran': 'Asia',
+    'Afghanistan': 'Asia', 'Tajikistan': 'Asia', 'Israel': 'Asia', 'Saudi Arabia': 'Asia',
+    'Egypt': 'Asia', 'Iraq': 'Asia', 'Jordan': 'Asia', 'Lebanon': 'Asia',
+    'Syria': 'Asia', 'United Arab Emirates': 'Asia', 'Brunei': 'Asia',
+    
+    // 北美洲
+    'United States of America': 'North America', 'Canada': 'North America', 'Mexico': 'North America',
+    
+    // 南美洲
+    'Brazil': 'South America', 'Argentina': 'South America', 'Colombia': 'South America',
+    'Peru': 'South America', 'Venezuela': 'South America', 'Chile': 'South America',
+    'Ecuador': 'South America', 'Bolivia': 'South America', 'Paraguay': 'South America',
+    'Uruguay': 'South America', 'Guyana': 'South America', 'Suriname': 'South America',
+    
+    // 非洲
+    'Nigeria': 'Africa', 'South Africa': 'Africa', 'Ethiopia': 'Africa', 'Tanzania': 'Africa',
+    'Kenya': 'Africa', 'Uganda': 'Africa', 'Democratic Republic of the Congo': 'Africa',
+    'Algeria': 'Africa', 'Morocco': 'Africa', 'Tunisia': 'Africa', 'Senegal': 'Africa',
+    'Ivory Coast': 'Africa', 'Angola': 'Africa', 'Mozambique': 'Africa', 'Cape Verde': 'Africa',
+    'Namibia': 'Africa', 'Benin': 'Africa', 'Niger': 'Africa',
+    
+    // 大洋洲
+    'Australia': 'Oceania', 'New Zealand': 'Oceania', 'Fiji': 'Oceania', 'Papua New Guinea': 'Oceania',
   };
 
   const continents = countries
