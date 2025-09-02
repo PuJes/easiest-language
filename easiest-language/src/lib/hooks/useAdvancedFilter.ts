@@ -260,9 +260,12 @@ export function useAdvancedFilter(languages: Language[]): UseAdvancedFilterRetur
           newState.languageFamilies.length > 0 ||
           newState.regions.length > 0 ||
           newState.searchQuery.trim() !== '' ||
-          (newState.difficultyRange[0] > 1 || newState.difficultyRange[1] < 10) ||
-          (newState.learningTimeRange[0] > 0 || newState.learningTimeRange[1] < 3000) ||
-          (newState.speakersRange[0] > 0 || newState.speakersRange[1] < 2000000000);
+          newState.difficultyRange[0] > 1 ||
+          newState.difficultyRange[1] < 10 ||
+          newState.learningTimeRange[0] > 0 ||
+          newState.learningTimeRange[1] < 3000 ||
+          newState.speakersRange[0] > 0 ||
+          newState.speakersRange[1] < 2000000000;
 
         return { ...newState, isActive };
       });

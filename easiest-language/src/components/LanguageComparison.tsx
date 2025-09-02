@@ -41,12 +41,12 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
     const languagesParam = searchParams.get('languages');
     if (languagesParam && languagesParam.trim()) {
       // 将逗号分隔的语言ID字符串转换为数组
-      const languageIds = languagesParam.split(',').map(id => id.trim());
+      const languageIds = languagesParam.split(',').map((id) => id.trim());
       // 根据ID找到对应的语言对象
       const languagesFromParams = languageIds
-        .map(id => allLanguages.find(lang => lang.id === id))
+        .map((id) => allLanguages.find((lang) => lang.id === id))
         .filter((lang): lang is Language => lang !== undefined);
-      
+
       // 如果找到了有效的语言，则设置为选中的语言
       if (languagesFromParams.length > 0) {
         setSelectedLanguages(languagesFromParams);
@@ -407,9 +407,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
             <div className="h-full flex items-center justify-center">
               <div className="space-y-6 w-full max-w-md">
                 {selectedLanguages.map((lang, index) => {
-                  const maxHours = Math.max(
-                    ...selectedLanguages.map((l) => l.fsi.hours || 0)
-                  );
+                  const maxHours = Math.max(...selectedLanguages.map((l) => l.fsi.hours || 0));
                   const hours = lang.fsi.hours || 0;
                   const percentage = maxHours > 0 ? (hours / maxHours) * 100 : 0;
 

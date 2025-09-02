@@ -31,17 +31,19 @@ async function readCultureData(): Promise<Record<string, CultureInfo>> {
     } catch (jsonError) {
       console.log('JSON文件不存在，尝试读取TypeScript文件');
     }
-    
+
     // 如果JSON文件不存在，尝试从TypeScript文件读取
     const fileContent = await fs.readFile(CULTURE_DATA_PATH, 'utf-8');
-    
+
     // 提取CULTURE_DATA对象的内容
-    const match = fileContent.match(/export const CULTURE_DATA: Record<string, CultureInfo> = \{([\s\S]*?)\};/);
+    const match = fileContent.match(
+      /export const CULTURE_DATA: Record<string, CultureInfo> = \{([\s\S]*?)\};/
+    );
     if (!match) {
       console.log('无法从TypeScript文件解析数据，返回空对象');
       return {};
     }
-    
+
     // 尝试解析TypeScript对象内容
     try {
       const objectContent = match[1];
@@ -49,7 +51,7 @@ async function readCultureData(): Promise<Record<string, CultureInfo>> {
       const jsonString = objectContent
         .replace(/(\w+):/g, '"$1":') // 将键名加引号
         .replace(/'/g, '"'); // 将单引号替换为双引号
-      
+
       return JSON.parse(`{${jsonString}}`);
     } catch (parseError) {
       console.error('解析TypeScript对象失败:', parseError);
@@ -68,10 +70,10 @@ async function saveCultureData(cultureData: Record<string, CultureInfo>): Promis
   try {
     // 创建文化信息JSON文件路径
     const jsonPath = path.join(process.cwd(), 'src/lib/data/culture-data.json');
-    
+
     // 保存为JSON文件
     await fs.writeFile(jsonPath, JSON.stringify(cultureData, null, 2), 'utf-8');
-    
+
     // 同时更新TypeScript文件
     const tsContent = `/**
  * 文化信息数据
@@ -145,7 +147,6 @@ export function getLanguagesWithCustomCulture(): string[] {
 `;
 
     await fs.writeFile(CULTURE_DATA_PATH, tsContent, 'utf-8');
-    
   } catch (error) {
     console.error('保存文化信息数据失败:', error);
     throw error;
@@ -177,7 +178,7 @@ export async function POST(request: NextRequest) {
 
     // 读取当前文化信息数据
     const currentData = await readCultureData();
-    
+
     // 更新指定语言的文化信息
     currentData[languageId] = {
       overview: cultureInfo.overview,
@@ -191,11 +192,11 @@ export async function POST(request: NextRequest) {
 
     // 创建备份
     const backupPath = path.join(
-      process.cwd(), 
-      'src/lib/data/backups', 
+      process.cwd(),
+      'src/lib/data/backups',
       `culture-data-${new Date().toISOString().replace(/[:.]/g, '-')}.json`
     );
-    
+
     // 确保备份目录存在
     await fs.mkdir(path.dirname(backupPath), { recursive: true });
     await fs.writeFile(backupPath, JSON.stringify(currentData, null, 2), 'utf-8');
@@ -206,13 +207,12 @@ export async function POST(request: NextRequest) {
       backupPath: backupPath,
       updatedCount: 1,
     });
-
   } catch (error) {
     console.error('保存文化信息失败:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        message: `保存失败: ${error instanceof Error ? error.message : '未知错误'}` 
+      {
+        success: false,
+        message: `保存失败: ${error instanceof Error ? error.message : '未知错误'}`,
       },
       { status: 500 }
     );
@@ -231,7 +231,7 @@ export async function GET(request: NextRequest) {
       // 获取指定语言的文化信息
       const cultureData = await readCultureData();
       const cultureInfo = cultureData[languageId];
-      
+
       return NextResponse.json({
         success: true,
         data: cultureInfo || null,
@@ -240,20 +240,19 @@ export async function GET(request: NextRequest) {
     } else {
       // 获取所有文化信息
       const cultureData = await readCultureData();
-      
+
       return NextResponse.json({
         success: true,
         data: cultureData,
         count: Object.keys(cultureData).length,
       });
     }
-
   } catch (error) {
     console.error('获取文化信息失败:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        message: `获取失败: ${error instanceof Error ? error.message : '未知错误'}` 
+      {
+        success: false,
+        message: `获取失败: ${error instanceof Error ? error.message : '未知错误'}`,
       },
       { status: 500 }
     );

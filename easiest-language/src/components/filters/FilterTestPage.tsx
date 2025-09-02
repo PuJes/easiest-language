@@ -20,11 +20,11 @@ const mockLanguages: Language[] = [
     family: 'Indo-European',
     subfamily: 'Romance',
     writingSystem: 'Latin',
-    fsi: { 
-      category: 1 as FSICategory, 
-      hours: 600, 
+    fsi: {
+      category: 1 as FSICategory,
+      hours: 600,
       description: 'Easy',
-      details: { grammar: 2, vocabulary: 3, pronunciation: 2, writing: 1, cultural: 2 }
+      details: { grammar: 2, vocabulary: 3, pronunciation: 2, writing: 1, cultural: 2 },
     },
     difficulty: { overall: 3, grammar: 3, pronunciation: 2, vocabulary: 3 },
     speakers: 500000000,
@@ -39,11 +39,11 @@ const mockLanguages: Language[] = [
     family: 'Sino-Tibetan',
     subfamily: 'Sinitic',
     writingSystem: 'Chinese Characters',
-    fsi: { 
-      category: 5 as FSICategory, 
-      hours: 2200, 
+    fsi: {
+      category: 5 as FSICategory,
+      hours: 2200,
       description: 'Very Hard',
-      details: { grammar: 5, vocabulary: 5, pronunciation: 5, writing: 5, cultural: 5 }
+      details: { grammar: 5, vocabulary: 5, pronunciation: 5, writing: 5, cultural: 5 },
     },
     difficulty: { overall: 9, grammar: 6, pronunciation: 8, vocabulary: 10 },
     speakers: 1400000000,
@@ -58,11 +58,11 @@ const mockLanguages: Language[] = [
     family: 'Indo-European',
     subfamily: 'Romance',
     writingSystem: 'Latin',
-    fsi: { 
-      category: 2 as FSICategory, 
-      hours: 900, 
+    fsi: {
+      category: 2 as FSICategory,
+      hours: 900,
       description: 'Medium',
-      details: { grammar: 3, vocabulary: 3, pronunciation: 3, writing: 2, cultural: 3 }
+      details: { grammar: 3, vocabulary: 3, pronunciation: 3, writing: 2, cultural: 3 },
     },
     difficulty: { overall: 5, grammar: 6, pronunciation: 4, vocabulary: 5 },
     speakers: 280000000,
@@ -77,11 +77,11 @@ const mockLanguages: Language[] = [
     family: 'Japonic',
     subfamily: 'Sinitic',
     writingSystem: 'Chinese Characters',
-    fsi: { 
-      category: 4 as FSICategory, 
-      hours: 1800, 
+    fsi: {
+      category: 4 as FSICategory,
+      hours: 1800,
       description: 'Hard',
-      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 }
+      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 },
     },
     difficulty: { overall: 8, grammar: 8, pronunciation: 7, vocabulary: 10 },
     speakers: 125000000,
@@ -96,11 +96,11 @@ const mockLanguages: Language[] = [
     family: 'Afro-Asiatic',
     subfamily: 'Semitic',
     writingSystem: 'Arabic',
-    fsi: { 
-      category: 4 as FSICategory, 
-      hours: 1800, 
+    fsi: {
+      category: 4 as FSICategory,
+      hours: 1800,
       description: 'Hard',
-      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 }
+      details: { grammar: 4, vocabulary: 5, pronunciation: 5, writing: 4, cultural: 4 },
     },
     difficulty: { overall: 8, grammar: 8, pronunciation: 7, vocabulary: 7 },
     speakers: 400000000,
@@ -156,13 +156,22 @@ export const FilterTestPage: React.FC = () => {
   // 辅助函数：根据国家推断区域
   function getRegionFromCountries(countries: string[]): string {
     const regionMap: Record<string, string> = {
-      'Spain': 'Europe', 'France': 'Europe', 'Germany': 'Europe',
-      'China': 'Asia', 'Japan': 'Asia', 'Taiwan': 'Asia', 'Singapore': 'Asia',
-      'Saudi Arabia': 'Middle East', 'Egypt': 'Middle East', 'Morocco': 'Middle East',
-      'Mexico': 'North America', 'Argentina': 'South America',
-      'Canada': 'North America', 'Belgium': 'Europe'
+      Spain: 'Europe',
+      France: 'Europe',
+      Germany: 'Europe',
+      China: 'Asia',
+      Japan: 'Asia',
+      Taiwan: 'Asia',
+      Singapore: 'Asia',
+      'Saudi Arabia': 'Middle East',
+      Egypt: 'Middle East',
+      Morocco: 'Middle East',
+      Mexico: 'North America',
+      Argentina: 'South America',
+      Canada: 'North America',
+      Belgium: 'Europe',
     };
-    
+
     for (const country of countries) {
       if (regionMap[country]) {
         return regionMap[country];
@@ -179,13 +188,18 @@ export const FilterTestPage: React.FC = () => {
           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
             <span>总语言数: {mockLanguages.length}</span>
             <span>筛选后: {filteredLanguages.length}</span>
-            <span>活跃筛选: {Object.keys(filterState).filter(key => 
-              Array.isArray(filterState[key as keyof typeof filterState]) 
-                ? (filterState[key as keyof typeof filterState] as any[]).length > 0
-                : filterState[key as keyof typeof filterState] !== ''
-            ).length}</span>
-            {Object.keys(filterState).some(key => 
-              Array.isArray(filterState[key as keyof typeof filterState]) 
+            <span>
+              活跃筛选:{' '}
+              {
+                Object.keys(filterState).filter((key) =>
+                  Array.isArray(filterState[key as keyof typeof filterState])
+                    ? (filterState[key as keyof typeof filterState] as any[]).length > 0
+                    : filterState[key as keyof typeof filterState] !== ''
+                ).length
+              }
+            </span>
+            {Object.keys(filterState).some((key) =>
+              Array.isArray(filterState[key as keyof typeof filterState])
                 ? (filterState[key as keyof typeof filterState] as any[]).length > 0
                 : filterState[key as keyof typeof filterState] !== ''
             ) && (
@@ -303,7 +317,8 @@ export const FilterTestPage: React.FC = () => {
                           <span className="font-medium">家族:</span> {language.family}
                         </p>
                         <p>
-                          <span className="font-medium">区域:</span> {getRegionFromCountries(language.countries)}
+                          <span className="font-medium">区域:</span>{' '}
+                          {getRegionFromCountries(language.countries)}
                         </p>
                         <p>
                           <span className="font-medium">学习时长:</span> {language.fsi.hours}小时

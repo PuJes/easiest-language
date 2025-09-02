@@ -313,7 +313,7 @@ export class LanguageEditor {
 
     const result = success1 && success2 && success3 && success4;
     console.log(`${result ? '✅' : '❌'} 语言完整更新${result ? '成功' : '失败'}: ${languageId}`);
-    
+
     return result;
   }
 
@@ -323,16 +323,13 @@ export class LanguageEditor {
   updateCultureInfo(
     languageId: string,
     updates: Partial<
-      Pick<
-        LanguageEditForm,
-        'culturalOverview' | 'businessUse' | 'entertainment' | 'cuisine'
-      >
+      Pick<LanguageEditForm, 'culturalOverview' | 'businessUse' | 'entertainment' | 'cuisine'>
     >
   ): boolean {
     // 注意：文化信息目前存储在culture-data.ts中，不是FSI_LANGUAGE_DATA中
     // 这里我们只是记录更新，实际的文化信息更新需要单独处理
     console.log(`📝 文化信息更新请求: ${languageId}`, updates);
-    
+
     // 由于文化信息存储在单独的文件中，这里返回true表示请求已记录
     // 实际的文化信息更新需要在culture-data.ts中手动进行
     return true;
@@ -469,7 +466,7 @@ export class LanguageEditor {
     // 直接添加到全局数据源
     FSI_LANGUAGE_DATA.languages.push(newLanguage);
     console.log(`✅ 已创建新语言: ${newId}`);
-    
+
     return newId;
   }
 
@@ -510,9 +507,9 @@ export class LanguageEditor {
   async persistDataToFile(): Promise<{ success: boolean; message: string; backupPath?: string }> {
     try {
       console.log('🔄 开始持久化保存数据...');
-      
+
       const data = this.exportData();
-      
+
       // 调用API保存数据
       const response = await fetch('/api/admin/save-data', {
         method: 'POST',
@@ -522,31 +519,31 @@ export class LanguageEditor {
         body: JSON.stringify({
           languages: data.languages,
           learningResources: data.learningResources,
-          saveToFile: true
+          saveToFile: true,
         }),
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         console.log('✅ 数据持久化成功');
         return {
           success: true,
           message: `数据已永久保存！已处理 ${result.stats?.languagesCount || 0} 种语言`,
-          backupPath: result.backupPath
+          backupPath: result.backupPath,
         };
       } else {
         console.error('❌ 数据持久化失败:', result.error);
         return {
           success: false,
-          message: `持久化失败: ${result.error}`
+          message: `持久化失败: ${result.error}`,
         };
       }
     } catch (error) {
       console.error('❌ 持久化保存异常:', error);
       return {
         success: false,
-        message: `持久化异常: ${error instanceof Error ? error.message : String(error)}`
+        message: `持久化异常: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }
@@ -554,11 +551,11 @@ export class LanguageEditor {
   /**
    * 获取备份列表
    */
-  async getBackupList(): Promise<Array<{path: string; timestamp: string; description: string}>> {
+  async getBackupList(): Promise<Array<{ path: string; timestamp: string; description: string }>> {
     try {
       const response = await fetch('/api/admin/save-data');
       const result = await response.json();
-      
+
       if (result.success) {
         return result.backups || [];
       } else {
@@ -587,12 +584,12 @@ export class LanguageEditor {
       const result = await response.json();
       return {
         success: result.success,
-        message: result.message || result.error
+        message: result.message || result.error,
       };
     } catch (error) {
       return {
         success: false,
-        message: `恢复失败: ${error instanceof Error ? error.message : String(error)}`
+        message: `恢复失败: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }

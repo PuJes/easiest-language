@@ -177,59 +177,60 @@ function getExtendedCultureData(languageId: string) {
 }
 
 /**
- * 从Excel文件导入语言数据
+ * 从Excel文件导入语言数据（服务器端版本）
  */
-export function importLanguagesFromExcel(file: File): Promise<{
+export async function importLanguagesFromExcel(file: File): Promise<{
   success: boolean;
   message: string;
   data?: any;
   errors?: string[];
 }> {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
+  try {
+    console.log('开始导入Excel文件:', file.name, '大小:', file.size, 'bytes');
+    
+    // 将File对象转换为ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    console.log('文件数据大小:', arrayBuffer.byteLength, 'bytes');
+    
+    // 使用XLSX读取Excel文件
+    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+    console.log('Excel工作簿解析成功');
+    console.log('工作表名称:', workbook.SheetNames);
 
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+    // 解析各个工作表
+    const result = parseExcelData(workbook);
+    console.log('数据解析完成，错误数量:', result.errors.length);
 
-        // 解析各个工作表
-        const result = parseExcelData(workbook);
-
-        if (result.errors.length > 0) {
-          resolve({
-            success: false,
-            message: `导入完成，但发现 ${result.errors.length} 个错误`,
-            data: result.data,
-            errors: result.errors,
-          });
-        } else {
-          resolve({
-            success: true,
-            message: '数据导入成功',
-            data: result.data,
-          });
-        }
-      } catch (error) {
-        console.error('导入Excel文件失败:', error);
-        resolve({
-          success: false,
-          message: '文件格式错误或文件损坏',
-          errors: [error instanceof Error ? error.message : '未知错误'],
-        });
-      }
-    };
-
-    reader.onerror = () => {
-      resolve({
+    if (result.errors.length > 0) {
+      console.log('发现错误:', result.errors);
+      return {
         success: false,
-        message: '文件读取失败',
-        errors: ['无法读取文件'],
+        message: `导入完成，但发现 ${result.errors.length} 个错误`,
+        data: result.data,
+        errors: result.errors,
+      };
+    } else {
+      console.log('导入成功，数据摘要:', {
+        basicInfo: result.data.basicInfo.length,
+        fsiDetails: result.data.fsiDetails.length,
+        learningResources: result.data.learningResources.length,
+        cultureInfo: result.data.cultureInfo.length,
       });
+      return {
+        success: true,
+        message: '数据导入成功',
+        data: result.data,
+      };
+    }
+  } catch (error) {
+    console.error('导入Excel文件失败:', error);
+    console.error('错误堆栈:', error instanceof Error ? error.stack : '无堆栈信息');
+    return {
+      success: false,
+      message: '文件格式错误或文件损坏',
+      errors: [error instanceof Error ? error.message : '未知错误'],
     };
-
-    reader.readAsArrayBuffer(file);
-  });
+  }
 }
 
 /**
@@ -249,6 +250,7 @@ function parseExcelData(workbook: XLSX.WorkBook) {
     if (workbook.Sheets['Basic Info']) {
       const basicInfoSheet = workbook.Sheets['Basic Info'];
       data.basicInfo = XLSX.utils.sheet_to_json(basicInfoSheet);
+      console.log('Basic Info 数据行数:', data.basicInfo.length);
     } else {
       errors.push('缺少"Basic Info"工作表');
     }
@@ -257,6 +259,7 @@ function parseExcelData(workbook: XLSX.WorkBook) {
     if (workbook.Sheets['FSI Details']) {
       const fsiDetailsSheet = workbook.Sheets['FSI Details'];
       data.fsiDetails = XLSX.utils.sheet_to_json(fsiDetailsSheet);
+      console.log('FSI Details 数据行数:', data.fsiDetails.length);
     } else {
       errors.push('缺少"FSI Details"工作表');
     }
@@ -265,6 +268,7 @@ function parseExcelData(workbook: XLSX.WorkBook) {
     if (workbook.Sheets['Learning Resources']) {
       const learningResourcesSheet = workbook.Sheets['Learning Resources'];
       data.learningResources = XLSX.utils.sheet_to_json(learningResourcesSheet);
+      console.log('Learning Resources 数据行数:', data.learningResources.length);
     } else {
       errors.push('缺少"Learning Resources"工作表');
     }
@@ -273,12 +277,23 @@ function parseExcelData(workbook: XLSX.WorkBook) {
     if (workbook.Sheets['Culture Info']) {
       const cultureInfoSheet = workbook.Sheets['Culture Info'];
       data.cultureInfo = XLSX.utils.sheet_to_json(cultureInfoSheet);
+      console.log('Culture Info 数据行数:', data.cultureInfo.length);
     } else {
       errors.push('缺少"Culture Info"工作表');
     }
 
-    // 数据验证
-    validateImportedData(data, errors);
+    // 检查是否有任何数据
+    const totalDataRows = data.basicInfo.length + data.fsiDetails.length + 
+                         data.learningResources.length + data.cultureInfo.length;
+    
+    if (totalDataRows === 0) {
+      errors.push('Excel文件中没有找到任何数据，请确保至少有一个工作表包含数据');
+    }
+
+    // 数据验证（只有在有数据时才进行验证）
+    if (totalDataRows > 0) {
+      validateImportedData(data, errors);
+    }
   } catch (error) {
     errors.push(`解析Excel数据失败: ${error instanceof Error ? error.message : '未知错误'}`);
   }
@@ -303,6 +318,8 @@ function validateImportedData(data: any, errors: string[]) {
         errors.push(`基础信息第${index + 1}行缺少语言家族`);
       }
     });
+  } else {
+    console.log('基础信息工作表为空，跳过验证');
   }
 
   // 验证FSI详细信息
@@ -318,6 +335,8 @@ function validateImportedData(data: any, errors: string[]) {
         errors.push(`FSI详细信息第${index + 1}行缺少学习时长`);
       }
     });
+  } else {
+    console.log('FSI详细信息工作表为空，跳过验证');
   }
 
   // 验证学习资源
@@ -330,6 +349,8 @@ function validateImportedData(data: any, errors: string[]) {
         errors.push(`学习资源第${index + 1}行有标题但缺少资源类型`);
       }
     });
+  } else {
+    console.log('学习资源工作表为空，跳过验证');
   }
 
   // 验证文化信息
@@ -339,6 +360,8 @@ function validateImportedData(data: any, errors: string[]) {
         errors.push(`文化信息第${index + 1}行缺少语言ID`);
       }
     });
+  } else {
+    console.log('文化信息工作表为空，跳过验证');
   }
 }
 

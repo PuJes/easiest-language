@@ -44,8 +44,7 @@ export function adaptLanguageData(rawLanguage: Record<string, unknown>): Languag
 
   return {
     id:
-      (rawLanguage.id as string) ||
-      (rawLanguage.name as string).toLowerCase().replace(/\s+/g, '-'),
+      (rawLanguage.id as string) || (rawLanguage.name as string).toLowerCase().replace(/\s+/g, '-'),
     name: rawLanguage.name as string,
     nativeName:
       (rawLanguage.localName as string) ||
@@ -69,18 +68,11 @@ export function adaptLanguageData(rawLanguage: Record<string, unknown>): Languag
         vocabulary: ((fsi?.details as Record<string, unknown>)?.vocabulary as number) || 5,
       } as LanguageDifficulty),
     family: (rawLanguage.family as string) || 'Unknown',
-    subfamily:
-      (rawLanguage.subfamily as string) ||
-      (rawLanguage.family as string) ||
-      'Unknown',
+    subfamily: (rawLanguage.subfamily as string) || (rawLanguage.family as string) || 'Unknown',
     writingSystem:
-      (rawLanguage.writingSystem as string) ||
-      (rawLanguage.writing_system as string) ||
-      'Latin',
-    speakers:
-      (rawLanguage.speakers as number) || (rawLanguage.speakersTotal as number) || 0,
-    flagEmoji:
-      (rawLanguage.flag as string) || (rawLanguage.flagEmoji as string) || '🏳️',
+      (rawLanguage.writingSystem as string) || (rawLanguage.writing_system as string) || 'Latin',
+    speakers: (rawLanguage.speakers as number) || (rawLanguage.speakersTotal as number) || 0,
+    flagEmoji: (rawLanguage.flag as string) || (rawLanguage.flagEmoji as string) || '🏳️',
     color: (rawLanguage.color as string) || getFSIColor(validCategory),
   };
 }
@@ -128,14 +120,16 @@ export function getFeaturedLanguages(): Language[] {
       return featuredIds.some((id) => langId.includes(id) || lang.name.toLowerCase().includes(id));
     })
     .slice(0, 4)
-    .map(lang => adaptLanguageData(lang as unknown as Record<string, unknown>));
+    .map((lang) => adaptLanguageData(lang as unknown as Record<string, unknown>));
 }
 
 /**
  * 获取所有语言数据（适配后）
  */
 export function getAllLanguages(): Language[] {
-  return FSI_LANGUAGE_DATA.languages.map(lang => adaptLanguageData(lang as unknown as Record<string, unknown>));
+  return FSI_LANGUAGE_DATA.languages.map((lang) =>
+    adaptLanguageData(lang as unknown as Record<string, unknown>)
+  );
 }
 
 /**
@@ -155,15 +149,15 @@ export function getLanguageById(id: string): Language | null {
  */
 export function getLearningResourcesForLanguage(languageId: string) {
   const resources = LEARNING_RESOURCES_BY_LANGUAGE[languageId] || [];
-  
+
   // 按资源类型分组
   const groupedResources = {
-    app: resources.filter(r => r.type === 'app'),
-    book: resources.filter(r => r.type === 'book'),
-    course: resources.filter(r => r.type === 'course'),
-    website: resources.filter(r => r.type === 'website'),
-    video: resources.filter(r => r.type === 'video'),
-    podcast: resources.filter(r => r.type === 'podcast'),
+    app: resources.filter((r) => r.type === 'app'),
+    book: resources.filter((r) => r.type === 'book'),
+    course: resources.filter((r) => r.type === 'course'),
+    website: resources.filter((r) => r.type === 'website'),
+    video: resources.filter((r) => r.type === 'video'),
+    podcast: resources.filter((r) => r.type === 'podcast'),
   };
 
   return groupedResources;
@@ -189,10 +183,28 @@ export interface ExtendedLanguageDetail extends Omit<Language, 'speakers'> {
   learningResources: {
     app: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
     book: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
-    course: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
-    website: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    course: Array<{
+      title: string;
+      type: string;
+      url?: string;
+      description: string;
+      free: boolean;
+    }>;
+    website: Array<{
+      title: string;
+      type: string;
+      url?: string;
+      description: string;
+      free: boolean;
+    }>;
     video: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
-    podcast: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    podcast: Array<{
+      title: string;
+      type: string;
+      url?: string;
+      description: string;
+      free: boolean;
+    }>;
   };
   culture: {
     overview: string;
@@ -266,29 +278,29 @@ function formatSpeakerCount(count: number): string {
 function calculateNativeSpeakers(totalSpeakers: number, languageId: string): number {
   // 不同语言的母语使用者比例不同
   const nativeRatios: { [key: string]: number } = {
-    'zh': 0.95, // 中文主要是母语使用者
-    'en': 0.25, // 英语很多是第二语言使用者
-    'es': 0.85, // 西班牙语主要是母语使用者
-    'hi': 0.90, // 印地语主要是母语使用者
-    'ar': 0.80, // 阿拉伯语主要是母语使用者
-    'pt': 0.85, // 葡萄牙语主要是母语使用者
-    'bn': 0.90, // 孟加拉语主要是母语使用者
-    'ru': 0.85, // 俄语主要是母语使用者
-    'ja': 0.95, // 日语主要是母语使用者
-    'pa': 0.90, // 旁遮普语主要是母语使用者
-    'de': 0.80, // 德语主要是母语使用者
-    'ko': 0.95, // 韩语主要是母语使用者
-    'fr': 0.60, // 法语很多是第二语言使用者
-    'tr': 0.90, // 土耳其语主要是母语使用者
-    'vi': 0.95, // 越南语主要是母语使用者
-    'it': 0.90, // 意大利语主要是母语使用者
-    'th': 0.95, // 泰语主要是母语使用者
-    'ur': 0.85, // 乌尔都语主要是母语使用者
-    'pl': 0.95, // 波兰语主要是母语使用者
-    'fa': 0.90, // 波斯语主要是母语使用者
+    zh: 0.95, // 中文主要是母语使用者
+    en: 0.25, // 英语很多是第二语言使用者
+    es: 0.85, // 西班牙语主要是母语使用者
+    hi: 0.9, // 印地语主要是母语使用者
+    ar: 0.8, // 阿拉伯语主要是母语使用者
+    pt: 0.85, // 葡萄牙语主要是母语使用者
+    bn: 0.9, // 孟加拉语主要是母语使用者
+    ru: 0.85, // 俄语主要是母语使用者
+    ja: 0.95, // 日语主要是母语使用者
+    pa: 0.9, // 旁遮普语主要是母语使用者
+    de: 0.8, // 德语主要是母语使用者
+    ko: 0.95, // 韩语主要是母语使用者
+    fr: 0.6, // 法语很多是第二语言使用者
+    tr: 0.9, // 土耳其语主要是母语使用者
+    vi: 0.95, // 越南语主要是母语使用者
+    it: 0.9, // 意大利语主要是母语使用者
+    th: 0.95, // 泰语主要是母语使用者
+    ur: 0.85, // 乌尔都语主要是母语使用者
+    pl: 0.95, // 波兰语主要是母语使用者
+    fa: 0.9, // 波斯语主要是母语使用者
   };
-  
-  const ratio = nativeRatios[languageId] || 0.80; // 默认80%
+
+  const ratio = nativeRatios[languageId] || 0.8; // 默认80%
   return Math.floor(totalSpeakers * ratio);
 }
 
@@ -315,45 +327,123 @@ function getLanguageContinents(countries: string[]): string[] {
   // 更完整的国家-大陆映射
   const continentMap: { [key: string]: string } = {
     // 欧洲
-    'Spain': 'Europe', 'France': 'Europe', 'Germany': 'Europe', 'Italy': 'Europe',
-    'United Kingdom': 'Europe', 'Poland': 'Europe', 'Romania': 'Europe', 'Netherlands': 'Europe',
-    'Sweden': 'Europe', 'Norway': 'Europe', 'Denmark': 'Europe', 'Finland': 'Europe',
-    'Greece': 'Europe', 'Czech Republic': 'Europe', 'Slovakia': 'Europe', 'Croatia': 'Europe',
-    'Bulgaria': 'Europe', 'Latvia': 'Europe', 'Lithuania': 'Europe', 'Slovenia': 'Europe',
-    'Ukraine': 'Europe', 'Estonia': 'Europe', 'Hungary': 'Europe', 'Austria': 'Europe',
-    'Switzerland': 'Europe', 'Belgium': 'Europe', 'Portugal': 'Europe', 'Ireland': 'Europe',
-    'San Marino': 'Europe', 'Vatican City': 'Europe', 'Liechtenstein': 'Europe', 'Luxembourg': 'Europe',
-    'Andorra': 'Europe', 'Cyprus': 'Europe', 'Moldova': 'Europe', 'Belarus': 'Europe',
-    'Kazakhstan': 'Europe', 'Kyrgyzstan': 'Europe', 'Russia': 'Europe',
-    
+    Spain: 'Europe',
+    France: 'Europe',
+    Germany: 'Europe',
+    Italy: 'Europe',
+    'United Kingdom': 'Europe',
+    Poland: 'Europe',
+    Romania: 'Europe',
+    Netherlands: 'Europe',
+    Sweden: 'Europe',
+    Norway: 'Europe',
+    Denmark: 'Europe',
+    Finland: 'Europe',
+    Greece: 'Europe',
+    'Czech Republic': 'Europe',
+    Slovakia: 'Europe',
+    Croatia: 'Europe',
+    Bulgaria: 'Europe',
+    Latvia: 'Europe',
+    Lithuania: 'Europe',
+    Slovenia: 'Europe',
+    Ukraine: 'Europe',
+    Estonia: 'Europe',
+    Hungary: 'Europe',
+    Austria: 'Europe',
+    Switzerland: 'Europe',
+    Belgium: 'Europe',
+    Portugal: 'Europe',
+    Ireland: 'Europe',
+    'San Marino': 'Europe',
+    'Vatican City': 'Europe',
+    Liechtenstein: 'Europe',
+    Luxembourg: 'Europe',
+    Andorra: 'Europe',
+    Cyprus: 'Europe',
+    Moldova: 'Europe',
+    Belarus: 'Europe',
+    Kazakhstan: 'Europe',
+    Kyrgyzstan: 'Europe',
+    Russia: 'Europe',
+
     // 亚洲
-    'China': 'Asia', 'Japan': 'Asia', 'South Korea': 'Asia', 'North Korea': 'Asia',
-    'India': 'Asia', 'Thailand': 'Asia', 'Vietnam': 'Asia', 'Indonesia': 'Asia',
-    'Malaysia': 'Asia', 'Singapore': 'Asia', 'Philippines': 'Asia', 'Taiwan': 'Asia',
-    'Hong Kong': 'Asia', 'Macau': 'Asia', 'Bangladesh': 'Asia', 'Pakistan': 'Asia',
-    'Sri Lanka': 'Asia', 'Mongolia': 'Asia', 'Turkey': 'Asia', 'Iran': 'Asia',
-    'Afghanistan': 'Asia', 'Tajikistan': 'Asia', 'Israel': 'Asia', 'Saudi Arabia': 'Asia',
-    'Egypt': 'Asia', 'Iraq': 'Asia', 'Jordan': 'Asia', 'Lebanon': 'Asia',
-    'Syria': 'Asia', 'United Arab Emirates': 'Asia', 'Brunei': 'Asia',
-    
+    China: 'Asia',
+    Japan: 'Asia',
+    'South Korea': 'Asia',
+    'North Korea': 'Asia',
+    India: 'Asia',
+    Thailand: 'Asia',
+    Vietnam: 'Asia',
+    Indonesia: 'Asia',
+    Malaysia: 'Asia',
+    Singapore: 'Asia',
+    Philippines: 'Asia',
+    Taiwan: 'Asia',
+    'Hong Kong': 'Asia',
+    Macau: 'Asia',
+    Bangladesh: 'Asia',
+    Pakistan: 'Asia',
+    'Sri Lanka': 'Asia',
+    Mongolia: 'Asia',
+    Turkey: 'Asia',
+    Iran: 'Asia',
+    Afghanistan: 'Asia',
+    Tajikistan: 'Asia',
+    Israel: 'Asia',
+    'Saudi Arabia': 'Asia',
+    Egypt: 'Asia',
+    Iraq: 'Asia',
+    Jordan: 'Asia',
+    Lebanon: 'Asia',
+    Syria: 'Asia',
+    'United Arab Emirates': 'Asia',
+    Brunei: 'Asia',
+
     // 北美洲
-    'United States of America': 'North America', 'Canada': 'North America', 'Mexico': 'North America',
-    
+    'United States of America': 'North America',
+    Canada: 'North America',
+    Mexico: 'North America',
+
     // 南美洲
-    'Brazil': 'South America', 'Argentina': 'South America', 'Colombia': 'South America',
-    'Peru': 'South America', 'Venezuela': 'South America', 'Chile': 'South America',
-    'Ecuador': 'South America', 'Bolivia': 'South America', 'Paraguay': 'South America',
-    'Uruguay': 'South America', 'Guyana': 'South America', 'Suriname': 'South America',
-    
+    Brazil: 'South America',
+    Argentina: 'South America',
+    Colombia: 'South America',
+    Peru: 'South America',
+    Venezuela: 'South America',
+    Chile: 'South America',
+    Ecuador: 'South America',
+    Bolivia: 'South America',
+    Paraguay: 'South America',
+    Uruguay: 'South America',
+    Guyana: 'South America',
+    Suriname: 'South America',
+
     // 非洲
-    'Nigeria': 'Africa', 'South Africa': 'Africa', 'Ethiopia': 'Africa', 'Tanzania': 'Africa',
-    'Kenya': 'Africa', 'Uganda': 'Africa', 'Democratic Republic of the Congo': 'Africa',
-    'Algeria': 'Africa', 'Morocco': 'Africa', 'Tunisia': 'Africa', 'Senegal': 'Africa',
-    'Ivory Coast': 'Africa', 'Angola': 'Africa', 'Mozambique': 'Africa', 'Cape Verde': 'Africa',
-    'Namibia': 'Africa', 'Benin': 'Africa', 'Niger': 'Africa',
-    
+    Nigeria: 'Africa',
+    'South Africa': 'Africa',
+    Ethiopia: 'Africa',
+    Tanzania: 'Africa',
+    Kenya: 'Africa',
+    Uganda: 'Africa',
+    'Democratic Republic of the Congo': 'Africa',
+    Algeria: 'Africa',
+    Morocco: 'Africa',
+    Tunisia: 'Africa',
+    Senegal: 'Africa',
+    'Ivory Coast': 'Africa',
+    Angola: 'Africa',
+    Mozambique: 'Africa',
+    'Cape Verde': 'Africa',
+    Namibia: 'Africa',
+    Benin: 'Africa',
+    Niger: 'Africa',
+
     // 大洋洲
-    'Australia': 'Oceania', 'New Zealand': 'Oceania', 'Fiji': 'Oceania', 'Papua New Guinea': 'Oceania',
+    Australia: 'Oceania',
+    'New Zealand': 'Oceania',
+    Fiji: 'Oceania',
+    'Papua New Guinea': 'Oceania',
   };
 
   const continents = countries

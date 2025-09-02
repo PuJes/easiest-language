@@ -1,10 +1,10 @@
 /**
  * 文化信息数据
  * 为主要语言提供真实的文化背景信息
- * 
+ *
  * 数据结构说明：
  * - overview: 文化概述
- * - businessUse: 商务用途描述  
+ * - businessUse: 商务用途描述
  * - entertainment: 娱乐文化形式
  * - cuisine: 饮食文化特色
  */
@@ -19,9 +19,9 @@ export interface CultureInfo {
 /**
  * 主要语言的文化信息数据
  * 按语言ID索引，包含真实的文化内容
- * 
+ *
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T06:36:48.283Z
+ * 最后更新时间: 2025-09-02T09:08:11.644Z
  */
 export const CULTURE_DATA: Record<string, CultureInfo> = {
   "test": {
@@ -37,22 +37,24 @@ export const CULTURE_DATA: Record<string, CultureInfo> = {
     ]
   },
   "es": {
-    "overview": "es is a fascinating language with unique cultural characteristics. Learning it opens doors to new perspectives and cultural experiences.",
-    "businessUse": "es can be valuable for international business, especially in regions where it's widely spoken.",
+    "overview": "Spanish is a fascinating language with rich cultural heritage...",
+    "businessUse": "Spanish is valuable for international business...",
     "entertainment": [
-      "Local Music",
-      "Traditional Arts",
-      "Cultural Festivals",
-      "Local Cinema",
-      "Traditional Games"
+      "Flamenco",
+      "Spanish Cinema",
+      "Bullfighting"
     ],
     "cuisine": [
-      "Traditional Dishes",
-      "Local Specialties",
-      "Street Food",
-      "Regional Cuisine",
-      "Local Beverages"
-    ]
+      "Paella",
+      "Tapas",
+      "Gazpacho"
+    ],
+    "culturalInfo": {
+      "businessUse": 4,
+      "travelValue": 5,
+      "culturalRichness": 5,
+      "onlinePresence": 4
+    }
   }
 };
 
@@ -62,24 +64,26 @@ export const CULTURE_DATA: Record<string, CultureInfo> = {
  * @returns 文化信息对象，如果不存在则返回默认值
  */
 export function getCultureInfo(languageId: string): CultureInfo {
-  return CULTURE_DATA[languageId] || {
-    overview: `${languageId} is a fascinating language with unique cultural characteristics. Learning it opens doors to new perspectives and cultural experiences.`,
-    businessUse: `${languageId} can be valuable for international business, especially in regions where it's widely spoken.`,
-    entertainment: [
-      'Local Music',
-      'Traditional Arts',
-      'Cultural Festivals',
-      'Local Cinema',
-      'Traditional Games',
-    ],
-    cuisine: [
-      'Traditional Dishes',
-      'Local Specialties',
-      'Street Food',
-      'Regional Cuisine',
-      'Local Beverages',
-    ],
-  };
+  return (
+    CULTURE_DATA[languageId] || {
+      overview: `${languageId} is a fascinating language with unique cultural characteristics. Learning it opens doors to new perspectives and cultural experiences.`,
+      businessUse: `${languageId} can be valuable for international business, especially in regions where it's widely spoken.`,
+      entertainment: [
+        'Local Music',
+        'Traditional Arts',
+        'Cultural Festivals',
+        'Local Cinema',
+        'Traditional Games',
+      ],
+      cuisine: [
+        'Traditional Dishes',
+        'Local Specialties',
+        'Street Food',
+        'Regional Cuisine',
+        'Local Beverages',
+      ],
+    }
+  );
 }
 
 /**

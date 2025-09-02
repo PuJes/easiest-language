@@ -77,7 +77,13 @@ const FSIBadge: React.FC<FSIBadgeProps> = ({
 }) => {
   const config = FSI_CONFIG[category];
   const sizeConfig = SIZE_CONFIG[size];
-  const romanMap: Record<Exclude<FSICategory, 0>, string> = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V' }; // 罗马数字映射
+  const romanMap: Record<Exclude<FSICategory, 0>, string> = {
+    1: 'I',
+    2: 'II',
+    3: 'III',
+    4: 'IV',
+    5: 'V',
+  }; // 罗马数字映射
 
   return (
     <motion.div

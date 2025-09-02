@@ -20,7 +20,7 @@ function generateFSIDetails(category: number) {
  * 基于美国外国语学院官方分类和学习时长标准
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T06:36:51.152Z
+ * 最后更新时间: 2025-09-02T09:11:36.886Z
  */
 export const FSI_LANGUAGE_DATA: LanguageData = {
   languages: [
@@ -31,15 +31,14 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
         'countries': [
             'Spain',
             'Mexico',
-            'Argentina',
-            'Colombia',
-            'Peru',
-            'Venezuela',
-            'Chile',
-            'Ecuador',
-            'Cuba',
-            'Guatemala'
+            'Argentina'
         ],
+        'family': 'Indo-European',
+        'subfamily': 'Romance',
+        'writingSystem': 'Latin',
+        'speakers': 548000000,
+        'flagEmoji': '🇪🇸',
+        'color': '#28a745',
         'fsi': {
             'category': 1,
             'hours': 600,
@@ -57,13 +56,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
             'grammar': 3,
             'pronunciation': 2,
             'vocabulary': 3
-        },
-        'family': 'Indo-European',
-        'subfamily': 'Romance',
-        'writingSystem': 'Latin',
-        'speakers': 548000000,
-        'flagEmoji': '🇪🇸',
-        'color': '#28a745'
+        }
     },
     {
         'id': 'pt',

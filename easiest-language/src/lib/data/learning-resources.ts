@@ -5,7 +5,7 @@ import type { LearningResource } from '../types';
  * 为每种语言提供推荐的学习资源
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T06:36:51.157Z
+ * 最后更新时间: 2025-09-02T09:11:36.892Z
  */
 export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> = {
   'ar': [
@@ -67,24 +67,10 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
   ],
   'es': [
     {
-      'title': 'Duolingo Spanish',
+      'title': 'Duolingo Spanish1',
       'type': 'app',
-      'url': 'https://www.duolingo.com/course/es/en',
-      'description': 'Popular gamified Spanish learning app with bite-sized lessons and progress tracking',
-      'free': true
-    },
-    {
-      'title': 'SpanishPod101',
-      'type': 'podcast',
-      'url': 'https://www.spanishpod101.com',
-      'description': 'Comprehensive Spanish audio program with native speakers and cultural insights',
-      'free': false
-    },
-    {
-      'title': 'Conjuguemos',
-      'type': 'website',
-      'url': 'https://conjuguemos.com',
-      'description': 'Interactive Spanish verb conjugation practice with customizable exercises',
+      'description': 'Popular language learning app',
+      'url': 'https://www.duolingo.com',
       'free': true
     }
   ],

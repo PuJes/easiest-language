@@ -96,10 +96,10 @@ export const SmartSearchFilter: React.FC<SmartSearchFilterProps> = ({
     if (!showSuggestions || !isFocused) {
       return [];
     }
-    
+
     // 如果没有查询，显示所有语言的建议
     if (!searchQuery.trim()) {
-      return languages.slice(0, maxSuggestions).map(language => ({
+      return languages.slice(0, maxSuggestions).map((language) => ({
         type: 'language' as const,
         value: language.name,
         label: `${language.name} (${language.nativeName})`,
@@ -324,7 +324,7 @@ export const SmartSearchFilter: React.FC<SmartSearchFilterProps> = ({
    */
   const findMatches = (text: string, searchTerm: string): [number, number][] => {
     if (!text || typeof text !== 'string') return [];
-    
+
     const matches: [number, number][] = [];
     const lowerText = text.toLowerCase();
     let startIndex = 0;

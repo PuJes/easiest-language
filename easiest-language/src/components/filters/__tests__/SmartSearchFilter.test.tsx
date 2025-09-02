@@ -257,7 +257,8 @@ describe('SmartSearchFilter', () => {
       jest.advanceTimersByTime(300);
 
       await waitFor(() => {
-        const results = mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
+        const results =
+          mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
         expect(results).toHaveLength(2); // Spanish and French
       });
     });
@@ -275,7 +276,8 @@ describe('SmartSearchFilter', () => {
       jest.advanceTimersByTime(300);
 
       await waitFor(() => {
-        const results = mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
+        const results =
+          mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
         expect(results).toHaveLength(1);
         expect(results[0].language.name).toBe('Spanish');
       });
@@ -294,7 +296,8 @@ describe('SmartSearchFilter', () => {
       jest.advanceTimersByTime(300);
 
       await waitFor(() => {
-        const results = mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
+        const results =
+          mockOnSearchResults.mock.calls[mockOnSearchResults.mock.calls.length - 1][0];
         expect(results.length).toBeGreaterThan(0);
         // 结果应该按分数排序
         for (let i = 1; i < results.length; i++) {

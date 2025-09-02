@@ -1,8 +1,5 @@
 {
   "timestamp": "2025-09-02T05:12:34.054Z",
-  "files": [
-    "languages.ts",
-    "learning-resources.ts"
-  ],
+  "files": ["languages.ts", "learning-resources.ts"],
   "description": "自动备份 - Admin页面数据修改前"
 }

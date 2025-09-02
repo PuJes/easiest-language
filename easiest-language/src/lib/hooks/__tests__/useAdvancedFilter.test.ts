@@ -116,9 +116,9 @@ describe('useAdvancedFilter', () => {
       const { result } = renderHook(() => useAdvancedFilter(mockLanguages));
 
       expect(result.current.filteredLanguages).toHaveLength(3);
-      expect(result.current.filteredLanguages.map(l => l.id)).toContain('spanish');
-      expect(result.current.filteredLanguages.map(l => l.id)).toContain('mandarin');
-      expect(result.current.filteredLanguages.map(l => l.id)).toContain('french');
+      expect(result.current.filteredLanguages.map((l) => l.id)).toContain('spanish');
+      expect(result.current.filteredLanguages.map((l) => l.id)).toContain('mandarin');
+      expect(result.current.filteredLanguages.map((l) => l.id)).toContain('french');
     });
   });
 
@@ -275,7 +275,7 @@ describe('useAdvancedFilter', () => {
       });
 
       expect(result.current.filteredLanguages).toHaveLength(2);
-      const ids = result.current.filteredLanguages.map(l => l.id);
+      const ids = result.current.filteredLanguages.map((l) => l.id);
       expect(ids).toContain('spanish');
       expect(ids).toContain('french');
     });

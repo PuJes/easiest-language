@@ -7,6 +7,7 @@
 ## 问题分析
 
 ### 根本原因
+
 **数据流断裂问题**：admin页面中存在两套独立的学习资源数据管理机制，导致数据不同步。
 
 ### 具体问题
@@ -57,10 +58,10 @@ existingData = eval(`(${dataString})`);
 
 // 修复后：使用安全的JSON解析
 const jsonString = dataString
-  .replace(/'/g, '"')  // 将单引号替换为双引号
-  .replace(/(\w+):/g, '"$1":')  // 为对象键添加双引号
-  .replace(/,\s*}/g, '}')  // 移除尾随逗号
-  .replace(/,\s*]/g, ']');  // 移除数组尾随逗号
+  .replace(/'/g, '"') // 将单引号替换为双引号
+  .replace(/(\w+):/g, '"$1":') // 为对象键添加双引号
+  .replace(/,\s*}/g, '}') // 移除尾随逗号
+  .replace(/,\s*]/g, ']'); // 移除数组尾随逗号
 
 existingData = JSON.parse(jsonString);
 ```
@@ -77,12 +78,14 @@ console.log(`✅ 已更新学习资源文件: ${resourcesFilePath}`);
 ## 修复效果
 
 ### 修复前的问题
+
 - ❌ 新增的学习资源只保存在内存中
 - ❌ 页面刷新后新增的资源消失
 - ❌ 数据流断裂，无法正确同步
 - ❌ 使用不安全的eval函数解析数据
 
 ### 修复后的改进
+
 - ✅ 新增的学习资源正确保存到文件
 - ✅ 保存后自动重新加载数据
 - ✅ 数据流完整，确保同步
@@ -93,6 +96,7 @@ console.log(`✅ 已更新学习资源文件: ${resourcesFilePath}`);
 ## 测试验证
 
 ### 测试步骤
+
 1. 启动开发服务器：`npm run dev`
 2. 访问admin页面：`http://localhost:3000/admin`
 3. 选择一种语言（如Spanish）
@@ -103,6 +107,7 @@ console.log(`✅ 已更新学习资源文件: ${resourcesFilePath}`);
 8. 刷新页面验证资源是否还在
 
 ### 预期结果
+
 - 新增的资源应该正确保存到 `src/lib/data/learning-resources.ts` 文件中
 - 页面刷新后新增的资源应该仍然存在
 - 控制台应该显示详细的保存日志

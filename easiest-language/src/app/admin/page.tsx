@@ -130,9 +130,9 @@ function LanguageEditorSection() {
   >([]);
   const [selectedId, setSelectedId] = useState<string>('');
   const [editForm, setEditForm] = useState<LanguageEditForm | null>(null);
-  const [activeTab, setActiveTab] = useState<'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture'>(
-    'basics'
-  );
+  const [activeTab, setActiveTab] = useState<
+    'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture'
+  >('basics');
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -393,17 +393,19 @@ function LanguageEditorSection() {
           {/* 标签页导航 */}
           <div className="border-b border-gray-200">
             <nav className="px-6 -mb-px flex space-x-8">
-                        {[
-            { id: 'basics', label: '基础信息' },
-            { id: 'fsi', label: 'FSI难度' },
-            { id: 'difficulty', label: '详细评分' },
-            { id: 'resources', label: '学习资源' },
-            { id: 'culture', label: '文化信息' },
-          ].map((tab) => (
+              {[
+                { id: 'basics', label: '基础信息' },
+                { id: 'fsi', label: 'FSI难度' },
+                { id: 'difficulty', label: '详细评分' },
+                { id: 'resources', label: '学习资源' },
+                { id: 'culture', label: '文化信息' },
+              ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() =>
-                    setActiveTab(tab.id as 'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture')
+                    setActiveTab(
+                      tab.id as 'basics' | 'fsi' | 'difficulty' | 'resources' | 'culture'
+                    )
                   }
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
@@ -426,8 +428,8 @@ function LanguageEditorSection() {
             )}
             {activeTab === 'resources' && <ResourcesTab selectedId={selectedId} />}
             {activeTab === 'culture' && (
-              <CultureTab 
-                editForm={editForm} 
+              <CultureTab
+                editForm={editForm}
                 updateForm={updateForm}
                 onSaveCulture={async () => {
                   if (!selectedId) return;
@@ -786,7 +788,7 @@ function ResourcesTab({ selectedId }: { selectedId: string }) {
   };
 
   const handleUpdateResource = (index: number, updates: any) => {
-    const updatedResources = resources.map((resource, i) => 
+    const updatedResources = resources.map((resource, i) =>
       i === index ? { ...resource, ...updates } : resource
     );
     setResources(updatedResources);
@@ -815,7 +817,7 @@ function ResourcesTab({ selectedId }: { selectedId: string }) {
         },
         body: JSON.stringify({
           languageId: selectedId,
-          resources: resources
+          resources: resources,
         }),
       });
 
@@ -878,9 +880,13 @@ function ResourcesTab({ selectedId }: { selectedId: string }) {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h4 className="font-medium text-gray-900">{resource.title}</h4>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        resource.free ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          resource.free
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-blue-100 text-blue-800'
+                        }`}
+                      >
                         {resource.free ? '免费' : '付费'}
                       </span>
                       <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
@@ -924,10 +930,7 @@ function ResourcesTab({ selectedId }: { selectedId: string }) {
 
       {/* 添加资源表单 */}
       {showAddForm && (
-        <AddResourceModal
-          onSubmit={handleAddResource}
-          onCancel={() => setShowAddForm(false)}
-        />
+        <AddResourceModal onSubmit={handleAddResource} onCancel={() => setShowAddForm(false)} />
       )}
     </div>
   );
@@ -1174,7 +1177,7 @@ function CultureTab({
           {isLoading ? '保存中...' : '💾 保存文化信息'}
         </button>
       </div>
-      
+
       {/* 文化概述 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">文化概述 *</label>
@@ -1288,7 +1291,11 @@ function CultureTab({
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <div className="ml-3">
@@ -1299,7 +1306,9 @@ function CultureTab({
                 <li>商务用途描述应该说明这种语言在商业环境中的重要性</li>
                 <li>娱乐文化形式包括音乐、电影、文学、艺术等文化表达方式</li>
                 <li>饮食文化特色包括传统美食、地方特色和饮品文化</li>
-                <li><strong>重要：</strong>编辑完成后请点击"💾 保存文化信息"按钮保存更改</li>
+                <li>
+                  <strong>重要：</strong>编辑完成后请点击"💾 保存文化信息"按钮保存更改
+                </li>
                 <li>保存的文化信息会立即在前端语言详情页面中显示</li>
               </ul>
             </div>
@@ -1358,6 +1367,21 @@ function DataExportSection() {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<any>(null);
+  const [languages, setLanguages] = useState<any[]>([]);
+
+  // 获取语言数据
+  useEffect(() => {
+    const loadLanguages = async () => {
+      try {
+        const { getAllLanguages } = await import('@/lib/data/data-adapters');
+        const languagesData = getAllLanguages();
+        setLanguages(languagesData);
+      } catch (error) {
+        console.error('加载语言数据失败:', error);
+      }
+    };
+    loadLanguages();
+  }, []);
 
   const handleExport = async (format: 'json' | 'excel') => {
     setIsExporting(true);
@@ -1382,7 +1406,7 @@ function DataExportSection() {
         const { exportLanguagesToExcel } = await import('@/lib/utils/excel-utils');
         exportLanguagesToExcel();
       }
-      
+
       alert(`${format.toUpperCase()}文件导出成功！`);
     } catch (error) {
       console.error('导出失败:', error);
@@ -1394,31 +1418,48 @@ function DataExportSection() {
 
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log('没有选择文件');
+      return;
+    }
 
+    console.log('开始导入文件:', file.name, '大小:', file.size, '类型:', file.type);
     setIsImporting(true);
     setImportResult(null);
 
     try {
       const formData = new FormData();
       formData.append('file', file);
+      console.log('FormData创建成功，准备发送请求...');
 
       const response = await fetch('/api/admin/import-excel', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('API响应状态:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP错误: ${response.status} ${response.statusText}`);
+      }
+
       const result = await response.json();
+      console.log('API响应结果:', result);
       setImportResult(result);
 
       if (result.success) {
-        alert('Excel文件导入成功！');
+        console.log('导入成功！');
+        const saveInfo = result.saveResult ? `\n\n保存结果: ${result.saveResult.message}` : '';
+        alert(`Excel文件导入成功！\n\n数据摘要:\n- 基础信息: ${result.summary?.basicInfo || 0} 条\n- FSI详情: ${result.summary?.fsiDetails || 0} 条\n- 学习资源: ${result.summary?.learningResources || 0} 条\n- 文化信息: ${result.summary?.cultureInfo || 0} 条${saveInfo}`);
       } else {
-        alert(`导入失败: ${result.message}`);
+        console.log('导入失败:', result.message, result.errors);
+        const errorDetails = result.errors ? result.errors.join('\n') : '';
+        alert(`导入失败: ${result.message}\n\n错误详情:\n${errorDetails}`);
       }
     } catch (error) {
       console.error('导入失败:', error);
-      alert(`导入失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      console.error('错误堆栈:', error instanceof Error ? error.stack : '无堆栈信息');
+      alert(`导入失败: ${error instanceof Error ? error.message : '未知错误'}\n\n请检查浏览器控制台获取详细错误信息。`);
     } finally {
       setIsImporting(false);
       // 清空文件输入
@@ -1460,7 +1501,9 @@ function DataExportSection() {
 
             <div className="border border-gray-200 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2">📊 Excel格式</h4>
-              <p className="text-sm text-gray-600 mb-4">包含所有语言数据的Excel文件，包含4个工作表</p>
+              <p className="text-sm text-gray-600 mb-4">
+                包含所有语言数据的Excel文件，包含4个工作表
+              </p>
               <button
                 onClick={() => handleExport('excel')}
                 disabled={isExporting}
@@ -1481,7 +1524,7 @@ function DataExportSection() {
               <p className="text-sm text-gray-600 mb-4">
                 支持导入包含基础信息、FSI详情、学习资源和文化信息的Excel文件
               </p>
-              
+
               <div className="flex gap-4 items-center">
                 <input
                   type="file"
@@ -1501,30 +1544,50 @@ function DataExportSection() {
 
             {/* 导入结果显示 */}
             {importResult && (
-              <div className={`mt-4 p-4 rounded-md ${
-                importResult.success ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-              }`}>
+              <div
+                className={`mt-4 p-4 rounded-md ${
+                  importResult.success
+                    ? 'bg-green-50 border border-green-200'
+                    : 'bg-red-50 border border-red-200'
+                }`}
+              >
                 <div className="flex">
                   <div className="flex-shrink-0">
                     {importResult.success ? (
-                      <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      <svg
+                        className="h-5 w-5 text-green-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     ) : (
                       <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     )}
                   </div>
                   <div className="ml-3">
-                    <h3 className={`text-sm font-medium ${
-                      importResult.success ? 'text-green-800' : 'text-red-800'
-                    }`}>
+                    <h3
+                      className={`text-sm font-medium ${
+                        importResult.success ? 'text-green-800' : 'text-red-800'
+                      }`}
+                    >
                       {importResult.success ? '导入成功' : '导入失败'}
                     </h3>
-                    <div className={`mt-2 text-sm ${
-                      importResult.success ? 'text-green-700' : 'text-red-700'
-                    }`}>
+                    <div
+                      className={`mt-2 text-sm ${
+                        importResult.success ? 'text-green-700' : 'text-red-700'
+                      }`}
+                    >
                       <p>{importResult.message}</p>
                       {importResult.summary && (
                         <div className="mt-2">
@@ -1599,7 +1662,7 @@ function DataExportSection() {
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-blue-600">59</div>
+                <div className="text-2xl font-bold text-blue-600">{languages.length}</div>
                 <div className="text-sm text-gray-600">总语言数</div>
               </div>
               <div>

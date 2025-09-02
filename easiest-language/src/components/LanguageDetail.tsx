@@ -101,7 +101,10 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                     <div className="text-sm text-gray-600 dark:text-gray-400">Native Speakers</div>
                   </div>
                   <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="speakers-count">
+                    <div
+                      className="text-2xl font-bold text-gray-900 dark:text-white"
+                      data-testid="speakers-count"
+                    >
                       {language.speakers.total}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Total Speakers</div>
@@ -372,19 +375,43 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
             {Object.entries(language.learningResources).map(([type, resources]) => {
               // 只显示有资源的类型
               if (resources.length === 0) return null;
-              
+
               // 资源类型的英文名称和图标映射
               const typeConfig = {
-                app: { name: 'Applications', icon: '📱', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
-                book: { name: 'Books', icon: '📚', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' },
-                course: { name: 'Courses', icon: '🎓', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' },
-                website: { name: 'Websites', icon: '🌐', color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' },
-                video: { name: 'Videos', icon: '🎥', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' },
-                podcast: { name: 'Podcasts', icon: '🎧', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' },
+                app: {
+                  name: 'Applications',
+                  icon: '📱',
+                  color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                },
+                book: {
+                  name: 'Books',
+                  icon: '📚',
+                  color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                },
+                course: {
+                  name: 'Courses',
+                  icon: '🎓',
+                  color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                },
+                website: {
+                  name: 'Websites',
+                  icon: '🌐',
+                  color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+                },
+                video: {
+                  name: 'Videos',
+                  icon: '🎥',
+                  color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                },
+                podcast: {
+                  name: 'Podcasts',
+                  icon: '🎧',
+                  color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                },
               };
-              
+
               const config = typeConfig[type as keyof typeof typeConfig];
-              
+
               return (
                 <div key={type} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
@@ -403,27 +430,29 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                       >
                         {/* 免费/付费标签 */}
                         <div className="absolute top-3 right-3">
-                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            resource.free 
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                              : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                          }`}>
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full font-medium ${
+                              resource.free
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            }`}
+                          >
                             {resource.free ? 'Free' : 'Paid'}
                           </span>
                         </div>
-                        
+
                         {/* 资源标题 */}
                         <div className="mb-3 pr-16">
                           <h4 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">
                             {resource.title}
                           </h4>
                         </div>
-                        
+
                         {/* 资源描述 */}
                         <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                           {resource.description}
                         </p>
-                        
+
                         {/* 底部信息 */}
                         <div className="flex items-center justify-end">
                           {/* 访问链接 */}
@@ -447,9 +476,11 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                 </div>
               );
             })}
-            
+
             {/* 如果没有学习资源 */}
-            {Object.values(language.learningResources).every(resources => resources.length === 0) && (
+            {Object.values(language.learningResources).every(
+              (resources) => resources.length === 0
+            ) && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 shadow-lg text-center">
                 <div className="text-6xl mb-4">📚</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -562,13 +593,21 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
           transition={{ duration: 0.8 }}
         >
           <div className="text-8xl mb-4">{language.flag}</div>
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4" data-testid="language-name">{language.name}</h1>
+          <h1
+            className="text-5xl font-bold text-gray-900 dark:text-white mb-4"
+            data-testid="language-name"
+          >
+            {language.name}
+          </h1>
           <p className="text-2xl text-gray-600 dark:text-gray-400 mb-6">{language.nativeName}</p>
 
           <div className="flex justify-center items-center gap-6 mb-8">
             <FSIBadge category={language.fsi.category} size="lg" showLabel />
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400" data-testid="learning-hours">
+              <div
+                className="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                data-testid="learning-hours"
+              >
                 {language.fsi.hours}h
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -583,9 +622,6 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                 Compare Languages
               </button>
             </Link>
-            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg">
-              Start Learning
-            </button>
           </div>
         </motion.div>
 

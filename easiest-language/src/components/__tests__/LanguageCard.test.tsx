@@ -12,7 +12,16 @@ import { Language } from '@/lib/types/language';
 // Mock Framer Motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, onClick, className, whileHover, whileTap, layout, transition, ...props }: any) => (
+    div: ({
+      children,
+      onClick,
+      className,
+      whileHover,
+      whileTap,
+      layout,
+      transition,
+      ...props
+    }: any) => (
       <div onClick={onClick} className={className} data-testid="motion-div" {...props}>
         {children}
       </div>
@@ -247,7 +256,7 @@ describe('LanguageCard', () => {
       );
 
       const compareButton = screen.getByText('Compare');
-      
+
       // 这应该不会抛出错误
       expect(() => fireEvent.click(compareButton)).not.toThrow();
     });
@@ -256,7 +265,7 @@ describe('LanguageCard', () => {
       render(<LanguageCard language={mockLanguage} />);
 
       const card = screen.getByTestId('motion-div');
-      
+
       // 这应该不会抛出错误
       expect(() => fireEvent.click(card)).not.toThrow();
     });
@@ -302,7 +311,7 @@ describe('LanguageCard', () => {
         ...mockLanguage,
         countries: [],
       };
-      
+
       render(<LanguageCard language={languageNoCountries} />);
 
       expect(screen.getByText('0')).toBeInTheDocument();
@@ -314,7 +323,7 @@ describe('LanguageCard', () => {
         ...mockLanguage,
         countries: ['Spain'],
       };
-      
+
       render(<LanguageCard language={languageOneCountry} />);
 
       expect(screen.getByText('Spain')).toBeInTheDocument();
