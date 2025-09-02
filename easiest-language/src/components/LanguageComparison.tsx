@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeftIcon,
   XMarkIcon,
@@ -26,6 +27,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
   availableLanguages,
   initialLanguages = [],
 }) => {
+  const searchParams = useSearchParams(); // 获取URL参数
   const [allLanguages] = useState<Language[]>(() => availableLanguages || getAllLanguages());
   const [selectedLanguages, setSelectedLanguages] = useState<Language[]>(initialLanguages);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
@@ -33,6 +35,24 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
     'overview'
   );
   const [aiInsight, setAiInsight] = useState<string>('');
+
+  // 从URL参数中读取语言ID并初始化选中的语言
+  useEffect(() => {
+    const languagesParam = searchParams.get('languages');
+    if (languagesParam && languagesParam.trim()) {
+      // 将逗号分隔的语言ID字符串转换为数组
+      const languageIds = languagesParam.split(',').map(id => id.trim());
+      // 根据ID找到对应的语言对象
+      const languagesFromParams = languageIds
+        .map(id => allLanguages.find(lang => lang.id === id))
+        .filter((lang): lang is Language => lang !== undefined);
+      
+      // 如果找到了有效的语言，则设置为选中的语言
+      if (languagesFromParams.length > 0) {
+        setSelectedLanguages(languagesFromParams);
+      }
+    }
+  }, [searchParams, allLanguages]);
 
   useEffect(() => {
     if (selectedLanguages.length >= 2) {
@@ -261,8 +281,12 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
               key: 'speakers',
               render: (lang: Language) => (
                 <div>
-                  <span className="font-medium">{lang.speakers.total}</span>
-                  <p className="text-sm text-gray-500">#{lang.speakers.rank} worldwide</p>
+                  <span className="font-medium">
+                    {lang.speakers >= 1000000
+                      ? `${Math.round(lang.speakers / 1000000)}M`
+                      : `${Math.round(lang.speakers / 1000)}K`}
+                  </span>
+                  <p className="text-sm text-gray-500">native speakers</p>
                 </div>
               ),
             },
@@ -271,24 +295,29 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
               key: 'family',
               render: (lang: Language) => (
                 <div>
-                  <span className="font-medium">{lang.family.name}</span>
-                  <p className="text-sm text-gray-500">{lang.family.branch}</p>
+                  <span className="font-medium">{lang.family}</span>
+                  <p className="text-sm text-gray-500">{lang.subfamily}</p>
                 </div>
               ),
             },
             {
-              label: 'Primary Regions',
+              label: 'Primary Countries',
               key: 'geography',
               render: (lang: Language) => (
                 <div className="flex flex-wrap gap-1">
-                  {lang.geography.continents.map((continent) => (
+                  {lang.countries.slice(0, 3).map((country) => (
                     <span
-                      key={continent}
+                      key={country}
                       className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs"
                     >
-                      {continent}
+                      {country}
                     </span>
                   ))}
+                  {lang.countries.length > 3 && (
+                    <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full text-xs">
+                      +{lang.countries.length - 3} more
+                    </span>
+                  )}
                 </div>
               ),
             },
@@ -379,12 +408,9 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
               <div className="space-y-6 w-full max-w-md">
                 {selectedLanguages.map((lang, index) => {
                   const maxHours = Math.max(
-                    ...selectedLanguages.map(
-                      (l) => parseInt(l.fsi.hours.split('-')[0]) || parseInt(l.fsi.hours) || 0
-                    )
+                    ...selectedLanguages.map((l) => l.fsi.hours || 0)
                   );
-                  const hours =
-                    parseInt(lang.fsi.hours.split('-')[0]) || parseInt(lang.fsi.hours) || 0;
+                  const hours = lang.fsi.hours || 0;
                   const percentage = maxHours > 0 ? (hours / maxHours) * 100 : 0;
 
                   return (

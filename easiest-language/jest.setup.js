@@ -44,3 +44,26 @@ Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
   writable: true,
 });
+
+// Mock Next.js navigation hooks
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: jest.fn(),
+    getAll: jest.fn(),
+    has: jest.fn(),
+    keys: jest.fn(),
+    values: jest.fn(),
+    entries: jest.fn(),
+    forEach: jest.fn(),
+    toString: jest.fn(),
+  }),
+  usePathname: () => '/',
+}));

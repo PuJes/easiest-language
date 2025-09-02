@@ -5,6 +5,7 @@
 
 import { Language, FSIInfo, LanguageDifficulty, FSICategory } from '../types';
 import { FSI_LANGUAGE_DATA } from './languages';
+import { LEARNING_RESOURCES_BY_LANGUAGE } from './learning-resources';
 
 /**
  * 根据FSI类别生成默认的详细难度评分
@@ -126,14 +127,14 @@ export function getFeaturedLanguages(): Language[] {
       return featuredIds.some((id) => langId.includes(id) || lang.name.toLowerCase().includes(id));
     })
     .slice(0, 4)
-    .map(lang => adaptLanguageData(lang as Record<string, unknown>));
+    .map(lang => adaptLanguageData(lang as unknown as Record<string, unknown>));
 }
 
 /**
  * 获取所有语言数据（适配后）
  */
 export function getAllLanguages(): Language[] {
-  return FSI_LANGUAGE_DATA.languages.map(lang => adaptLanguageData(lang as Record<string, unknown>));
+  return FSI_LANGUAGE_DATA.languages.map(lang => adaptLanguageData(lang as unknown as Record<string, unknown>));
 }
 
 /**
@@ -145,7 +146,26 @@ export function getLanguageById(id: string): Language | null {
     return langId === id || lang.id === id;
   });
 
-  return rawLanguage ? adaptLanguageData(rawLanguage as Record<string, unknown>) : null;
+  return rawLanguage ? adaptLanguageData(rawLanguage as unknown as Record<string, unknown>) : null;
+}
+
+/**
+ * 获取指定语言的学习资源，按类型分组
+ */
+export function getLearningResourcesForLanguage(languageId: string) {
+  const resources = LEARNING_RESOURCES_BY_LANGUAGE[languageId] || [];
+  
+  // 按资源类型分组
+  const groupedResources = {
+    app: resources.filter(r => r.type === 'app'),
+    book: resources.filter(r => r.type === 'book'),
+    course: resources.filter(r => r.type === 'course'),
+    website: resources.filter(r => r.type === 'website'),
+    video: resources.filter(r => r.type === 'video'),
+    podcast: resources.filter(r => r.type === 'podcast'),
+  };
+
+  return groupedResources;
 }
 
 /**
@@ -166,9 +186,12 @@ export interface ExtendedLanguageDetail extends Omit<Language, 'speakers'> {
     continents: string[];
   };
   learningResources: {
-    beginner: Array<{ name: string; type: string; url?: string; rating: number }>;
-    intermediate: Array<{ name: string; type: string; url?: string; rating: number }>;
-    advanced: Array<{ name: string; type: string; url?: string; rating: number }>;
+    app: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    book: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    course: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    website: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    video: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
+    podcast: Array<{ title: string; type: string; url?: string; description: string; free: boolean }>;
   };
   culture: {
     overview: string;
@@ -208,62 +231,8 @@ export function getLanguageDetailData(id: string): ExtendedLanguageDetail | null
       secondaryCountries: baseLanguage.countries.slice(3),
       continents: getLanguageContinents(baseLanguage.countries),
     },
-    // 生成组件需要的resources数据
-    learningResources: {
-      beginner: [
-        {
-          name: `Duolingo ${baseLanguage.name}`,
-          type: 'App',
-          url: 'https://duolingo.com',
-          rating: 5,
-        },
-        {
-          name: `${baseLanguage.name} Grammar Basics`,
-          type: 'Book',
-          rating: 4,
-        },
-        {
-          name: `${baseLanguage.name} for Beginners`,
-          type: 'Course',
-          rating: 4,
-        },
-      ],
-      intermediate: [
-        {
-          name: `Babbel ${baseLanguage.name}`,
-          type: 'App',
-          url: 'https://babbel.com',
-          rating: 4,
-        },
-        {
-          name: `${baseLanguage.name} News Podcasts`,
-          type: 'Podcast',
-          rating: 5,
-        },
-        {
-          name: `${baseLanguage.name} Conversation Practice`,
-          type: 'Course',
-          rating: 4,
-        },
-      ],
-      advanced: [
-        {
-          name: `${baseLanguage.name} Literature`,
-          type: 'Book',
-          rating: 5,
-        },
-        {
-          name: `Native ${baseLanguage.name} Media`,
-          type: 'Website',
-          rating: 5,
-        },
-        {
-          name: `${baseLanguage.name} Academic Papers`,
-          type: 'Resource',
-          rating: 4,
-        },
-      ],
-    },
+    // 从真实的学习资源数据中获取
+    learningResources: getLearningResourcesForLanguage(id),
     // 生成组件需要的culturalInfo数据
     culturalInfo: {
       businessUse: Math.min(5, validCategory + 1), // 基于难度计算商务价值

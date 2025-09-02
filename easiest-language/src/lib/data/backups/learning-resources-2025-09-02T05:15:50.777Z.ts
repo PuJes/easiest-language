@@ -5,7 +5,7 @@ import type { LearningResource } from '../types';
  * 为每种语言提供推荐的学习资源
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T05:15:50.777Z
+ * 最后更新时间: 2025-09-02T05:15:12.943Z
  */
 export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> = {
   'ar': [
@@ -85,6 +85,13 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       'type': 'website',
       'url': 'https://conjuguemos.com',
       'description': 'Interactive Spanish verb conjugation practice with customizable exercises',
+      'free': true
+    },
+    {
+      'title': 'pjpjpj',
+      'type': 'app',
+      'url': 'https://mp.weixin.qq.com/s/Mg5utkp0iD_b0RGMbCvA4A',
+      'description': 'pjpjpj',
       'free': true
     },
   ],

@@ -175,7 +175,7 @@ function LanguageEditorSection() {
       // 验证数据完整性
       const validation = editor.validateLanguage(selectedId);
       if (!validation.valid) {
-        alert(`数据验证失败：\n${validation.errors.join('\n')}`);
+        alert(`Data validation failed:\n${validation.errors.join('\n')}`);
         return;
       }
 
@@ -188,14 +188,16 @@ function LanguageEditorSection() {
         const updatedLanguages = editor.getAllLanguagesSummary();
         setLanguages(updatedLanguages);
 
-        alert('内存保存成功！数据已在当前会话中生效。\n\n要永久保存请点击"永久保存"按钮。');
+        alert(
+          'Memory save successful! Data is now active in the current session.\n\nTo save permanently, click the "Permanent Save" button.'
+        );
         console.log('语言数据已更新:', selectedId, editForm);
       } else {
-        alert('保存失败！请检查数据格式。');
+        alert('Save failed! Please check the data format.');
       }
     } catch (error) {
       console.error('保存失败:', error);
-      alert(`保存失败：${error}`);
+      alert(`Save failed: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -210,14 +212,14 @@ function LanguageEditorSection() {
 
       if (result.success) {
         alert(
-          `${result.message}\n\n备份路径: ${result.backupPath}\n\n⚠️ 请重启开发服务器以完全应用更改！`
+          `${result.message}\n\nBackup path: ${result.backupPath}\n\n⚠️ Please restart the development server to fully apply changes!`
         );
       } else {
-        alert(`永久保存失败：${result.message}`);
+        alert(`Permanent save failed: ${result.message}`);
       }
     } catch (error) {
       console.error('永久保存失败:', error);
-      alert(`永久保存异常：${error}`);
+      alert(`Permanent save error: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -250,10 +252,10 @@ function LanguageEditorSection() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      alert('数据导出成功！');
+      alert('Data export successful!');
     } catch (error) {
       console.error('导出失败:', error);
-      alert('导出失败！');
+      alert('Export failed!');
     }
   };
 
@@ -381,7 +383,7 @@ function LanguageEditorSection() {
             {activeTab === 'difficulty' && (
               <DifficultyTab editForm={editForm} updateForm={updateForm} />
             )}
-            {activeTab === 'resources' && <ResourcesTab />}
+            {activeTab === 'resources' && <ResourcesTab selectedId={selectedId} />}
           </div>
         </div>
       )}
@@ -695,25 +697,397 @@ function DifficultyTab({
 /**
  * 学习资源标签页
  */
-function ResourcesTab() {
+function ResourcesTab({ selectedId }: { selectedId: string }) {
+  const [resources, setResources] = useState<any[]>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 获取当前语言的学习资源
+  useEffect(() => {
+    if (selectedId) {
+      loadResourcesForLanguage(selectedId);
+    }
+  }, [selectedId]);
+
+  const loadResourcesForLanguage = async (languageId: string) => {
+    try {
+      // 从学习资源数据中获取该语言的资源
+      const { LEARNING_RESOURCES_BY_LANGUAGE } = await import('@/lib/data/learning-resources');
+      const languageResources = LEARNING_RESOURCES_BY_LANGUAGE[languageId] || [];
+      setResources(languageResources);
+    } catch (error) {
+      console.error('加载学习资源失败:', error);
+      // 如果加载失败，使用空数组
+      setResources([]);
+    }
+  };
+
+  const handleAddResource = (resourceData: any) => {
+    setResources([...resources, resourceData]);
+    setShowAddForm(false);
+  };
+
+  const handleUpdateResource = (index: number, updates: any) => {
+    const updatedResources = resources.map((resource, i) => 
+      i === index ? { ...resource, ...updates } : resource
+    );
+    setResources(updatedResources);
+    setEditingIndex(null);
+  };
+
+  const handleDeleteResource = (index: number) => {
+    if (window.confirm('确定要删除这个学习资源吗？')) {
+      const updatedResources = resources.filter((_, i) => i !== index);
+      setResources(updatedResources);
+    }
+  };
+
+  const handleSaveResources = async () => {
+    if (!selectedId) {
+      alert('Please select a language first');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/admin/save-learning-resources', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          languageId: selectedId,
+          resources: resources
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(
+          `Learning resources saved successfully!\n\nBackup path: ${result.backupPath}\nUpdated ${result.updatedCount} resources\n\n⚠️ Please restart the development server to fully apply changes!`
+        );
+      } else {
+        alert(`Save failed: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('保存学习资源失败:', error);
+      alert('Save failed, please try again');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-900">学习资源</h3>
-        <button
-          onClick={() => console.log('添加学习资源')}
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-        >
-          添加资源
-        </button>
+        <h3 className="text-lg font-medium text-gray-900">学习资源管理</h3>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            添加资源
+          </button>
+          <button
+            onClick={handleSaveResources}
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+          >
+            {isLoading ? '保存中...' : '保存资源'}
+          </button>
+        </div>
       </div>
-      <div className="bg-gray-50 rounded-lg p-4">
-        <p className="text-gray-600">学习资源管理功能即将开放...</p>
-        <p className="text-sm text-gray-500 mt-2">
-          您可以在这里添加和管理该语言的学习资源，包括在线课程、教材、应用程序等。
-        </p>
+
+      {/* 资源列表 */}
+      <div className="space-y-4">
+        {resources.length === 0 ? (
+          <div className="bg-gray-50 rounded-lg p-8 text-center">
+            <p className="text-gray-600 mb-2">暂无学习资源</p>
+            <p className="text-sm text-gray-500">点击"添加资源"按钮开始添加学习资源</p>
+          </div>
+        ) : (
+          resources.map((resource, index) => (
+            <div key={index} className="border border-gray-200 rounded-lg p-4">
+              {editingIndex === index ? (
+                <EditResourceForm
+                  resource={resource}
+                  onSave={(updates) => handleUpdateResource(index, updates)}
+                  onCancel={() => setEditingIndex(null)}
+                />
+              ) : (
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="font-medium text-gray-900">{resource.title}</h4>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        resource.free ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {resource.free ? '免费' : '付费'}
+                      </span>
+                      <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
+                        {resource.type}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{resource.description}</p>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      {resource.url && (
+                        <a
+                          href={resource.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          查看资源 →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 ml-4">
+                    <button
+                      onClick={() => setEditingIndex(index)}
+                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                    >
+                      编辑
+                    </button>
+                    <button
+                      onClick={() => handleDeleteResource(index)}
+                      className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                    >
+                      删除
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* 添加资源表单 */}
+      {showAddForm && (
+        <AddResourceModal
+          onSubmit={handleAddResource}
+          onCancel={() => setShowAddForm(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * 添加资源模态框
+ */
+function AddResourceModal({
+  onSubmit,
+  onCancel,
+}: {
+  onSubmit: (resource: any) => void;
+  onCancel: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    title: '',
+    type: 'app' as const,
+    url: '',
+    description: '',
+    free: true,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.title && formData.description) {
+      onSubmit(formData);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h3 className="text-lg font-medium mb-4">添加学习资源</h3>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">资源标题 *</label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="如: Duolingo"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">资源类型 *</label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="app">应用程序</option>
+              <option value="website">网站</option>
+              <option value="book">书籍</option>
+              <option value="podcast">播客</option>
+              <option value="course">课程</option>
+              <option value="video">视频</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">资源链接</label>
+            <input
+              type="url"
+              value={formData.url}
+              onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">资源描述 *</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              rows={3}
+              placeholder="描述这个学习资源的特点和优势..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">是否免费</label>
+            <select
+              value={formData.free ? 'true' : 'false'}
+              onChange={(e) => setFormData({ ...formData, free: e.target.value === 'true' })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="true">免费</option>
+              <option value="false">付费</option>
+            </select>
+          </div>
+
+          <div className="flex justify-end space-x-4 pt-4">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              取消
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              添加资源
+            </button>
+          </div>
+        </form>
       </div>
     </div>
+  );
+}
+
+/**
+ * 编辑资源表单
+ */
+function EditResourceForm({
+  resource,
+  onSave,
+  onCancel,
+}: {
+  resource: any;
+  onSave: (updates: any) => void;
+  onCancel: () => void;
+}) {
+  const [formData, setFormData] = useState(resource);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">资源标题 *</label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">资源类型 *</label>
+        <select
+          value={formData.type}
+          onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="app">应用程序</option>
+          <option value="website">网站</option>
+          <option value="book">书籍</option>
+          <option value="podcast">播客</option>
+          <option value="course">课程</option>
+          <option value="video">视频</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">资源链接</label>
+        <input
+          type="url"
+          value={formData.url}
+          onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="https://example.com"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">资源描述 *</label>
+        <textarea
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          rows={3}
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">是否免费</label>
+        <select
+          value={formData.free ? 'true' : 'false'}
+          onChange={(e) => setFormData({ ...formData, free: e.target.value === 'true' })}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="true">免费</option>
+          <option value="false">付费</option>
+        </select>
+      </div>
+
+      <div className="flex justify-end space-x-4 pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          取消
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          保存更改
+        </button>
+      </div>
+    </form>
   );
 }
 

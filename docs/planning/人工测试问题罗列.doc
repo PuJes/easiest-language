@@ -1,8 +1,16 @@
-1、HOME页面问卷按钮点击没反应：
+第一次问题反馈
+1、(已解决)HOME页面问卷按钮点击没反应：
 截屏/截屏2025-09-01 13.29.03.png
-2、语言详情页![1756723308549](image/人工测试问题罗列/1756723308549.png)点击后报错无内容:
+2、(已解决)语言详情页![1756723308549](image/人工测试问题罗列/1756723308549.png)点击后报错无内容:
 截屏/截屏2025-09-01 17.25.32.png
-3、语言对比页点击detail后显示Cannot read properties of undefined (reading 'continents')，点击charts显示l.fsi.hours.split is not a function：
+3、(已解决)语言对比页点击detail后显示Cannot read properties of undefined (reading 'continents')，点击charts显示l.fsi.hours.split is not a function：
 截屏/截屏2025-09-01 17.35.58.png
-4、语言列表页无法点进去具体语言：
+4、(已解决)语言列表页无法点进去具体语言：
 截屏/截屏2025-09-01 17.41.11.png
+
+第二次问题反馈
+1、learning resources也需要可以在admin页面里面更新信息
+2、Culture & Context模块要优化一下信息结构，然后也需要可以在admin页面里面更新信息
+3、(已解决)语言对比页面选择了几个语言之后，点击detail和charts均报错，应该是没有实现detail和charts的功能
+4、language数据里面的fsi里面的description不能是中文，请全部翻译成英文，符合美国用户习惯
+5、目前每种语言的数据感觉有点不够细致，太粗略

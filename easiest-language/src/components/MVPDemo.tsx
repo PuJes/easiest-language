@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import LanguageCard from './LanguageCard';
 import StatsDashboard from './StatsDashboard';
 import FSIBadge from './FSIBadge';
@@ -9,6 +10,7 @@ import { Language } from '@/lib/types/language';
 import { getAllLanguages } from '../lib/data/data-adapters';
 
 const MVPDemo: React.FC = () => {
+  const router = useRouter(); // 添加路由钩子
   const [languages, setLanguages] = useState<Language[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number[]>([]);
@@ -58,6 +60,22 @@ const MVPDemo: React.FC = () => {
   const handleViewDetails = (language: Language) => {
     // 导航到语言详情页
     window.location.href = `/language/${language.id}`;
+  };
+
+  /**
+   * 处理开始对比功能
+   * 将选中的语言ID作为URL参数传递到对比页面
+   */
+  const handleStartComparison = () => {
+    if (selectedLanguages.length < 2) {
+      alert('Please select at least 2 languages for comparison');
+      return;
+    }
+    
+    // 构建URL参数，将选中的语言ID用逗号分隔
+    const languageIds = selectedLanguages.join(',');
+    // 使用Next.js路由跳转到对比页面，并传递语言ID参数
+    router.push(`/compare?languages=${languageIds}`);
   };
 
   const toggleDifficultyFilter = (category: number) => {
@@ -252,11 +270,7 @@ const MVPDemo: React.FC = () => {
                     </div>
 
                     <button
-                      onClick={() =>
-                        alert(
-                          'Navigate to Language Comparison Page\n\nThis would show:\n- Detailed comparison table\n- Learning time bar charts\n- Overlapped radar charts\n- AI learning path recommendations'
-                        )
-                      }
+                      onClick={handleStartComparison} // 使用新的处理函数
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       data-testid="start-comparison"
                     >

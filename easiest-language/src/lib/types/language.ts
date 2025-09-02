@@ -151,8 +151,6 @@ export interface LearningResource {
   description: string;
   /** Whether the resource is free */
   free: boolean;
-  /** User rating (1-5 stars) */
-  rating?: number;
 }
 
 /**

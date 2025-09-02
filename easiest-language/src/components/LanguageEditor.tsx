@@ -574,7 +574,6 @@ function ResourcesTab({
                 <p className="text-sm text-gray-600">{resource.description}</p>
                 <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                   <span>类型: {resource.type}</span>
-                  <span>评分: {resource.rating || 'N/A'}</span>
                   <span>{resource.free ? '免费' : '付费'}</span>
                   {resource.url && (
                     <a
@@ -791,7 +790,6 @@ function AddResourceModal({
     url: '',
     description: '',
     free: true,
-    rating: 4,
     level: 'beginner' as const,
   });
 
