@@ -1,0 +1,281 @@
+{
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/layout.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/layout.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/page.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/page.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/FSIBadge.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/FSIBadge.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/HomePage.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/HomePage.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageCard.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageCard.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageComparison.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageComparison.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageDetail.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/LanguageDetail.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/MVPDemo.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/MVPDemo.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/StatsDashboard.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/StatsDashboard.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/compare/page.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/compare/page.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/home/page.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/home/page.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/languages/page.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/languages/page.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/FSICategoryFilter.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/FSICategoryFilter.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/FilterTestPage.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/FilterTestPage.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/GeographicRegionFilter.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/GeographicRegionFilter.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/LanguageFamilyFilter.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/LanguageFamilyFilter.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/SmartSearchFilter.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/components/filters/SmartSearchFilter.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/__mocks__/test-data.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/__mocks__/test-data.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/__templates__/test-templates.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/__templates__/test-templates.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/countries.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/countries.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/data-adapters.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/data-adapters.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/language-families.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/language-families.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/languages.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/languages.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/learning-resources.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/data/learning-resources.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/hooks/useAdvancedFilter.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/hooks/useAdvancedFilter.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/filter.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/filter.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/index.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/index.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/language.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/types/language.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/utils/data-validation.ts": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/utils/data-validation.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/utils/test-utils.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/lib/utils/test-utils.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/language/[id]/page.tsx": {
+    "path": "/Users/jesspu/codes/Easiest_Language/easiest-language/src/app/language/[id]/page.tsx",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  }
+}

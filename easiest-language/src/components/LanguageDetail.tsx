@@ -101,7 +101,7 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                     <div className="text-sm text-gray-600 dark:text-gray-400">Native Speakers</div>
                   </div>
                   <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="speakers-count">
                       {language.speakers.total}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Total Speakers</div>
@@ -220,6 +220,21 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
         );
 
       case 'difficulty':
+        // 安全检查：确保fsi.details存在
+        if (!language.fsi?.details) {
+          return (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Learning Difficulty Data Not Available
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                The difficulty analysis data for this language is currently being prepared.
+              </p>
+            </div>
+          );
+        }
+
         return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
@@ -361,7 +376,7 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                   {level} Resources
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {language.resources[level as keyof typeof language.resources].map(
+                  {language.learningResources[level as keyof typeof language.learningResources].map(
                     (resource, index) => (
                       <motion.a
                         key={index}
@@ -502,13 +517,13 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
           transition={{ duration: 0.8 }}
         >
           <div className="text-8xl mb-4">{language.flag}</div>
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">{language.name}</h1>
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4" data-testid="language-name">{language.name}</h1>
           <p className="text-2xl text-gray-600 dark:text-gray-400 mb-6">{language.nativeName}</p>
 
           <div className="flex justify-center items-center gap-6 mb-8">
             <FSIBadge category={language.fsi.category} size="lg" showLabel />
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400" data-testid="learning-hours">
                 {language.fsi.hours}h
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">

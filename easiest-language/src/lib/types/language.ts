@@ -34,6 +34,19 @@ export interface FSIInfo {
   description: string;
   /** Hour range (for ranges like 600-750h) */
   hoursRange?: [number, number];
+  /** Detailed difficulty breakdown for different aspects */
+  details: {
+    /** Grammar complexity score (1-5, 1=easiest, 5=hardest) */
+    grammar: number;
+    /** Vocabulary learning difficulty (1-5) */
+    vocabulary: number;
+    /** Pronunciation difficulty (1-5) */
+    pronunciation: number;
+    /** Writing system difficulty (1-5) */
+    writing: number;
+    /** Cultural context difficulty (1-5) */
+    cultural: number;
+  };
 }
 
 /**

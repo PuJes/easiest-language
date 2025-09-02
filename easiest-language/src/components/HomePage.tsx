@@ -143,9 +143,20 @@ const HomePage: React.FC = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg transform transition-all duration-200 hover:scale-105"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setQuizStep(0)}
+                onClick={() => {
+                  setQuizStep(0);
+                  setQuizAnswers([]);
+                  setShowQuizResults(false);
+                  // 滚动到问卷区域
+                  setTimeout(() => {
+                    const quizSection = document.getElementById('quiz-section');
+                    if (quizSection) {
+                      quizSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 100);
+                }}
               >
-                Take 3-Minute Quiz 🚀
+                Take 1-Minute Quiz 🚀
               </motion.button>
 
               <Link href="/languages">
@@ -185,7 +196,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Quick Assessment Quiz */}
-      <section className="py-16 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
+      <section id="quiz-section" className="py-16 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {!showQuizResults ? (
             <motion.div

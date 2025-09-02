@@ -20,13 +20,13 @@ function generateFSIDetails(category: number) {
  * 基于美国外国语学院官方分类和学习时长标准
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T02:30:44.644Z
+ * 最后更新时间: 2025-09-02T02:30:17.057Z
  */
 export const FSI_LANGUAGE_DATA: LanguageData = {
   languages: [
     {
         'id': 'es',
-        'name': 'Spanish',
+        'name': 'Spanish的点点滴滴',
         'nativeName': 'Español',
         'countries': [
             'Spain',

@@ -12,6 +12,7 @@ const MVPDemo: React.FC = () => {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number[]>([]);
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   // 加载语言数据
@@ -27,10 +28,19 @@ const MVPDemo: React.FC = () => {
   }, []);
 
   // 筛选逻辑
-  const filteredLanguages = languages.filter((lang) => {
-    if (selectedDifficulty.length === 0) return true;
-    return selectedDifficulty.includes(lang.fsi.category);
-  });
+  const filteredLanguages = languages
+    .filter((lang) => {
+      if (selectedDifficulty.length === 0) return true;
+      return selectedDifficulty.includes(lang.fsi.category);
+    })
+    .filter((lang) => {
+      if (!search) return true;
+      const keyword = search.toLowerCase();
+      return (
+        lang.name.toLowerCase().includes(keyword) ||
+        lang.nativeName.toLowerCase().includes(keyword)
+      );
+    });
 
   const handleCompare = (language: Language) => {
     setSelectedLanguages((prev) => {
@@ -46,9 +56,8 @@ const MVPDemo: React.FC = () => {
   };
 
   const handleViewDetails = (language: Language) => {
-    alert(
-      `View ${language.name} Details\n\nThis would navigate to the language detail page showing:\n- Learning complexity radar chart\n- Geographic distribution map\n- Detailed learning resources\n- Language family relationships`
-    );
+    // 导航到语言详情页
+    window.location.href = `/language/${language.id}`;
   };
 
   const toggleDifficultyFilter = (category: number) => {
@@ -120,6 +129,43 @@ const MVPDemo: React.FC = () => {
               </h3>
 
               <div className="space-y-3">
+                {/* 搜索框 */}
+                <input
+                  type="text"
+                  placeholder="Search languages..."
+                  className="w-full mb-2 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  data-testid="search-input"
+                />
+                {/* 搜索建议 */}
+                {search.length >= 2 && (
+                  <div
+                    className="w-full p-2 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-sm"
+                    data-testid="search-suggestions"
+                  >
+                    {languages
+                      .filter((l) =>
+                        [l.name, l.nativeName].some((t) => t.toLowerCase().includes(search.toLowerCase()))
+                      )
+                      .slice(0, 5)
+                      .map((l) => (
+                        <div key={l.id} className="py-1 px-2">
+                          {l.name}
+                        </div>
+                      ))}
+                  </div>
+                )}
+                {/* 清除搜索 */}
+                {search && (
+                  <button
+                    className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-md text-gray-600 dark:text-gray-300"
+                    onClick={() => setSearch('')}
+                    data-testid="search-clear"
+                  >
+                    Clear Search
+                  </button>
+                )}
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Difficulty Levels
                 </label>
@@ -141,6 +187,7 @@ const MVPDemo: React.FC = () => {
                     }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    data-testid={`fsi-category-${category}-checkbox`}
                   >
                     <div className="w-4 h-4 rounded-full" style={{ backgroundColor: color }} />
                     <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
@@ -155,6 +202,7 @@ const MVPDemo: React.FC = () => {
                   className="mt-4 w-full px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border border-slate-200 dark:border-slate-700 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  data-testid="clear-filters"
                 >
                   Clear Filters
                 </motion.button>
@@ -173,6 +221,7 @@ const MVPDemo: React.FC = () => {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
+                  data-testid="comparison-list"
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -192,6 +241,7 @@ const MVPDemo: React.FC = () => {
                               <button
                                 onClick={() => handleCompare(lang)}
                                 className="text-red-500 hover:text-red-700 ml-1"
+                                data-testid="comparison-remove"
                               >
                                 ×
                               </button>
@@ -208,6 +258,7 @@ const MVPDemo: React.FC = () => {
                         )
                       }
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      data-testid="start-comparison"
                     >
                       Start Comparison
                     </button>
@@ -265,6 +316,7 @@ const MVPDemo: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
+                data-testid="empty-state"
               >
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">

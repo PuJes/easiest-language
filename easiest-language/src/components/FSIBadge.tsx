@@ -77,10 +77,12 @@ const FSIBadge: React.FC<FSIBadgeProps> = ({
 }) => {
   const config = FSI_CONFIG[category];
   const sizeConfig = SIZE_CONFIG[size];
+  const romanMap: Record<Exclude<FSICategory, 0>, string> = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V' }; // 罗马数字映射
 
   return (
     <motion.div
       className={`inline-flex items-center ${sizeConfig.container} ${className}`}
+      data-testid="fsi-badge"
       whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.2 }}
     >
@@ -95,6 +97,7 @@ const FSIBadge: React.FC<FSIBadgeProps> = ({
       {showLabel && (
         <span className={`${sizeConfig.text} text-gray-700 dark:text-gray-200`}>
           {config.label}
+          {category !== 0 ? ` (${romanMap[category as Exclude<FSICategory, 0>]})` : ''}
         </span>
       )}
     </motion.div>

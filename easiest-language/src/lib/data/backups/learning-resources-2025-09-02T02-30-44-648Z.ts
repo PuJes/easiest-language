@@ -5,7 +5,7 @@ import type { LearningResource } from '../types';
  * 为每种语言提供推荐的学习资源
  * 
  * ⚠️ 此文件由数据管理系统自动生成，请勿手动编辑
- * 最后更新时间: 2025-09-02T02:30:44.648Z
+ * 最后更新时间: 2025-09-02T02:30:29.947Z
  */
 export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> = {
   'en': [

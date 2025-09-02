@@ -59,6 +59,7 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
   return (
     <motion.div
       className={`${cardStyles} ${className}`}
+      data-testid="language-card"
       onClick={handleViewDetails}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
@@ -84,6 +85,7 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
             onClick={handleCompare}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            data-testid="compare-button"
           >
             Compare
           </motion.button>
