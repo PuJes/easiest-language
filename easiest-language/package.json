@@ -20,6 +20,7 @@
     "lint-staged": "lint-staged",
     "lh:ci": "lighthouse http://localhost:3000 --quiet --chrome-flags='--headless=new' --only-categories=performance,accessibility,best-practices,seo",
     "deploy:cloudbase": "bash scripts/deploy-cloudbase.sh",
+    "deploy:quick": "bash quick-deploy.sh",
     "build:cloudbase": "cloudbase framework deploy",
     "preview:cloudbase": "cloudbase hosting deploy -e $CLOUDBASE_ENV_ID"
   },

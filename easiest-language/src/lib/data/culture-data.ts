@@ -14,6 +14,12 @@ export interface CultureInfo {
   businessUse: string;
   entertainment: string[];
   cuisine: string[];
+  culturalInfo?: {
+    businessUse: number;
+    travelValue: number;
+    culturalRichness: number;
+    onlinePresence: number;
+  };
 }
 
 /**
@@ -24,38 +30,24 @@ export interface CultureInfo {
  * 最后更新时间: 2025-09-02T09:08:11.644Z
  */
 export const CULTURE_DATA: Record<string, CultureInfo> = {
-  "test": {
-    "overview": "这是一个测试语言的文化概述",
-    "businessUse": "这是一个测试语言的商务用途描述",
-    "entertainment": [
-      "测试音乐",
-      "测试电影"
-    ],
-    "cuisine": [
-      "测试美食",
-      "测试饮品"
-    ]
+  test: {
+    overview: '这是一个测试语言的文化概述',
+    businessUse: '这是一个测试语言的商务用途描述',
+    entertainment: ['测试音乐', '测试电影'],
+    cuisine: ['测试美食', '测试饮品'],
   },
-  "es": {
-    "overview": "Spanish is a fascinating language with rich cultural heritage...",
-    "businessUse": "Spanish is valuable for international business...",
-    "entertainment": [
-      "Flamenco",
-      "Spanish Cinema",
-      "Bullfighting"
-    ],
-    "cuisine": [
-      "Paella",
-      "Tapas",
-      "Gazpacho"
-    ],
-    "culturalInfo": {
-      "businessUse": 4,
-      "travelValue": 5,
-      "culturalRichness": 5,
-      "onlinePresence": 4
-    }
-  }
+  es: {
+    overview: 'Spanish is a fascinating language with rich cultural heritage...',
+    businessUse: 'Spanish is valuable for international business...',
+    entertainment: ['Flamenco', 'Spanish Cinema', 'Bullfighting'],
+    cuisine: ['Paella', 'Tapas', 'Gazpacho'],
+    culturalInfo: {
+      businessUse: 4,
+      travelValue: 5,
+      culturalRichness: 5,
+      onlinePresence: 4,
+    },
+  },
 };
 
 /**

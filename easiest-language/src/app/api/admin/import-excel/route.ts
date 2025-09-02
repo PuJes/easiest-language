@@ -116,11 +116,38 @@ export async function POST(request: NextRequest) {
 /**
  * 保存导入的数据到系统
  */
-async function saveImportedData(data: any): Promise<{
+interface BasicInfoItem {
+  ID: string;
+  [key: string]: unknown;
+}
+
+interface FSIDetailItem {
+  ID: string;
+  [key: string]: unknown;
+}
+
+interface LearningResourceItem {
+  ID: string;
+  [key: string]: unknown;
+}
+
+interface CultureInfoItem {
+  ID: string;
+  [key: string]: unknown;
+}
+
+interface ImportedData {
+  basicInfo?: BasicInfoItem[];
+  fsiDetails?: FSIDetailItem[];
+  learningResources?: LearningResourceItem[];
+  cultureInfo?: CultureInfoItem[];
+}
+
+async function saveImportedData(data: ImportedData): Promise<{
   success: boolean;
   message: string;
   errors?: string[];
-  details?: any;
+  details?: Record<string, unknown>;
 }> {
   try {
     console.log('开始保存导入的数据...');
@@ -135,7 +162,7 @@ async function saveImportedData(data: any): Promise<{
 
     // 保存基础信息和FSI详情到语言数据文件
     if (data.basicInfo && data.basicInfo.length > 0) {
-      const languageSaveResult = await saveLanguageData(data.basicInfo, data.fsiDetails);
+      const languageSaveResult = await saveLanguageData(data.basicInfo, data.fsiDetails || []);
       if (languageSaveResult.success) {
         savedCount += data.basicInfo.length;
         console.log(`✅ 成功保存 ${data.basicInfo.length} 条语言数据`);
@@ -199,8 +226,8 @@ async function saveImportedData(data: any): Promise<{
  * 保存语言数据
  */
 async function saveLanguageData(
-  basicInfo: any[],
-  fsiDetails: any[]
+  basicInfo: BasicInfoItem[],
+  fsiDetails: FSIDetailItem[]
 ): Promise<{
   success: boolean;
   message: string;
@@ -225,9 +252,9 @@ async function saveLanguageData(
     const existingData = JSON.parse(JSON.stringify(FSI_LANGUAGE_DATA));
 
     // 创建FSI详情映射
-    const fsiDetailsMap: Record<string, any> = {};
+    const fsiDetailsMap: Record<string, FSIDetailItem> = {};
     fsiDetails.forEach((detail) => {
-      const languageId = detail['Language ID'];
+      const languageId = detail['Language ID'] as string;
       if (languageId) {
         fsiDetailsMap[languageId] = detail;
       }
@@ -239,7 +266,7 @@ async function saveLanguageData(
       if (languageId) {
         // 查找现有语言
         const existingLanguageIndex = existingData.languages.findIndex(
-          (lang: any) => lang.id === languageId
+          (lang: { id: string; [key: string]: unknown }) => lang.id === languageId
         );
 
         const fsiDetail = fsiDetailsMap[languageId];
@@ -249,7 +276,7 @@ async function saveLanguageData(
           name: info.Name,
           nativeName: info['Native Name'],
           countries: info.Countries
-            ? info.Countries.split('; ').filter((item: string) => item.trim())
+            ? (info.Countries as string).split('; ').filter((item: string) => item.trim())
             : [],
           family: info.Family,
           subfamily: info.Subfamily,
@@ -329,7 +356,7 @@ async function saveLanguageData(
 /**
  * 保存学习资源数据
  */
-async function saveLearningResourcesData(learningResources: any[]): Promise<{
+async function saveLearningResourcesData(learningResources: LearningResourceItem[]): Promise<{
   success: boolean;
   message: string;
 }> {
@@ -353,9 +380,9 @@ async function saveLearningResourcesData(learningResources: any[]): Promise<{
     const existingData = JSON.parse(JSON.stringify(LEARNING_RESOURCES_BY_LANGUAGE));
 
     // 按语言ID分组学习资源
-    const resourcesByLanguage: Record<string, any[]> = {};
+    const resourcesByLanguage: Record<string, unknown[]> = {};
     learningResources.forEach((resource) => {
-      const languageId = resource['Language ID'];
+      const languageId = resource['Language ID'] as string;
       if (languageId) {
         if (!resourcesByLanguage[languageId]) {
           resourcesByLanguage[languageId] = [];
@@ -407,7 +434,7 @@ async function saveLearningResourcesData(learningResources: any[]): Promise<{
 /**
  * 保存文化信息数据
  */
-async function saveCultureInfoData(cultureInfo: any[]): Promise<{
+async function saveCultureInfoData(cultureInfo: CultureInfoItem[]): Promise<{
   success: boolean;
   message: string;
 }> {
@@ -432,16 +459,16 @@ async function saveCultureInfoData(cultureInfo: any[]): Promise<{
 
     // 更新文化信息数据
     cultureInfo.forEach((info) => {
-      const languageId = info['Language ID'];
+      const languageId = info['Language ID'] as string;
       if (languageId) {
         existingData[languageId] = {
           overview: info['Cultural Overview'],
           businessUse: info['Business Use'],
           entertainment: info['Entertainment']
-            ? info['Entertainment'].split('; ').filter((item: string) => item.trim())
+            ? (info['Entertainment'] as string).split('; ').filter((item: string) => item.trim())
             : [],
           cuisine: info['Cuisine']
-            ? info['Cuisine'].split('; ').filter((item: string) => item.trim())
+            ? (info['Cuisine'] as string).split('; ').filter((item: string) => item.trim())
             : [],
           culturalInfo: {
             businessUse: info['Business Value'] || 4,
@@ -582,7 +609,7 @@ export function getLanguagesWithCustomCulture(): string[] {
 /**
  * 生成语言数据文件内容
  */
-function generateLanguagesFile(data: any): string {
+function generateLanguagesFile(data: { languages: unknown[] }): string {
   const dataString = JSON.stringify(data, null, 2);
 
   return `import type { LanguageData } from '../types';

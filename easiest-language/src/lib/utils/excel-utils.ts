@@ -187,11 +187,11 @@ export async function importLanguagesFromExcel(file: File): Promise<{
 }> {
   try {
     console.log('开始导入Excel文件:', file.name, '大小:', file.size, 'bytes');
-    
+
     // 将File对象转换为ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
     console.log('文件数据大小:', arrayBuffer.byteLength, 'bytes');
-    
+
     // 使用XLSX读取Excel文件
     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
     console.log('Excel工作簿解析成功');
@@ -283,9 +283,12 @@ function parseExcelData(workbook: XLSX.WorkBook) {
     }
 
     // 检查是否有任何数据
-    const totalDataRows = data.basicInfo.length + data.fsiDetails.length + 
-                         data.learningResources.length + data.cultureInfo.length;
-    
+    const totalDataRows =
+      data.basicInfo.length +
+      data.fsiDetails.length +
+      data.learningResources.length +
+      data.cultureInfo.length;
+
     if (totalDataRows === 0) {
       errors.push('Excel文件中没有找到任何数据，请确保至少有一个工作表包含数据');
     }

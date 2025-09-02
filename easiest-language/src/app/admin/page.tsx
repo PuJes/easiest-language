@@ -1438,7 +1438,7 @@ function DataExportSection() {
       });
 
       console.log('API响应状态:', response.status, response.statusText);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP错误: ${response.status} ${response.statusText}`);
       }
@@ -1450,7 +1450,9 @@ function DataExportSection() {
       if (result.success) {
         console.log('导入成功！');
         const saveInfo = result.saveResult ? `\n\n保存结果: ${result.saveResult.message}` : '';
-        alert(`Excel文件导入成功！\n\n数据摘要:\n- 基础信息: ${result.summary?.basicInfo || 0} 条\n- FSI详情: ${result.summary?.fsiDetails || 0} 条\n- 学习资源: ${result.summary?.learningResources || 0} 条\n- 文化信息: ${result.summary?.cultureInfo || 0} 条${saveInfo}`);
+        alert(
+          `Excel文件导入成功！\n\n数据摘要:\n- 基础信息: ${result.summary?.basicInfo || 0} 条\n- FSI详情: ${result.summary?.fsiDetails || 0} 条\n- 学习资源: ${result.summary?.learningResources || 0} 条\n- 文化信息: ${result.summary?.cultureInfo || 0} 条${saveInfo}`
+        );
       } else {
         console.log('导入失败:', result.message, result.errors);
         const errorDetails = result.errors ? result.errors.join('\n') : '';
@@ -1459,7 +1461,9 @@ function DataExportSection() {
     } catch (error) {
       console.error('导入失败:', error);
       console.error('错误堆栈:', error instanceof Error ? error.stack : '无堆栈信息');
-      alert(`导入失败: ${error instanceof Error ? error.message : '未知错误'}\n\n请检查浏览器控制台获取详细错误信息。`);
+      alert(
+        `导入失败: ${error instanceof Error ? error.message : '未知错误'}\n\n请检查浏览器控制台获取详细错误信息。`
+      );
     } finally {
       setIsImporting(false);
       // 清空文件输入
