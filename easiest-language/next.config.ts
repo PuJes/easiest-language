@@ -42,15 +42,13 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // 实验性功能
-  experimental: {
-    // 启用 Turbopack（开发环境）
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  // Turbopack 配置（替代已废弃的 experimental.turbo）
+  turbopack: {
+    root: __dirname, // 明确指定根目录，解决多 lockfile 警告
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },

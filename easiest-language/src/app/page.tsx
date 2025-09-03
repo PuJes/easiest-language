@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'; // 动态导入组件，实现代码分割
 // 动态导入 MVPDemo 组件，实现代码分割优化
 const MVPDemo = dynamic(() => import('@/components/MVPDemo'), {
   loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded-lg" />, // 加载占位符
-  ssr: false, // 客户端渲染，减少服务端压力
+  // 移除 ssr: false，因为服务端组件不支持此选项
 });
 
 export default function Home() {
