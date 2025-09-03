@@ -1,6 +1,47 @@
 import MVPDemo from '@/components/MVPDemo';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'All Languages - Complete Language Database | FSI Difficulty Ratings',
+  description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers. Compare learning time, difficulty levels, and find your perfect language to learn.',
+  keywords: [
+    'all languages',
+    'language database',
+    'FSI difficulty ratings',
+    'language comparison',
+    'easiest languages to learn',
+    'language learning guide',
+    'foreign language difficulty',
+    'language learning time'
+  ],
+  openGraph: {
+    title: 'All Languages - Complete Language Database',
+    description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
+    url: 'https://easiestlanguage.site/languages',
+    siteName: 'Easiest Language to Learn',
+    images: [
+      {
+        url: '/og?type=languages',
+        width: 1200,
+        height: 630,
+        alt: 'All Languages - Complete Language Database',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'All Languages - Complete Language Database',
+    description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
+    images: ['/og?type=languages'],
+  },
+  alternates: {
+    canonical: '/languages',
+  },
+};
 
 export default function LanguagesPage() {
   return (
@@ -9,7 +50,7 @@ export default function LanguagesPage() {
       <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <Link href="/">
+            <Link href="/" title="Back to Home - Easiest Language to Learn">
               <button className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 <ArrowLeftIcon className="h-5 w-5" />
                 Back to Home

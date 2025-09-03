@@ -2,17 +2,77 @@ import Link from 'next/link';
 import MVPDemo from '@/components/MVPDemo';
 
 export default function Home() {
+  // 首页结构化数据
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Easiest Language to Learn",
+    "description": "Discover the easiest languages to learn based on official FSI standards for English speakers",
+    "url": "https://easiestlanguage.site",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://easiestlanguage.site/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Easiest Language to Learn",
+      "url": "https://easiestlanguage.site"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Easiest Languages to Learn",
+      "description": "Languages ranked by difficulty for English speakers based on FSI standards",
+      "numberOfItems": 50,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Language",
+            "name": "Spanish",
+            "description": "FSI Category 1 - Easiest for English speakers"
+          }
+        },
+        {
+          "@type": "ListItem", 
+          "position": 2,
+          "item": {
+            "@type": "Language",
+            "name": "French",
+            "description": "FSI Category 1 - Easiest for English speakers"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Language", 
+            "name": "German",
+            "description": "FSI Category 2 - Relatively easy for English speakers"
+          }
+        }
+      ]
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
-            🌍 Easiest Languages to Learn
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-            Discover the best language learning path based on FSI difficulty ratings for English
-            speakers:
-          </p>
+    <>
+      {/* 结构化数据 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
+              🌍 Easiest Languages to Learn
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+              Discover the best language learning path based on FSI difficulty ratings for English
+              speakers:
+            </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
             <Link href="/home">
@@ -86,5 +146,6 @@ export default function Home() {
         <MVPDemo />
       </div>
     </div>
+    </>
   );
 }

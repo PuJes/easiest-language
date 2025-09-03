@@ -17,6 +17,97 @@ import {
 import FSIBadge from './FSIBadge';
 import { ExtendedLanguageDetail } from '@/lib/data/data-adapters';
 
+// 辅助函数：获取难度描述
+function getDifficultyDescription(category: number): string {
+  const descriptions = {
+    1: 'easiest',
+    2: 'relatively easy', 
+    3: 'moderately difficult',
+    4: 'challenging',
+    5: 'very challenging'
+  };
+  return descriptions[category as keyof typeof descriptions] || 'moderate';
+}
+
+// 辅助函数：获取语法描述
+function getGrammarDescription(level: number): string {
+  const descriptions = {
+    1: 'Very simple grammar structure',
+    2: 'Simple grammar with few exceptions',
+    3: 'Moderate complexity with some rules',
+    4: 'Complex grammar with many rules',
+    5: 'Very complex grammar system'
+  };
+  return descriptions[level as keyof typeof descriptions] || 'Moderate complexity';
+}
+
+// 辅助函数：获取发音描述
+function getPronunciationDescription(level: number): string {
+  const descriptions = {
+    1: 'Easy pronunciation for English speakers',
+    2: 'Some new sounds to learn',
+    3: 'Moderate pronunciation challenges',
+    4: 'Difficult pronunciation patterns',
+    5: 'Very challenging pronunciation system'
+  };
+  return descriptions[level as keyof typeof descriptions] || 'Moderate difficulty';
+}
+
+// 辅助函数：获取词汇描述
+function getVocabularyDescription(level: number): string {
+  const descriptions = {
+    1: 'Many cognates with English',
+    2: 'Some familiar vocabulary',
+    3: 'Moderate vocabulary learning required',
+    4: 'Extensive vocabulary to master',
+    5: 'Very extensive vocabulary system'
+  };
+  return descriptions[level as keyof typeof descriptions] || 'Moderate vocabulary';
+}
+
+// 辅助函数：获取相似性
+function getSimilarities(language: ExtendedLanguageDetail): string[] {
+  const similarities: string[] = [];
+  
+  if (language.family === 'Indo-European') {
+    similarities.push('Both are Indo-European languages');
+  }
+  
+  if (language.writingSystem === 'Latin') {
+    similarities.push('Uses the same Latin alphabet');
+  }
+  
+  if (language.fsi.category <= 2) {
+    similarities.push('Similar sentence structure to English');
+    similarities.push('Many cognates with English words');
+  }
+  
+  return similarities.length > 0 ? similarities : ['Both are human languages with grammar rules'];
+}
+
+// 辅助函数：获取差异
+function getDifferences(language: ExtendedLanguageDetail): string[] {
+  const differences: string[] = [];
+  
+  if (language.writingSystem !== 'Latin') {
+    differences.push(`Uses ${language.writingSystem} writing system`);
+  }
+  
+  if (language.fsi.details.grammar >= 4) {
+    differences.push('More complex grammar than English');
+  }
+  
+  if (language.fsi.details.pronunciation >= 4) {
+    differences.push('Different pronunciation patterns');
+  }
+  
+  if (language.family !== 'Indo-European') {
+    differences.push('Different language family structure');
+  }
+  
+  return differences.length > 0 ? differences : ['Different vocabulary and cultural context'];
+}
+
 interface LanguageDetailProps {
   language: ExtendedLanguageDetail;
 }
@@ -566,7 +657,7 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
       <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <Link href="/languages">
+            <Link href="/languages" title="Back to All Languages - Complete Language List">
               <motion.button
                 className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 whileHover={{ x: -4 }}
@@ -617,7 +708,7 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
           </div>
 
           <div className="flex justify-center gap-4">
-            <Link href={`/compare?languages=${language.id}`}>
+            <Link href={`/compare?languages=${language.id}`} title={`Compare ${language.name} with Other Languages`}>
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg">
                 Compare Languages
               </button>
@@ -655,6 +746,139 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
           transition={{ duration: 0.4 }}
         >
           {renderTabContent()}
+        </motion.div>
+
+        {/* SEO Content Sections */}
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+              Why Learn {language.name}? Complete Guide for English Speakers
+            </h2>
+            
+            <div className="prose prose-lg max-w-none space-y-8">
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  {language.name} Learning Overview
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {language.name} ({language.nativeName}) is classified as FSI Category {language.fsi.category}, 
+                  making it {getDifficultyDescription(language.fsi.category)} for English speakers to learn. 
+                  According to the Foreign Service Institute, you'll need approximately {language.fsi.hours} hours 
+                  of study to achieve professional working proficiency.
+                </p>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Key Learning Challenges for English Speakers
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Grammar Complexity</h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {language.fsi.details.grammar}/5 difficulty - {getGrammarDescription(language.fsi.details.grammar)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Pronunciation</h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {language.fsi.details.pronunciation}/5 difficulty - {getPronunciationDescription(language.fsi.details.pronunciation)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Writing System</h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {language.fsi.details.writing}/5 difficulty - Uses {language.writingSystem} script
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Vocabulary</h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {language.fsi.details.vocabulary}/5 difficulty - {getVocabularyDescription(language.fsi.details.vocabulary)}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Why {language.name} is Worth Learning
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+                  With {language.speakers.total} speakers worldwide, {language.name} is the #{language.speakers.rank} 
+                  most spoken language globally. It's primarily spoken in {language.geography.primaryCountries.join(', ')} 
+                  and is part of the {language.family} language family.
+                </p>
+                <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                  <li>Business opportunities in {language.geography.primaryCountries.slice(0, 2).join(' and ')}</li>
+                  <li>Cultural enrichment through {language.family} heritage</li>
+                  <li>Travel convenience across {language.geography.continents.join(', ')}</li>
+                  <li>Academic and research opportunities</li>
+                </ul>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  {language.name} vs English: Key Differences
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Similarities</h3>
+                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                      {getSimilarities(language).map((similarity, index) => (
+                        <li key={index}>{similarity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Key Differences</h3>
+                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                      {getDifferences(language).map((difference, index) => (
+                        <li key={index}>{difference}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Best Learning Strategies for {language.name}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Beginner Level</h3>
+                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 text-sm">
+                      <li>Master basic pronunciation</li>
+                      <li>Learn essential vocabulary</li>
+                      <li>Understand basic grammar rules</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Intermediate Level</h3>
+                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 text-sm">
+                      <li>Practice conversation skills</li>
+                      <li>Expand vocabulary range</li>
+                      <li>Study cultural context</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Advanced Level</h3>
+                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 text-sm">
+                      <li>Master complex grammar</li>
+                      <li>Develop fluency</li>
+                      <li>Understand nuances</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

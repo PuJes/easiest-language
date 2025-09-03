@@ -159,7 +159,7 @@ const HomePage: React.FC = () => {
                 Take 1-Minute Quiz 🚀
               </motion.button>
 
-              <Link href="/languages">
+              <Link href="/languages" title="Browse All Languages - Complete Language List">
                 <motion.button
                   className="bg-white hover:bg-gray-50 text-gray-900 px-8 py-4 rounded-xl text-lg font-semibold shadow-lg border-2 border-gray-200 transform transition-all duration-200 hover:scale-105"
                   whileHover={{ scale: 1.05 }}
@@ -328,7 +328,7 @@ const HomePage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredLanguages.map((language, index) => (
-              <Link key={language.id} href={`/language/${language.id}`}>
+              <Link key={language.id} href={`/language/${language.id}`} title={`Learn ${language.name} - ${language.fsi.hours}h Study Time`}>
                 <motion.div
                   className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer h-full"
                   initial={{ opacity: 0, y: 20 }}
@@ -381,7 +381,7 @@ const HomePage: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Link href="/languages">
+            <Link href="/languages" title="Explore All 50+ Languages - Complete Language Database">
               <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg transform transition-all duration-200 hover:scale-105">
                 Explore All 50+ Languages <ChevronRightIcon className="inline h-5 w-5 ml-2" />
               </button>

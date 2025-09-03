@@ -18,6 +18,22 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: false,
   },
+  // 重定向配置 - 处理www重定向
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.easiestlanguage.site',
+          },
+        ],
+        destination: 'https://easiestlanguage.site/:path*',
+        permanent: true, // 301重定向
+      },
+    ];
+  },
   // 实验性功能
   experimental: {
     // 启用 Turbopack（开发环境）
