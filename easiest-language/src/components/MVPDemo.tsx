@@ -288,7 +288,7 @@ const MVPDemo: React.FC = () => {
 
             {/* 语言卡片网格 */}
             {loading ? (
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
                 {[...Array(6)].map((_, index) => (
                   <div
                     key={index}
@@ -302,7 +302,7 @@ const MVPDemo: React.FC = () => {
               </div>
             ) : (
               <motion.div
-                className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+                className="grid gap-6 grid-cols-1 md:grid-cols-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
