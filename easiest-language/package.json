@@ -21,6 +21,12 @@
     "lh:ci": "lighthouse http://localhost:3000 --quiet --chrome-flags='--headless=new' --only-categories=performance,accessibility,best-practices,seo",
     "deploy:cloudbase": "bash scripts/deploy-cloudbase.sh",
     "deploy:quick": "bash quick-deploy.sh",
+    "deploy:docker": "bash docker-build.sh deploy",
+    "docker:build": "bash docker-build.sh build",
+    "docker:run": "bash docker-build.sh run",
+    "docker:dev": "bash docker-build.sh dev",
+    "docker:stop": "bash docker-build.sh stop",
+    "docker:logs": "bash docker-build.sh logs",
     "build:cloudbase": "cloudbase framework deploy",
     "preview:cloudbase": "cloudbase hosting deploy -e $CLOUDBASE_ENV_ID"
   },
