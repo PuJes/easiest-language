@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'; // 页面元数据类型
+import Script from 'next/script'; // Next.js Script组件，用于优化脚本加载
 import './globals.css'; // 全局样式（含 Tailwind v4）
 
 export const metadata: Metadata = {
@@ -39,9 +40,7 @@ export const metadata: Metadata = {
       { url: '/favicon.ico', sizes: 'any' },
     ],
     shortcut: '/favicon.ico', // 明确指定shortcut icon
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     other: [
       { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
       { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -94,7 +93,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        {/* Google Analytics 代码 - 使用Next.js Script组件优化加载性能 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8W1P7Z2D9D"
+          strategy="afterInteractive" // 在页面交互后加载，优化性能
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-8W1P7Z2D9D');
+          `}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
