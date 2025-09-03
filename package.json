@@ -1,0 +1,40 @@
+{
+  "name": "easiest-language-root",
+  "version": "1.0.0",
+  "description": "Easiest Language - Language Learning Difficulty Analysis Platform",
+  "private": true,
+  "scripts": {
+    "docker:build": "bash docker-build.sh build",
+    "docker:run": "bash docker-build.sh run",
+    "docker:dev": "bash docker-build.sh dev",
+    "docker:stop": "bash docker-build.sh stop",
+    "docker:logs": "bash docker-build.sh logs",
+    "docker:clean": "bash docker-build.sh clean",
+    "deploy:docker": "bash docker-build.sh deploy",
+    "deploy:docker:dev": "bash docker-build.sh deploy -e dev",
+    "build": "cd easiest-language && npm run build",
+    "dev": "cd easiest-language && npm run dev",
+    "start": "cd easiest-language && npm run start",
+    "test": "cd easiest-language && npm run test",
+    "lint": "cd easiest-language && npm run lint",
+    "format": "cd easiest-language && npm run format"
+  },
+  "keywords": [
+    "language-learning",
+    "difficulty-analysis",
+    "fsi-rating",
+    "nextjs",
+    "react",
+    "typescript"
+  ],
+  "author": "Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/easiest-language.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/easiest-language/issues"
+  },
+  "homepage": "https://github.com/your-username/easiest-language#readme"
+}
