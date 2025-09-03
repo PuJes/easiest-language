@@ -1,0 +1,72 @@
+# Render 平台优化版 Dockerfile
+# 专门为 Render 部署设计，兼顾构建速度和镜像大小
+
+# 使用官方 Node.js 20 Alpine 镜像作为基础镜像
+FROM node:20-alpine AS base
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装必要的系统依赖，添加 curl 用于健康检查
+RUN apk add --no-cache libc6-compat curl
+
+# 复制 package.json 和 package-lock.json
+COPY easiest-language/package*.json ./
+
+# Render 环境网络优化 - 使用官方源确保稳定性
+RUN npm config set registry https://registry.npmjs.org/ && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm config set fetch-retries 5 && \
+    npm ci --omit=dev --ignore-scripts --no-audit --no-fund && \
+    npm cache clean --force
+
+# 构建阶段
+FROM base AS builder
+WORKDIR /app
+
+# 复制 package 文件并安装全部依赖（包括开发依赖）
+COPY easiest-language/package*.json ./
+RUN npm config set registry https://registry.npmjs.org/ && \
+    npm ci --ignore-scripts --no-audit --no-fund
+
+# 复制源代码
+COPY easiest-language/ .
+
+# 构建应用 - 使用 Next.js standalone 输出
+RUN npm run build
+
+# 生产阶段 - 最小化镜像
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# 安装运行时必需的依赖
+RUN apk add --no-cache curl && \
+    addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# 创建public目录并复制构建产物（如果存在）
+RUN mkdir -p ./public
+COPY --from=builder /app/public ./public
+
+# 复制 Next.js standalone 构建产物
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# 切换到非 root 用户提高安全性
+USER nextjs
+
+# 暴露端口 - Render 自动分配端口
+EXPOSE 3000
+
+# 环境变量配置
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# 健康检查配置 - 适配 Render 平台
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+# 启动命令
+CMD ["node", "server.js"]

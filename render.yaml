@@ -1,0 +1,66 @@
+# Render 部署配置文件
+# 官方文档: https://render.com/docs/blueprint-spec
+
+services:
+  # 主应用服务
+  - type: web
+    name: easiest-language-app
+    env: docker
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    
+    # 服务配置
+    plan: starter  # 可选: starter, standard, pro
+    region: oregon  # 可选: oregon, frankfurt, singapore
+    
+    # 环境变量
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: HOSTNAME
+        value: "0.0.0.0"
+      # 添加您的自定义环境变量
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: easiest-language-db
+      #     property: connectionString
+    
+    # 健康检查
+    healthCheckPath: /api/health
+    
+    # 自动部署配置
+    autoDeploy: true  # GitHub 推送时自动部署
+    
+    # 构建配置
+    buildFilter:
+      paths:
+        - easiest-language/**
+      ignoredPaths:
+        - docs/**
+        - README.md
+        - "*.md"
+    
+    # 资源限制（可选）
+    disk:
+      name: easiest-language-disk
+      mountPath: /app/data
+      sizeGB: 1
+
+# 数据库配置（可选）
+# databases:
+#   - name: easiest-language-db
+#     databaseName: easiest_language
+#     user: app_user
+#     plan: starter  # 可选: starter, standard, pro
+#     region: oregon
+#     ipAllowList: []  # 允许的 IP 地址列表
+
+# 静态网站配置（如果需要 CDN 加速）
+# - type: static
+#   name: easiest-language-static
+#   staticPublishPath: ./easiest-language/public
+#   buildCommand: echo "Static files ready"
+#   domains:
+#     - easiest-language-static.onrender.com
