@@ -1,5 +1,17 @@
 @import 'tailwindcss';
 
+/* 关键 CSS 内联 - 首屏渲染优化 */
+@layer base {
+  /* 防止布局偏移的基础样式 */
+  html {
+    scroll-behavior: smooth; /* 平滑滚动 */
+  }
+  
+  body {
+    font-display: swap; /* 字体显示优化，防止文字闪烁 */
+  }
+}
+
 :root {
   /* 主色调 - 基于项目设计规范 */
   --primary: #3b82f6; /* 蓝色 - 信任、专业 */

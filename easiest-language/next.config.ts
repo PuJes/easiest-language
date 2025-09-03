@@ -11,12 +11,20 @@ const nextConfig: NextConfig = {
   },
   // Docker 部署配置
   output: 'standalone',
-  // 优化配置
-  compress: true,
-  poweredByHeader: false,
-  // 图片优化
+  // 性能优化配置
+  compress: true, // 启用 gzip 压缩
+  poweredByHeader: false, // 移除 X-Powered-By 头部
+  // 图片优化配置
   images: {
-    unoptimized: false,
+    unoptimized: false, // 启用图片优化
+    formats: ['image/webp', 'image/avif'], // 支持现代图片格式
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // 响应式图片尺寸
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // 图标尺寸
+    minimumCacheTTL: 60, // 图片缓存时间（秒）
+  },
+  // 编译器优化
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production', // 生产环境移除 console
   },
   // 重定向配置 - 处理www重定向
   async redirects() {

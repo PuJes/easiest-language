@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'; // 页面元数据类型
 import Script from 'next/script'; // Next.js Script组件，用于优化脚本加载
 import './globals.css'; // 全局样式（含 Tailwind v4）
+import PerformanceMonitor from '@/components/PerformanceMonitor'; // 性能监控组件
 
 export const metadata: Metadata = {
   title: {
@@ -93,6 +94,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* 字体预加载 - 优化字体加载性能 */}
+        <link
+          rel="preload"
+          href="/fonts/inter-var.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/* DNS 预解析 - 提前解析外部域名 */}
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        {/* 关键资源预连接 */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+      </head>
       <body className={`antialiased`}>
         {/* Google Analytics 代码 - 使用Next.js Script组件优化加载性能 */}
         <Script
@@ -108,6 +124,8 @@ export default function RootLayout({
           `}
         </Script>
         {children}
+        {/* 性能监控组件 - 监控 Core Web Vitals */}
+        <PerformanceMonitor />
       </body>
     </html>
   );
