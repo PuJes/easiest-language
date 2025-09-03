@@ -10,22 +10,26 @@ WORKDIR /app
 # 复制 package.json 和 package-lock.json
 COPY easiest-language/package*.json ./
 
-# 配置npm网络设置和安装依赖
-RUN npm config set registry https://registry.npmjs.org/ && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retries 5 && \
-    npm ci --only=production && \
-    npm cache clean --force
+# 清理并配置npm设置，使用淘宝镜像源提高稳定性
+RUN npm config delete registry && \
+    npm config set registry https://registry.npmmirror.com/ && \
+    npm config set fetch-retry-mintimeout 30000 && \
+    npm config set fetch-retry-maxtimeout 300000 && \
+    npm config set fetch-retries 10 && \
+    npm config set maxsockets 5 && \
+    npm cache clean --force && \
+    npm ci --omit=dev --ignore-scripts --no-audit --no-fund
 
 # 开发阶段
 FROM base AS dev
 # 配置npm网络设置并安装所有依赖（包括开发依赖）
-RUN npm config set registry https://registry.npmjs.org/ && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retries 5 && \
-    npm ci
+RUN npm config delete registry && \
+    npm config set registry https://registry.npmmirror.com/ && \
+    npm config set fetch-retry-mintimeout 30000 && \
+    npm config set fetch-retry-maxtimeout 300000 && \
+    npm config set fetch-retries 10 && \
+    npm config set maxsockets 5 && \
+    npm ci --ignore-scripts --no-audit --no-fund
 COPY easiest-language/ .
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
@@ -35,11 +39,13 @@ FROM base AS builder
 WORKDIR /app
 COPY easiest-language/package*.json ./
 # 配置npm网络设置并安装所有依赖（包括开发依赖）
-RUN npm config set registry https://registry.npmjs.org/ && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retries 5 && \
-    npm ci
+RUN npm config delete registry && \
+    npm config set registry https://registry.npmmirror.com/ && \
+    npm config set fetch-retry-mintimeout 30000 && \
+    npm config set fetch-retry-maxtimeout 300000 && \
+    npm config set fetch-retries 10 && \
+    npm config set maxsockets 5 && \
+    npm ci --ignore-scripts --no-audit --no-fund
 COPY easiest-language/ .
 
 # 构建应用
