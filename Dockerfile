@@ -60,8 +60,9 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # 复制构建产物
-COPY --from=builder /app/public ./public
+# 复制 standalone 构建产物（包含所有必要的文件）
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# 复制静态资源
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # 切换到非 root 用户
