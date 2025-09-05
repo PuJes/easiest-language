@@ -45,9 +45,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   // 生成优化的标题，确保长度符合SEO最佳实践
   const baseTitle = `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${fsiCategory}`;
-  const optimizedTitle = baseTitle.length > 70 
-    ? `Learn ${language.name} - ${language.fsi.hours}h | FSI Cat ${fsiCategory}`
-    : baseTitle;
+  const optimizedTitle =
+    baseTitle.length > 70
+      ? `Learn ${language.name} - ${language.fsi.hours}h | FSI Cat ${fsiCategory}`
+      : baseTitle;
 
   return {
     title: optimizedTitle,
@@ -168,8 +169,20 @@ export default async function LanguageDetailPage({ params }: PageProps) {
       ratingValue: Math.max(1, 5 - language.fsi.category + 1), // Calculate rating based on FSI category
       bestRating: 5,
       worstRating: 1,
-      ratingCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000), // Estimate rating count based on speaker count
-      reviewCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000), // Estimate review count based on speaker count
+      ratingCount: Math.max(
+        1,
+        Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000)
+      ), // Ensure rating count is at least 1
+      reviewCount: Math.max(
+        1,
+        Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000)
+      ), // Ensure review count is at least 1
+      itemReviewed: {
+        '@type': 'Language',
+        name: language.name,
+        alternateName: language.nativeName,
+        inLanguage: language.id,
+      },
     },
   };
 

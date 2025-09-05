@@ -160,8 +160,20 @@ export function generateLanguageStructuredData(language: ExtendedLanguageDetail)
       ratingValue: Math.max(1, 5 - language.fsi.category + 1),
       bestRating: 5,
       worstRating: 1,
-      ratingCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000),
-      reviewCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000),
+      ratingCount: Math.max(
+        1,
+        Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000)
+      ),
+      reviewCount: Math.max(
+        1,
+        Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000)
+      ),
+      itemReviewed: {
+        '@type': 'Language',
+        name: language.name,
+        alternateName: language.nativeName,
+        inLanguage: language.id,
+      },
     },
   };
 }
@@ -171,55 +183,56 @@ export function generateLanguageStructuredData(language: ExtendedLanguageDetail)
  */
 export function generateHomepageStructuredData() {
   return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Easiest Language to Learn",
-    "description": "Discover the easiest languages to learn based on official FSI standards for English speakers",
-    "url": "https://easiestlanguage.site",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://easiestlanguage.site/search?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Easiest Language to Learn',
+    description:
+      'Discover the easiest languages to learn based on official FSI standards for English speakers',
+    url: 'https://easiestlanguage.site',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://easiestlanguage.site/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Easiest Language to Learn",
-      "url": "https://easiestlanguage.site"
+    publisher: {
+      '@type': 'Organization',
+      name: 'Easiest Language to Learn',
+      url: 'https://easiestlanguage.site',
     },
-    "mainEntity": {
-      "@type": "ItemList",
-      "name": "Easiest Languages to Learn",
-      "description": "Languages ranked by difficulty for English speakers based on FSI standards",
-      "numberOfItems": 50,
-      "itemListElement": [
+    mainEntity: {
+      '@type': 'ItemList',
+      name: 'Easiest Languages to Learn',
+      description: 'Languages ranked by difficulty for English speakers based on FSI standards',
+      numberOfItems: 50,
+      itemListElement: [
         {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "Language",
-            "name": "Spanish",
-            "description": "FSI Category 1 - Easiest for English speakers"
-          }
+          '@type': 'ListItem',
+          position: 1,
+          item: {
+            '@type': 'Language',
+            name: 'Spanish',
+            description: 'FSI Category 1 - Easiest for English speakers',
+          },
         },
         {
-          "@type": "ListItem", 
-          "position": 2,
-          "item": {
-            "@type": "Language",
-            "name": "French",
-            "description": "FSI Category 1 - Easiest for English speakers"
-          }
+          '@type': 'ListItem',
+          position: 2,
+          item: {
+            '@type': 'Language',
+            name: 'French',
+            description: 'FSI Category 1 - Easiest for English speakers',
+          },
         },
         {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "Language", 
-            "name": "German",
-            "description": "FSI Category 2 - Relatively easy for English speakers"
-          }
-        }
-      ]
-    }
+          '@type': 'ListItem',
+          position: 3,
+          item: {
+            '@type': 'Language',
+            name: 'German',
+            description: 'FSI Category 2 - Relatively easy for English speakers',
+          },
+        },
+      ],
+    },
   };
 }
