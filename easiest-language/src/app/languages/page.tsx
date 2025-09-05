@@ -5,9 +5,10 @@ import LanguageList from '@/components/LanguageList';
 import InternalLinks from '@/components/InternalLinks';
 import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, Suspense } from 'react';
 
-export default function LanguagesPage() {
+// 将使用 useSearchParams 的组件分离出来
+function LanguagesPageContent() {
   const searchParams = useSearchParams(); // 获取 URL 查询参数
   const category = searchParams.get('category'); // 获取 category 参数
 
@@ -50,6 +51,7 @@ export default function LanguagesPage() {
   useEffect(() => {
     document.title = getPageTitle();
   }, [getPageTitle]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
@@ -223,5 +225,73 @@ export default function LanguagesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// 加载中组件
+function LanguagesPageLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Header */}
+      <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          {/* Breadcrumb Navigation with integrated back button */}
+          <BreadcrumbNavigation
+            items={generateBreadcrumbs.languages()}
+            showBackButton={true}
+            backButtonLabel="Back to Home"
+            backButtonHref="/home"
+          />
+        </div>
+      </div>
+
+      {/* Page Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Complete Language Database
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            Explore all 50+ languages with FSI difficulty ratings for English speakers. Compare learning time,
+            difficulty levels, and find your perfect language to learn.
+          </p>
+        </div>
+
+        {/* Loading skeleton */}
+        <div className="w-full">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8">
+            <div className="animate-pulse">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-pulse"
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 主组件，包装 Suspense
+export default function LanguagesPage() {
+  return (
+    <Suspense fallback={<LanguagesPageLoading />}>
+      <LanguagesPageContent />
+    </Suspense>
   );
 }
