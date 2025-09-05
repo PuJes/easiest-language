@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面包屑导航功能测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .test-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .test-link {
+            display: block;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .test-link:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        .status {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍞 面包屑导航功能测试</h1>
+            <p>测试新的语言下拉菜单功能</p>
+        </div>
+
+        <div class="status">
+            <strong>✅ 功能已实现！</strong> 面包屑导航现在包含语言下拉菜单，您可以直接从面包屑中跳转到任何语言详情页。
+        </div>
+
+        <div class="instructions">
+            <h3>📋 测试步骤：</h3>
+            <ol>
+                <li>点击下面的任意语言链接</li>
+                <li>查看页面顶部的面包屑导航</li>
+                <li>点击"Languages"旁边的下拉箭头 ▼</li>
+                <li>从下拉菜单中选择不同的语言</li>
+                <li>验证页面是否正确跳转</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>🌍 测试不同语言的面包屑导航</h2>
+            <div class="test-links">
+                <a href="http://localhost:3000/language/es" class="test-link">🇪🇸 西班牙语</a>
+                <a href="http://localhost:3000/language/fr" class="test-link">🇫🇷 法语</a>
+                <a href="http://localhost:3000/language/de" class="test-link">🇩🇪 德语</a>
+                <a href="http://localhost:3000/language/it" class="test-link">🇮🇹 意大利语</a>
+                <a href="http://localhost:3000/language/pt" class="test-link">🇵🇹 葡萄牙语</a>
+                <a href="http://localhost:3000/language/zh" class="test-link">🇨🇳 中文</a>
+                <a href="http://localhost:3000/language/ja" class="test-link">🇯🇵 日语</a>
+                <a href="http://localhost:3000/language/ko" class="test-link">🇰🇷 韩语</a>
+                <a href="http://localhost:3000/language/ar" class="test-link">🇸🇦 阿拉伯语</a>
+                <a href="http://localhost:3000/language/ru" class="test-link">🇷🇺 俄语</a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>✨ 新功能特性</h2>
+            <ul class="feature-list">
+                <li>语言下拉菜单：在"Languages"面包屑项中显示下拉箭头</li>
+                <li>快速跳转：直接从面包屑中选择任何语言跳转</li>
+                <li>国旗图标：每个语言选项都显示对应的国旗表情符号</li>
+                <li>响应式设计：在移动设备上也能正常使用</li>
+                <li>键盘友好：支持键盘导航和屏幕阅读器</li>
+                <li>点击外部关闭：点击下拉菜单外部区域自动关闭</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 预期结果</h2>
+            <p>测试成功后，您应该看到：</p>
+            <ul class="feature-list">
+                <li>面包屑显示：🏠 > Languages ▼ > 当前语言</li>
+                <li>点击"Languages"下拉箭头后显示所有语言列表</li>
+                <li>每个语言选项都有国旗图标和语言名称</li>
+                <li>点击任何语言选项都能正确跳转</li>
+                <li>下拉菜单在点击外部区域时自动关闭</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

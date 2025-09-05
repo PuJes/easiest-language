@@ -4,6 +4,14 @@ export interface BreadcrumbItem {
   label: string;
   href: string;
   isCurrentPage?: boolean;
+  /** 是否显示下拉菜单 */
+  hasDropdown?: boolean;
+  /** 下拉菜单选项 */
+  dropdownItems?: Array<{
+    label: string;
+    href: string;
+    flagEmoji?: string;
+  }>;
 }
 
 /**
@@ -13,8 +21,17 @@ export const generateBreadcrumbs = {
   /**
    * Generate breadcrumbs for language detail page
    */
-  languageDetail: (language: Language): BreadcrumbItem[] => [
-    { label: 'Languages', href: '/languages' },
+  languageDetail: (language: Language, allLanguages?: Language[]): BreadcrumbItem[] => [
+    { 
+      label: 'Languages', 
+      href: '/languages',
+      hasDropdown: true,
+      dropdownItems: allLanguages?.map(lang => ({
+        label: lang.name,
+        href: `/language/${lang.id}`,
+        flagEmoji: lang.flagEmoji
+      })) || []
+    },
     { label: language.name, href: `/language/${language.id}`, isCurrentPage: true },
   ],
 

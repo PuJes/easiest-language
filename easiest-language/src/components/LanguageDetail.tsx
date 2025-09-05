@@ -716,7 +716,7 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
             items={generateBreadcrumbs.languageDetail({
               ...language,
               speakers: parseInt(language.speakers.total.replace(/,/g, '')) || 0
-            } as Language)} 
+            } as Language, getAllLanguages())} 
             showBackButton={true}
             backButtonLabel="Back to Languages"
             backButtonHref="/languages"
