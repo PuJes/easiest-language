@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
-  ArrowLeftIcon,
   BookOpenIcon,
   GlobeAltIcon,
   UsersIcon,
@@ -15,7 +14,11 @@ import {
   PlayIcon,
 } from '@heroicons/react/24/outline';
 import FSIBadge from './FSIBadge';
-import { ExtendedLanguageDetail } from '@/lib/data/data-adapters';
+import InternalLinks from './InternalLinks';
+import BreadcrumbNavigation from './BreadcrumbNavigation';
+import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
+import { ExtendedLanguageDetail, getAllLanguages } from '@/lib/data/data-adapters';
+import { Language } from '@/lib/types/language';
 
 // 辅助函数：获取难度描述
 function getDifficultyDescription(category: number): string {
@@ -106,6 +109,58 @@ function getDifferences(language: ExtendedLanguageDetail): string[] {
   }
   
   return differences.length > 0 ? differences : ['Different vocabulary and cultural context'];
+}
+
+// 辅助函数：获取相关语言推荐
+function getRelatedLanguages(currentLanguage: ExtendedLanguageDetail): Language[] {
+  const allLanguages = getAllLanguages();
+  
+  // 过滤掉当前语言
+  const otherLanguages = allLanguages.filter(lang => lang.id !== currentLanguage.id);
+  
+  // 按相关性排序
+  const relatedLanguages = otherLanguages
+    .map(lang => {
+      let score = 0;
+      
+      // 同语言家族加分
+      if (lang.family === currentLanguage.family) {
+        score += 10;
+      }
+      
+      // 同子家族加分
+      if (lang.subfamily === currentLanguage.subfamily) {
+        score += 15;
+      }
+      
+      // 同书写系统加分
+      if (lang.writingSystem === currentLanguage.writingSystem) {
+        score += 5;
+      }
+      
+      // 相似难度等级加分
+      const difficultyDiff = Math.abs(lang.fsi.category - currentLanguage.fsi.category);
+      score += Math.max(0, 5 - difficultyDiff);
+      
+      // 同地理区域加分（简化处理）
+      const currentRegions = currentLanguage.regions || [];
+      const langRegions = lang.regions || [];
+      const hasCommonRegion = currentRegions.some(region => 
+        langRegions.some(langRegion => 
+          langRegion.toLowerCase().includes(region.toLowerCase()) ||
+          region.toLowerCase().includes(langRegion.toLowerCase())
+        )
+      );
+      if (hasCommonRegion) {
+        score += 3;
+      }
+      
+      return { ...lang, relevanceScore: score };
+    })
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, 8); // 取前8个最相关的语言
+  
+  return relatedLanguages;
 }
 
 interface LanguageDetailProps {
@@ -655,23 +710,17 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
       <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/languages" title="Back to All Languages - Complete Language List">
-              <motion.button
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                whileHover={{ x: -4 }}
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-                Back to Languages
-              </motion.button>
-            </Link>
-
-            <div className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
-              <span className="text-lg">🇺🇸</span>
-              <span>English Native Speaker</span>
-            </div>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          {/* Breadcrumb Navigation with integrated back button */}
+          <BreadcrumbNavigation 
+            items={generateBreadcrumbs.languageDetail({
+              ...language,
+              speakers: parseInt(language.speakers.total.replace(/,/g, '')) || 0
+            } as Language)} 
+            showBackButton={true}
+            backButtonLabel="Back to Languages"
+            backButtonHref="/languages"
+          />
         </div>
       </div>
 
@@ -1063,6 +1112,21 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
             </div>
           </div>
         </motion.div>
+        
+        {/* 内部链接区域 */}
+        <div className="mt-16">
+          <InternalLinks 
+            currentLanguage={{
+              ...language,
+              speakers: parseInt(language.speakers.total.replace(/,/g, '')) || 0
+            } as Language}
+            relatedLanguages={getRelatedLanguages(language)}
+            pageType="language-detail"
+            showLearningResources={true}
+            showComparisonLinks={true}
+            customTitle={`Learning Resources for ${language.name}`}
+          />
+        </div>
       </div>
     </div>
   );
