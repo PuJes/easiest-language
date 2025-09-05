@@ -1,10 +1,10 @@
-import type { CountryLanguageMapping, CountryLanguageData, Language } from '../types';
+import type { RegionLanguageMapping, RegionLanguageData, Language } from '../types';
 
 /**
- * 国家到语言映射关系
+ * 地区到语言映射关系
  * 基于FSI语言数据建立的完整映射表
  */
-export const COUNTRY_LANGUAGE_MAPPING: CountryLanguageMapping = {
+export const REGION_LANGUAGE_MAPPING: RegionLanguageMapping = {
   // 北美洲
   'United States of America': {
     primary: 'en', // English

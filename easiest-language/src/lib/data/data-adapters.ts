@@ -50,7 +50,7 @@ export function adaptLanguageData(rawLanguage: Record<string, unknown>): Languag
       (rawLanguage.localName as string) ||
       (rawLanguage.nativeName as string) ||
       (rawLanguage.name as string),
-    countries: (rawLanguage.countries as string[]) || [],
+    regions: (rawLanguage.regions as string[]) || [],
     fsi: {
       category: validCategory,
       hours: (fsi?.hours as number) || (rawLanguage.hours as number) || 0,
@@ -176,8 +176,8 @@ export interface ExtendedLanguageDetail extends Omit<Language, 'speakers'> {
   // 添加flag属性
   flag: string;
   geography: {
-    primaryCountries: string[];
-    secondaryCountries: string[];
+    primaryRegions: string[];
+    secondaryRegions: string[];
     continents: string[];
   };
   learningResources: {
@@ -240,9 +240,9 @@ export function getLanguageDetailData(id: string): ExtendedLanguageDetail | null
     // 使用flagEmoji作为flag属性
     flag: baseLanguage.flagEmoji,
     geography: {
-      primaryCountries: baseLanguage.countries.slice(0, 3),
-      secondaryCountries: baseLanguage.countries.slice(3),
-      continents: getLanguageContinents(baseLanguage.countries),
+      primaryRegions: baseLanguage.regions.slice(0, 3),
+      secondaryRegions: baseLanguage.regions.slice(3),
+      continents: getLanguageContinents(baseLanguage.regions),
     },
     // 从真实的学习资源数据中获取
     learningResources: getLearningResourcesForLanguage(id),
@@ -321,10 +321,10 @@ function calculateSpeakerRank(speakers: number): number {
 }
 
 /**
- * 根据国家列表推断大陆
+ * 根据地区列表推断大陆
  */
-function getLanguageContinents(countries: string[]): string[] {
-  // 更完整的国家-大陆映射
+function getLanguageContinents(regions: string[]): string[] {
+  // 更完整的地区-大陆映射
   const continentMap: { [key: string]: string } = {
     // 欧洲
     Spain: 'Europe',
@@ -446,8 +446,8 @@ function getLanguageContinents(countries: string[]): string[] {
     'Papua New Guinea': 'Oceania',
   };
 
-  const continents = countries
-    .map((country) => continentMap[country])
+  const continents = regions
+    .map((region) => continentMap[region])
     .filter(Boolean)
     .filter((continent, index, arr) => arr.indexOf(continent) === index);
 

@@ -169,7 +169,7 @@ export const DEFAULT_SEARCH_CONFIG: SearchConfig = {
     name: 1.0,
     nativeName: 0.8,
     family: 0.6,
-    countries: 0.4,
+    regions: 0.4,
   },
   threshold: 0.3,
   maxResults: 50,

@@ -9,8 +9,8 @@ interface PageProps {
 }
 
 /**
- * 生成语言详情页的动态元数据
- * 为每种语言创建SEO优化的标题、描述和关键词
+ * Generate dynamic metadata for language detail pages
+ * Create SEO-optimized titles, descriptions, and keywords for each language
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
@@ -33,13 +33,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                         fsiCategory === 3 ? 'moderately difficult' :
                         fsiCategory === 4 ? 'challenging' : 'very challenging';
 
-  const primaryCountries = language.geography.primaryCountries.slice(0, 3).join(', ');
+  const primaryRegions = language.geography.primaryRegions.slice(0, 3).join(', ');
   const languageFamily = language.family;
   const writingSystem = language.writingSystem;
 
   return {
     title: `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${fsiCategory}`,
-    description: `${language.name} (${language.nativeName}) is ${difficultyText} for English speakers. FSI Category ${fsiCategory}, ${language.fsi.hours} hours study time. Spoken by ${language.speakers.total} people in ${primaryCountries}. Part of the ${languageFamily} family with ${writingSystem} writing system.`,
+    description: `${language.name} (${language.nativeName}) is ${difficultyText} for English speakers. FSI Category ${fsiCategory}, ${language.fsi.hours} hours study time. Spoken by ${language.speakers.total} people in ${primaryRegions}. Part of the ${languageFamily} family with ${writingSystem} writing system.`,
     keywords: [
       `learn ${language.name.toLowerCase()}`,
       `${language.name.toLowerCase()} for English speakers`,
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: 'Easiest Language to Learn',
       images: [
         {
-          url: `/og/${id}`, // 动态生成语言特定的OG图片
+          url: `/og/${id}`, // Dynamically generate language-specific OG image
           width: 1200,
           height: 630,
           alt: `Learn ${language.name} - FSI Category ${fsiCategory}`,
@@ -118,7 +118,7 @@ export default async function LanguageDetailPage({ params }: PageProps) {
     );
   }
 
-  // 生成结构化数据
+  // Generate structured data
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOccupationalCredential",
@@ -153,16 +153,16 @@ export default async function LanguageDetailPage({ params }: PageProps) {
     },
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": Math.max(1, 5 - language.fsi.category + 1), // 基于FSI类别计算评分
+      "ratingValue": Math.max(1, 5 - language.fsi.category + 1), // Calculate rating based on FSI category
       "bestRating": 5,
       "worstRating": 1,
-      "ratingCount": Math.floor(language.speakers.native / 1000000) // 基于使用人数估算评分数量
+      "ratingCount": Math.floor(language.speakers.native / 1000000) // Estimate rating count based on speaker count
     }
   };
 
   return (
     <>
-      {/* 结构化数据 */}
+      {/* Structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

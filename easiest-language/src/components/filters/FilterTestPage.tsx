@@ -146,7 +146,7 @@ export const FilterTestPage: React.FC = () => {
   const regionCounts = mockLanguages.reduce(
     (acc, lang) => {
       // 根据国家推断区域
-      const region = getRegionFromCountries(lang.countries);
+      const region = getRegionFromCountries(lang.regions);
       acc[region] = (acc[region] || 0) + 1;
       return acc;
     },
@@ -318,7 +318,7 @@ export const FilterTestPage: React.FC = () => {
                         </p>
                         <p>
                           <span className="font-medium">区域:</span>{' '}
-                          {getRegionFromCountries(language.countries)}
+                          {getRegionFromCountries(language.regions)}
                         </p>
                         <p>
                           <span className="font-medium">学习时长:</span> {language.fsi.hours}小时
@@ -329,7 +329,7 @@ export const FilterTestPage: React.FC = () => {
                         </p>
                         <p>
                           <span className="font-medium">主要国家:</span>{' '}
-                          {language.countries.slice(0, 2).join(', ')}
+                          {language.regions.slice(0, 2).join(', ')}
                         </p>
                       </div>
 

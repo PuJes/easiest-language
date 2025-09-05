@@ -60,8 +60,8 @@ export interface Language {
   name: string;
   /** Native name of the language */
   nativeName: string;
-  /** Countries where this language is primarily spoken */
-  countries: string[];
+  /** Regions where this language is primarily spoken */
+  regions: string[];
   /** FSI difficulty and learning time information */
   fsi: FSIInfo;
   /** Detailed difficulty breakdown */
@@ -90,8 +90,8 @@ export interface LanguageMVP {
   name: string;
   /** 本地名称 */
   nativeName: string;
-  /** 主要使用国家（简化为1-3个主要国家） */
-  countries: string[];
+  /** 主要使用地区（简化为1-3个主要地区） */
+  regions: string[];
   /** FSI难度等级 (0-5) */
   difficulty: number;
   /** 学习小时数 */
@@ -107,18 +107,18 @@ export interface LanguageMVP {
 }
 
 /**
- * Country to language mapping information
+ * Region to language mapping information
  */
-export interface CountryLanguageData {
-  /** Primary language spoken in the country */
+export interface RegionLanguageData {
+  /** Primary language spoken in the region */
   primary: string;
-  /** Secondary languages spoken in the country */
+  /** Secondary languages spoken in the region */
   secondary: string[];
-  /** All languages associated with the country */
+  /** All languages associated with the region */
   languages: string[];
-  /** Geographic region where the country is located */
+  /** Geographic region where the region is located */
   region: string;
-  /** Average difficulty score for languages in this country */
+  /** Average difficulty score for languages in this region */
   difficulty_avg: number;
 }
 
@@ -131,10 +131,10 @@ export interface LanguageData {
 }
 
 /**
- * Country to language mapping structure
+ * Region to language mapping structure
  */
-export interface CountryLanguageMapping {
-  [countryName: string]: CountryLanguageData;
+export interface RegionLanguageMapping {
+  [regionName: string]: RegionLanguageData;
 }
 
 /**

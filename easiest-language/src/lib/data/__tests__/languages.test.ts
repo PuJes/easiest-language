@@ -220,17 +220,17 @@ describe('FSI Language Data Validation', () => {
   describe('Country Data Validation', () => {
     test('all languages should have at least one country', () => {
       languages.forEach((lang: Language) => {
-        expect(lang.countries.length).toBeGreaterThan(0);
-        expect(Array.isArray(lang.countries)).toBe(true);
+        expect(lang.regions.length).toBeGreaterThan(0);
+        expect(Array.isArray(lang.regions)).toBe(true);
       });
     });
 
     test('country names should be non-empty strings', () => {
       languages.forEach((lang: Language) => {
-        lang.countries.forEach((country: string) => {
-          expect(typeof country).toBe('string');
-          expect(country.length).toBeGreaterThan(0);
-          expect(country.trim()).toBe(country); // No leading/trailing whitespace
+        lang.regions.forEach((region: string) => {
+          expect(typeof region).toBe('string');
+          expect(region.length).toBeGreaterThan(0);
+          expect(region.trim()).toBe(region); // No leading/trailing whitespace
         });
       });
     });

@@ -18,7 +18,7 @@ export interface LanguageEditForm {
   id: string; // 语言ID（不可修改）
   name: string; // 英文名称
   nativeName: string; // 本地名称
-  countries: string[]; // 使用国家
+  regions: string[]; // 使用地区
 
   // === FSI分类信息 ===
   fsiCategory: FSICategory; // FSI分类等级 (0-5)
@@ -100,7 +100,7 @@ export class LanguageEditor {
       id: language.id,
       name: language.name,
       nativeName: language.nativeName,
-      countries: [...language.countries],
+      regions: [...language.regions],
 
       // FSI信息
       fsiCategory: language.fsi.category,
@@ -154,7 +154,7 @@ export class LanguageEditor {
         LanguageEditForm,
         | 'name'
         | 'nativeName'
-        | 'countries'
+        | 'regions'
         | 'family'
         | 'subfamily'
         | 'writingSystem'
@@ -172,7 +172,7 @@ export class LanguageEditor {
     // 更新指定字段 - 直接修改全局数据源
     if (updates.name !== undefined) language.name = updates.name;
     if (updates.nativeName !== undefined) language.nativeName = updates.nativeName;
-    if (updates.countries !== undefined) language.countries = [...updates.countries];
+    if (updates.regions !== undefined) language.regions = [...updates.regions];
     if (updates.family !== undefined) language.family = updates.family;
     if (updates.subfamily !== undefined) language.subfamily = updates.subfamily;
     if (updates.writingSystem !== undefined) language.writingSystem = updates.writingSystem;
@@ -277,7 +277,7 @@ export class LanguageEditor {
     const success1 = this.updateLanguageBasics(languageId, {
       name: formData.name,
       nativeName: formData.nativeName,
-      countries: formData.countries,
+      regions: formData.regions,
       family: formData.family,
       subfamily: formData.subfamily,
       writingSystem: formData.writingSystem,
@@ -436,7 +436,7 @@ export class LanguageEditor {
       id: newId,
       name: newLanguageData.name,
       nativeName: newLanguageData.nativeName,
-      countries: [...newLanguageData.countries],
+      regions: [...newLanguageData.regions],
       fsi: {
         category: newLanguageData.fsiCategory,
         hours: newLanguageData.learningHours,
@@ -608,7 +608,7 @@ export class LanguageEditor {
     // 基础字段验证
     if (!language.name.trim()) errors.push('Name is required');
     if (!language.nativeName.trim()) errors.push('Native name is required');
-    if (language.countries.length === 0) errors.push('At least one country is required');
+    if (language.regions.length === 0) errors.push('At least one region is required');
 
     // FSI数据验证
     if (language.fsi.category < 0 || language.fsi.category > 5) {

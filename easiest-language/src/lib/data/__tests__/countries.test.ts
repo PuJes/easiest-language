@@ -151,11 +151,11 @@ describe('Country Language Mapping Validation', () => {
     test('should have bidirectional consistency with language data', () => {
       // Every country mentioned in language data should exist in country mapping
       FSI_LANGUAGE_DATA.languages.forEach((lang) => {
-        lang.countries.forEach((countryName) => {
-          expect(COUNTRY_LANGUAGE_MAPPING[countryName]).toBeDefined();
+        lang.regions.forEach((regionName) => {
+          expect(COUNTRY_LANGUAGE_MAPPING[regionName]).toBeDefined();
 
-          if (COUNTRY_LANGUAGE_MAPPING[countryName]) {
-            const country = COUNTRY_LANGUAGE_MAPPING[countryName];
+          if (COUNTRY_LANGUAGE_MAPPING[regionName]) {
+            const country = COUNTRY_LANGUAGE_MAPPING[regionName];
             expect(country.languages).toContain(lang.id);
           }
         });

@@ -90,8 +90,8 @@ class SearchEngine {
       { value: language.nativeName.toLowerCase(), weight: this.config.fieldWeights.nativeName },
       { value: language.family.toLowerCase(), weight: this.config.fieldWeights.family },
       {
-        value: language.countries.join(' ').toLowerCase(),
-        weight: this.config.fieldWeights.countries,
+        value: language.regions.join(' ').toLowerCase(),
+        weight: this.config.fieldWeights.regions,
       },
     ];
 
@@ -159,8 +159,8 @@ class SearchEngine {
     if (language.name.toLowerCase().includes(query)) matchedFields.push('name');
     if (language.nativeName.toLowerCase().includes(query)) matchedFields.push('nativeName');
     if (language.family.toLowerCase().includes(query)) matchedFields.push('family');
-    if (language.countries.some((country) => country.toLowerCase().includes(query))) {
-      matchedFields.push('countries');
+    if (language.regions.some((region) => region.toLowerCase().includes(query))) {
+      matchedFields.push('regions');
     }
 
     return matchedFields;
@@ -188,7 +188,7 @@ export function useAdvancedFilter(languages: Language[]): UseAdvancedFilterRetur
       ...new Set(languages.map((l) => l.fsi.category)),
     ].sort() as FSICategory[];
     const families = [...new Set(languages.map((l) => l.family))].sort();
-    const regions = [...new Set(languages.flatMap((l) => l.countries))].sort();
+    const regions = [...new Set(languages.flatMap((l) => l.regions))].sort();
 
     const difficulties = languages.map((l) => l.difficulty.overall);
     const learningTimes = languages.map((l) => l.fsi.hours);
@@ -221,7 +221,7 @@ export function useAdvancedFilter(languages: Language[]): UseAdvancedFilterRetur
     // 地理区域筛选
     if (filterState.regions.length > 0) {
       result = result.filter((lang) =>
-        lang.countries.some((country) => filterState.regions.includes(country))
+        lang.regions.some((region) => filterState.regions.includes(region))
       );
     }
 

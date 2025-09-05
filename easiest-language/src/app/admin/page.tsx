@@ -557,12 +557,12 @@ function BasicsTab({
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          使用国家 (用逗号分隔)
+          使用地区 (用逗号分隔)
         </label>
         <textarea
-          value={editForm.countries.join(', ')}
+          value={editForm.regions.join(', ')}
           onChange={(e) =>
-            updateForm({ countries: e.target.value.split(',').map((c) => c.trim()) })
+            updateForm({ regions: e.target.value.split(',').map((c) => c.trim()) })
           }
           rows={3}
           className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"

@@ -237,11 +237,11 @@ export class DataValidator {
 
     // 检查语言中提到的国家是否在映射中存在
     languages.forEach((lang) => {
-      lang.countries.forEach((countryName) => {
-        if (!COUNTRY_LANGUAGE_MAPPING[countryName]) {
+      lang.regions.forEach((regionName) => {
+        if (!COUNTRY_LANGUAGE_MAPPING[regionName]) {
           this.addError(
             'mapping',
-            `Country "${countryName}" mentioned in ${lang.name} not found in country mapping`,
+            `Region "${regionName}" mentioned in ${lang.name} not found in region mapping`,
             'error',
             lang.id
           );

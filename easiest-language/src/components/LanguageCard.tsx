@@ -119,13 +119,13 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
             <div className="text-xs text-gray-600 dark:text-gray-300">speakers</div>
           </div>
 
-          {/* 国家数量 */}
+          {/* 地区数量 */}
           <div className="text-center p-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
             <div className="text-lg mb-1">🌍</div>
             <div className="text-lg font-bold text-gray-900 dark:text-white">
-              {language.countries.length}
+              {language.regions.length}
             </div>
-            <div className="text-xs text-gray-600 dark:text-gray-300">countries</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300">regions</div>
           </div>
         </div>
 
@@ -144,8 +144,8 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
               <span className="text-sm text-gray-600 dark:text-gray-300">
                 Spoken in:{' '}
                 <span className="font-medium">
-                  {language.countries.slice(0, 3).join(', ')}
-                  {language.countries.length > 3 && `, +${language.countries.length - 3} more`}
+                  {language.regions.slice(0, 3).join(', ')}
+                  {language.regions.length > 3 && `, +${language.regions.length - 3} more`}
                 </span>
               </span>
             </div>

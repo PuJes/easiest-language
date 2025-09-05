@@ -66,7 +66,7 @@ function prepareExportData() {
       ID: lang.id,
       Name: lang.name,
       'Native Name': lang.nativeName,
-      Countries: lang.countries.join('; '),
+      Regions: lang.regions.join('; '),
       Family: lang.family,
       Subfamily: lang.subfamily,
       'Writing System': lang.writingSystem,

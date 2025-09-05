@@ -163,15 +163,15 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                 <div className="space-y-4">
                   <div>
                     <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Primary Countries:
+                      Primary Regions:
                     </span>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {language.geography.primaryCountries.map((country) => (
+                      {language.geography.primaryRegions.map((region) => (
                         <span
-                          key={country}
+                          key={region}
                           className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm"
                         >
-                          {country}
+                          {region}
                         </span>
                       ))}
                     </div>
@@ -219,15 +219,15 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-medium text-gray-600 dark:text-gray-400 mb-2">
-                      Primary Countries
+                      Primary Regions
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {language.geography.primaryCountries.map((country) => (
+                      {language.geography.primaryRegions.map((region) => (
                         <span
-                          key={country}
+                          key={region}
                           className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm font-medium"
                         >
-                          {country}
+                          {region}
                         </span>
                       ))}
                     </div>
@@ -237,12 +237,12 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                       Also Spoken In
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {language.geography.secondaryCountries.map((country) => (
+                      {language.geography.secondaryRegions.map((region) => (
                         <span
-                          key={country}
+                          key={region}
                           className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm"
                         >
-                          {country}
+                          {region}
                         </span>
                       ))}
                     </div>
@@ -811,11 +811,11 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                   With {language.speakers.total} speakers worldwide, {language.name} is the #{language.speakers.rank} 
-                  most spoken language globally. It's primarily spoken in {language.geography.primaryCountries.join(', ')} 
+                  most spoken language globally. It's primarily spoken in {language.geography.primaryRegions.join(', ')} 
                   and is part of the {language.family} language family.
                 </p>
                 <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-2">
-                  <li>Business opportunities in {language.geography.primaryCountries.slice(0, 2).join(' and ')}</li>
+                  <li>Business opportunities in {language.geography.primaryRegions.slice(0, 2).join(' and ')}</li>
                   <li>Cultural enrichment through {language.family} heritage</li>
                   <li>Travel convenience across {language.geography.continents.join(', ')}</li>
                   <li>Academic and research opportunities</li>
@@ -874,6 +874,189 @@ const LanguageDetail: React.FC<LanguageDetailProps> = ({ language }) => {
                       <li>Develop fluency</li>
                       <li>Understand nuances</li>
                     </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Detailed Learning Time Breakdown for {language.name}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                  Based on FSI research, here's how the {language.fsi.hours} hours of study time are typically distributed 
+                  across different learning phases and skill areas for English speakers learning {language.name}.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Learning Phases</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Basic Foundation</span>
+                        <span className="font-semibold text-blue-600">{Math.round(language.fsi.hours * 0.3)}h</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Intermediate Skills</span>
+                        <span className="font-semibold text-green-600">{Math.round(language.fsi.hours * 0.4)}h</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Advanced Proficiency</span>
+                        <span className="font-semibold text-purple-600">{Math.round(language.fsi.hours * 0.3)}h</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Skill Areas</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Grammar & Structure</span>
+                        <span className="font-semibold text-yellow-600">{Math.round(language.fsi.hours * 0.25)}h</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Vocabulary Building</span>
+                        <span className="font-semibold text-red-600">{Math.round(language.fsi.hours * 0.25)}h</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Speaking & Listening</span>
+                        <span className="font-semibold text-indigo-600">{Math.round(language.fsi.hours * 0.35)}h</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
+                        <span className="text-gray-700 dark:text-gray-300">Reading & Writing</span>
+                        <span className="font-semibold text-pink-600">{Math.round(language.fsi.hours * 0.15)}h</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Common Mistakes English Speakers Make When Learning {language.name}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                  Understanding common pitfalls can help you avoid them and accelerate your learning progress. 
+                  Here are the most frequent mistakes English speakers make when learning {language.name}.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Pronunciation Mistakes</h3>
+                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Applying English stress patterns to {language.name} words</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Not mastering {language.name}-specific sounds early</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Ignoring tone or pitch variations (if applicable)</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Grammar Mistakes</h3>
+                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Using English word order in {language.name} sentences</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Overlooking gender or case systems</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        <span>Directly translating idioms and expressions</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Career Opportunities with {language.name} Skills
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                  Learning {language.name} opens doors to numerous career opportunities, especially in 
+                  {language.geography.primaryRegions.slice(0, 2).join(' and ')} and other regions where 
+                  {language.name} is widely spoken.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">Business & Finance</h3>
+                    <ul className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+                      <li>International business development</li>
+                      <li>Financial services and banking</li>
+                      <li>Import/export operations</li>
+                      <li>Market research and analysis</li>
+                    </ul>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 mb-3">Education & Research</h3>
+                    <ul className="space-y-2 text-sm text-green-700 dark:text-green-300">
+                      <li>Language teaching and tutoring</li>
+                      <li>Academic research and translation</li>
+                      <li>Cultural exchange programs</li>
+                      <li>Linguistic studies and analysis</li>
+                    </ul>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-3">Technology & Media</h3>
+                    <ul className="space-y-2 text-sm text-purple-700 dark:text-purple-300">
+                      <li>Software localization</li>
+                      <li>Content creation and media</li>
+                      <li>Customer support and services</li>
+                      <li>Digital marketing and SEO</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Cultural Context and Social Etiquette in {language.name}-Speaking Regions
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                  Understanding cultural context is crucial for effective communication in {language.name}. 
+                  Here are important cultural aspects to consider when learning and using {language.name}.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Communication Style</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Formal vs Informal</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {language.name} has distinct formal and informal registers. Understanding when to use 
+                          each level is essential for appropriate communication.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Non-verbal Communication</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Gestures, eye contact, and personal space norms vary significantly from English-speaking cultures.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Social Customs</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Greetings and Introductions</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Learn the proper way to greet people, including handshakes, kisses, or other cultural greetings.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Business Etiquette</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Professional communication norms, meeting protocols, and business relationship building.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>

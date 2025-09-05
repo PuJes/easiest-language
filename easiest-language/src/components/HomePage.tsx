@@ -367,7 +367,7 @@ const HomePage: React.FC = () => {
                         ? `${Math.round(language.speakers / 1000000)}M`
                         : `${Math.round(language.speakers / 1000)}K`}
                     </span>
-                    <span>🌍 {language.countries.length} countries</span>
+                    <span>🌍 {language.regions.length} regions</span>
                   </div>
                 </motion.div>
               </Link>

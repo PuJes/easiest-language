@@ -372,8 +372,8 @@ function BasicsTab({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">使用国家 *</label>
         <CountryEditor
-          countries={editForm.countries}
-          onChange={(countries) => updateBasics({ countries })}
+          regions={editForm.regions}
+          onChange={(regions) => updateBasics({ regions })}
         />
       </div>
     </div>
@@ -616,24 +616,24 @@ function ResourcesTab({
  * 国家编辑器组件
  */
 function CountryEditor({
-  countries,
+  regions,
   onChange,
 }: {
-  countries: string[];
-  onChange: (countries: string[]) => void;
+  regions: string[];
+  onChange: (regions: string[]) => void;
 }) {
-  const [newCountry, setNewCountry] = useState('');
+  const [newRegion, setNewRegion] = useState('');
 
-  const addCountry = () => {
-    if (newCountry.trim() && !countries.includes(newCountry.trim())) {
-      onChange([...countries, newCountry.trim()]);
-      setNewCountry('');
+  const addRegion = () => {
+    if (newRegion.trim() && !regions.includes(newRegion.trim())) {
+      onChange([...regions, newRegion.trim()]);
+      setNewRegion('');
     }
   };
 
-  const removeCountry = (index: number) => {
-    const newCountries = countries.filter((_, i) => i !== index);
-    onChange(newCountries);
+  const removeRegion = (index: number) => {
+    const newRegions = regions.filter((_, i) => i !== index);
+    onChange(newRegions);
   };
 
   return (
@@ -641,28 +641,28 @@ function CountryEditor({
       <div className="flex gap-2">
         <input
           type="text"
-          value={newCountry}
-          onChange={(e) => setNewCountry(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && addCountry()}
+          value={newRegion}
+          onChange={(e) => setNewRegion(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && addRegion()}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          placeholder="输入国家名称..."
+          placeholder="输入地区名称..."
         />
         <button
-          onClick={addCountry}
+          onClick={addRegion}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           添加
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
-        {countries.map((country, index) => (
+        {regions.map((region, index) => (
           <span
             key={index}
             className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
           >
-            {country}
+            {region}
             <button
-              onClick={() => removeCountry(index)}
+              onClick={() => removeRegion(index)}
               className="ml-2 text-blue-600 hover:text-blue-800"
             >
               ×

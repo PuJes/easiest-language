@@ -27,7 +27,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
   availableLanguages,
   initialLanguages = [],
 }) => {
-  const searchParams = useSearchParams(); // 获取URL参数
+  const searchParams = useSearchParams(); // Get URL parameters
   const [allLanguages] = useState<Language[]>(() => availableLanguages || getAllLanguages());
   const [selectedLanguages, setSelectedLanguages] = useState<Language[]>(initialLanguages);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
@@ -36,18 +36,18 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
   );
   const [aiInsight, setAiInsight] = useState<string>('');
 
-  // 从URL参数中读取语言ID并初始化选中的语言
+  // Read language IDs from URL parameters and initialize selected languages
   useEffect(() => {
     const languagesParam = searchParams.get('languages');
     if (languagesParam && languagesParam.trim()) {
-      // 将逗号分隔的语言ID字符串转换为数组
+      // Convert comma-separated language ID string to array
       const languageIds = languagesParam.split(',').map((id) => id.trim());
-      // 根据ID找到对应的语言对象
+      // Find corresponding language objects by ID
       const languagesFromParams = languageIds
         .map((id) => allLanguages.find((lang) => lang.id === id))
         .filter((lang): lang is Language => lang !== undefined);
 
-      // 如果找到了有效的语言，则设置为选中的语言
+      // If valid languages are found, set them as selected
       if (languagesFromParams.length > 0) {
         setSelectedLanguages(languagesFromParams);
       }
@@ -115,7 +115,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
           l.speakers >= 1000000
             ? `${Math.round(l.speakers / 1000000)}M`
             : `${Math.round(l.speakers / 1000)}K`,
-        primaryCountries: l.countries.slice(0, 3),
+        primaryRegions: l.regions.slice(0, 3),
       })),
       aiInsight,
     };
@@ -181,9 +181,9 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
                 <span className="font-medium text-gray-900 dark:text-white">{language.family}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Countries:</span>
+                <span className="text-gray-600 dark:text-gray-400">Regions:</span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {language.countries.length}
+                  {language.regions.length}
                 </span>
               </div>
             </div>
@@ -301,21 +301,21 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
               ),
             },
             {
-              label: 'Primary Countries',
+              label: 'Primary Regions',
               key: 'geography',
               render: (lang: Language) => (
                 <div className="flex flex-wrap gap-1">
-                  {lang.countries.slice(0, 3).map((country) => (
+                  {lang.regions.slice(0, 3).map((region) => (
                     <span
-                      key={country}
+                      key={region}
                       className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs"
                     >
-                      {country}
+                      {region}
                     </span>
                   ))}
-                  {lang.countries.length > 3 && (
+                  {lang.regions.length > 3 && (
                     <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full text-xs">
-                      +{lang.countries.length - 3} more
+                      +{lang.regions.length - 3} more
                     </span>
                   )}
                 </div>
@@ -482,12 +482,90 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Compare Languages
+            Language Learning Difficulty Comparison
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Compare up to 3 languages side by side to make the best learning decision
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            Compare up to 3 languages side by side to make the best learning decision based on FSI
+            difficulty ratings
           </p>
         </motion.div>
+
+        {/* Additional content section */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Why Compare Languages Before Learning?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Choosing the right language to learn is a crucial decision that can impact your
+              learning journey for years to come. By comparing languages based on official FSI
+              difficulty ratings, you can make an informed decision that aligns with your goals,
+              available time, and learning preferences.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl mb-3">⏰</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Time Investment
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Compare study time requirements to choose a language that fits your schedule
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-3">🎯</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Learning Goals</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Match language difficulty with your learning objectives and career goals
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-3">🌍</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Global Impact</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Consider speaker count and geographic distribution for maximum utility
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              How to Use This Language Comparison Tool
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Step 1: Select Languages
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Choose 2-3 languages you&apos;re considering learning. You can select from our
+                  comprehensive database of 50+ languages with official FSI difficulty ratings.
+                </p>
+                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>Click &quot;Add Language to Compare&quot; button</li>
+                  <li>Browse through available languages</li>
+                  <li>Select up to 3 languages for comparison</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Step 2: Analyze Results
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Review the comparison across multiple dimensions including difficulty, study time,
+                  speaker count, and business value.
+                </p>
+                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>Compare FSI difficulty categories</li>
+                  <li>Analyze study time requirements</li>
+                  <li>Consider global speaker distribution</li>
+                  <li>Evaluate business and career opportunities</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
 
         {/* Mode Tabs & Export */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -499,7 +577,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
             ].map((mode) => (
               <button
                 key={mode.id}
-                onClick={() => setComparisonMode(mode.id as any)}
+                onClick={() => setComparisonMode(mode.id as 'overview' | 'detailed' | 'chart')}
                 className={`${
                   comparisonMode === mode.id
                     ? 'bg-blue-600 text-white shadow-md'

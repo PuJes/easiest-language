@@ -10,14 +10,14 @@ import { Language } from '@/lib/types/language';
 import { getAllLanguages } from '../lib/data/data-adapters';
 
 const MVPDemo: React.FC = () => {
-  const router = useRouter(); // 添加路由钩子
+  const router = useRouter(); // Add router hook
   const [languages, setLanguages] = useState<Language[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // 加载语言数据
+  // Load language data
   useEffect(() => {
     try {
       const allLanguages = getAllLanguages();
@@ -29,7 +29,7 @@ const MVPDemo: React.FC = () => {
     }
   }, []);
 
-  // 筛选逻辑
+  // Filtering logic
   const filteredLanguages = languages
     .filter((lang) => {
       if (selectedDifficulty.length === 0) return true;
@@ -57,13 +57,13 @@ const MVPDemo: React.FC = () => {
   };
 
   const handleViewDetails = (language: Language) => {
-    // 导航到语言详情页
+    // Navigate to language detail page
     window.location.href = `/language/${language.id}`;
   };
 
   /**
-   * 处理开始对比功能
-   * 将选中的语言ID作为URL参数传递到对比页面
+   * Handle start comparison functionality
+   * Pass selected language IDs as URL parameters to comparison page
    */
   const handleStartComparison = () => {
     if (selectedLanguages.length < 2) {
@@ -71,9 +71,9 @@ const MVPDemo: React.FC = () => {
       return;
     }
 
-    // 构建URL参数，将选中的语言ID用逗号分隔
+    // Build URL parameters, join selected language IDs with commas
     const languageIds = selectedLanguages.join(',');
-    // 使用Next.js路由跳转到对比页面，并传递语言ID参数
+    // Use Next.js router to navigate to comparison page with language ID parameters
     router.push(`/compare?languages=${languageIds}`);
   };
 
@@ -89,7 +89,7 @@ const MVPDemo: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      {/* 头部 */}
+      {/* Header */}
       <motion.header
         className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40"
         initial={{ opacity: 0, y: -20 }}
@@ -99,15 +99,15 @@ const MVPDemo: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Easiest Languages
-              </h1>
+              </h2>
               <p className="text-gray-600 dark:text-gray-300 mt-2">
                 Smart language learning difficulty analysis based on FSI data for English speakers
               </p>
             </div>
 
-            {/* 英语母语优势说明 */}
+            {/* English native speaker advantage explanation */}
             <div className="text-right">
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg px-4 py-3">
                 <div className="flex items-center gap-2 text-green-700 dark:text-green-300">
@@ -125,7 +125,7 @@ const MVPDemo: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* 左侧统计面板 */}
+          {/* Left statistics panel */}
           <motion.aside
             className="lg:col-span-1"
             initial={{ opacity: 0, x: -20 }}
@@ -138,7 +138,7 @@ const MVPDemo: React.FC = () => {
               className="mb-6"
             />
 
-            {/* 快速筛选 */}
+            {/* Quick filters */}
             <motion.div
               className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6"
               initial={{ opacity: 0, y: 20 }}

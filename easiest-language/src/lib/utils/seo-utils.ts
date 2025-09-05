@@ -32,9 +32,9 @@ export function generateLanguageTitle(language: ExtendedLanguageDetail): string 
  */
 export function generateLanguageDescription(language: ExtendedLanguageDetail): string {
   const difficulty = getDifficultyDescription(language.fsi.category);
-  const primaryCountries = language.geography.primaryCountries.slice(0, 3).join(', ');
+  const primaryRegions = language.geography.primaryRegions.slice(0, 3).join(', ');
   
-  return `${language.name} (${language.nativeName}) is ${difficulty} for English speakers. FSI Category ${language.fsi.category}, ${language.fsi.hours} hours study time. Spoken by ${language.speakers.total} people in ${primaryCountries}. Part of the ${language.family} family with ${language.writingSystem} writing system.`;
+  return `${language.name} (${language.nativeName}) is ${difficulty} for English speakers. FSI Category ${language.fsi.category}, ${language.fsi.hours} hours study time. Spoken by ${language.speakers.total} people in ${primaryRegions}. Part of the ${language.family} family with ${language.writingSystem} writing system.`;
 }
 
 /**

@@ -169,18 +169,18 @@ export const SmartSearchFilter: React.FC<SmartSearchFilterProps> = ({
         }
       }
 
-      // 国家匹配
-      language.countries.forEach((country) => {
-        if (country.toLowerCase().includes(query)) {
-          const key = `country-${country}`;
+      // 地区匹配
+      language.regions.forEach((region) => {
+        if (region.toLowerCase().includes(query)) {
+          const key = `region-${region}`;
           const existing = suggestionMap.get(key);
           if (existing) {
             existing.count++;
           } else {
             suggestionMap.set(key, {
-              type: 'country',
-              value: country,
-              label: `Languages from ${country}`,
+              type: 'region',
+              value: region,
+              label: `Languages from ${region}`,
               count: 1,
             });
           }
@@ -282,16 +282,16 @@ export const SmartSearchFilter: React.FC<SmartSearchFilterProps> = ({
         score += subfamilyMatch.length * 6; // 子家族匹配权重与家族相同
       }
 
-      // 搜索国家
-      language.countries.forEach((country) => {
-        const countryMatch = findMatches(country, searchTerm);
-        if (countryMatch.length > 0) {
+      // 搜索地区
+      language.regions.forEach((region) => {
+        const regionMatch = findMatches(region, searchTerm);
+        if (regionMatch.length > 0) {
           matches.push({
-            field: 'countries',
-            value: country,
-            indices: countryMatch,
+            field: 'regions',
+            value: region,
+            indices: regionMatch,
           });
-          score += countryMatch.length * 3;
+          score += regionMatch.length * 3;
         }
       });
 

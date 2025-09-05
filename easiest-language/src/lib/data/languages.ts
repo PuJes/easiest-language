@@ -28,7 +28,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'es',
       name: 'Spanish',
       nativeName: 'Español',
-      countries: ['Spain', 'Mexico', 'Argentina'],
+      regions: ['Spain', 'Mexico', 'Argentina'],
       family: 'Indo-European',
       subfamily: 'Romance',
       writingSystem: 'Latin',
@@ -58,7 +58,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'pt',
       name: 'Portuguese',
       nativeName: 'Português',
-      countries: ['Brazil', 'Portugal', 'Angola', 'Mozambique', 'Cape Verde'],
+      regions: ['Brazil', 'Portugal', 'Angola', 'Mozambique', 'Cape Verde'],
       fsi: {
         category: 1,
         hours: 600,
@@ -88,7 +88,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'it',
       name: 'Italian',
       nativeName: 'Italiano',
-      countries: ['Italy', 'San Marino', 'Vatican City', 'Switzerland'],
+      regions: ['Italy', 'San Marino', 'Vatican City', 'Switzerland'],
       fsi: {
         category: 1,
         hours: 600,
@@ -118,7 +118,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'fr',
       name: 'French',
       nativeName: 'Français',
-      countries: [
+      regions: [
         'France',
         'Canada',
         'Belgium',
@@ -156,7 +156,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ro',
       name: 'Romanian',
       nativeName: 'Română',
-      countries: ['Romania', 'Moldova'],
+      regions: ['Romania', 'Moldova'],
       fsi: {
         category: 1,
         hours: 600,
@@ -186,7 +186,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'nl',
       name: 'Dutch',
       nativeName: 'Nederlands',
-      countries: ['Netherlands', 'Belgium', 'Suriname'],
+      regions: ['Netherlands', 'Belgium', 'Suriname'],
       fsi: {
         category: 1,
         hours: 600,
@@ -216,7 +216,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'sv',
       name: 'Swedish',
       nativeName: 'Svenska',
-      countries: ['Sweden', 'Finland'],
+      regions: ['Sweden', 'Finland'],
       fsi: {
         category: 1,
         hours: 600,
@@ -246,7 +246,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'no',
       name: 'Norwegian',
       nativeName: 'Norsk',
-      countries: ['Norway'],
+      regions: ['Norway'],
       fsi: {
         category: 1,
         hours: 600,
@@ -276,7 +276,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'de',
       name: 'German',
       nativeName: 'Deutsch',
-      countries: ['Germany', 'Austria', 'Switzerland', 'Liechtenstein', 'Luxembourg'],
+      regions: ['Germany', 'Austria', 'Switzerland', 'Liechtenstein', 'Luxembourg'],
       fsi: {
         category: 2,
         hours: 900,
@@ -306,7 +306,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'id',
       name: 'Indonesian',
       nativeName: 'Bahasa Indonesia',
-      countries: ['Indonesia'],
+      regions: ['Indonesia'],
       fsi: {
         category: 2,
         hours: 900,
@@ -336,7 +336,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ms',
       name: 'Malay',
       nativeName: 'Bahasa Melayu',
-      countries: ['Malaysia', 'Brunei', 'Singapore'],
+      regions: ['Malaysia', 'Brunei', 'Singapore'],
       fsi: {
         category: 2,
         hours: 900,
@@ -366,7 +366,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'sw',
       name: 'Swahili',
       nativeName: 'Kiswahili',
-      countries: ['Tanzania', 'Kenya', 'Uganda', 'Democratic Republic of the Congo'],
+      regions: ['Tanzania', 'Kenya', 'Uganda', 'Democratic Republic of the Congo'],
       fsi: {
         category: 2,
         hours: 900,
@@ -396,7 +396,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'hi',
       name: 'Hindi',
       nativeName: 'हिन्दी',
-      countries: ['India'],
+      regions: ['India'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -426,7 +426,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ru',
       name: 'Russian',
       nativeName: 'Русский',
-      countries: ['Russian Federation', 'Kazakhstan', 'Belarus', 'Kyrgyzstan'],
+      regions: ['Russian Federation', 'Kazakhstan', 'Belarus', 'Kyrgyzstan'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -456,7 +456,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'th',
       name: 'Thai',
       nativeName: 'ภาษาไทย',
-      countries: ['Thailand'],
+      regions: ['Thailand'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -486,7 +486,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'vi',
       name: 'Vietnamese',
       nativeName: 'Tiếng Việt',
-      countries: ['Vietnam'],
+      regions: ['Vietnam'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -516,7 +516,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'he',
       name: 'Hebrew',
       nativeName: 'עברית',
-      countries: ['Israel'],
+      regions: ['Israel'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -546,7 +546,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'pl',
       name: 'Polish',
       nativeName: 'Polski',
-      countries: ['Poland'],
+      regions: ['Poland'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -576,7 +576,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'tr',
       name: 'Turkish',
       nativeName: 'Türkçe',
-      countries: ['Turkey', 'Cyprus'],
+      regions: ['Turkey', 'Cyprus'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -606,7 +606,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ar',
       name: 'Arabic',
       nativeName: 'العربية',
-      countries: [
+      regions: [
         'Saudi Arabia',
         'Egypt',
         'Iraq',
@@ -647,7 +647,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ko',
       name: 'Korean',
       nativeName: '한국어',
-      countries: ['South Korea', 'North Korea'],
+      regions: ['South Korea', 'North Korea'],
       fsi: {
         category: 4,
         hours: 1800,
@@ -677,7 +677,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'zh',
       name: 'Mandarin Chinese',
       nativeName: '中文',
-      countries: ['China', 'Taiwan', 'Singapore'],
+      regions: ['China', 'Taiwan', 'Singapore'],
       fsi: {
         category: 5,
         hours: 2200,
@@ -707,7 +707,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ja',
       name: 'Japanese',
       nativeName: '日本語',
-      countries: ['Japan'],
+      regions: ['Japan'],
       fsi: {
         category: 5,
         hours: 2200,
@@ -737,7 +737,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'yue',
       name: 'Cantonese',
       nativeName: '粵語',
-      countries: ['China', 'Hong Kong', 'Macau'],
+      regions: ['China', 'Hong Kong', 'Macau'],
       fsi: {
         category: 5,
         hours: 2200,
@@ -767,7 +767,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'en',
       name: 'English',
       nativeName: 'English',
-      countries: [
+      regions: [
         'United States of America',
         'United Kingdom',
         'Canada',
@@ -806,7 +806,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'bn',
       name: 'Bengali',
       nativeName: 'বাংলা',
-      countries: ['Bangladesh', 'India'],
+      regions: ['Bangladesh', 'India'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -836,7 +836,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ur',
       name: 'Urdu',
       nativeName: 'اردو',
-      countries: ['Pakistan', 'India'],
+      regions: ['Pakistan', 'India'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -866,7 +866,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'fa',
       name: 'Persian',
       nativeName: 'فارسی',
-      countries: ['Iran', 'Afghanistan', 'Tajikistan'],
+      regions: ['Iran', 'Afghanistan', 'Tajikistan'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -896,7 +896,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ca',
       name: 'Catalan',
       nativeName: 'Català',
-      countries: ['Spain', 'Andorra'],
+      regions: ['Spain', 'Andorra'],
       fsi: {
         category: 1,
         hours: 600,
@@ -926,7 +926,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'da',
       name: 'Danish',
       nativeName: 'Dansk',
-      countries: ['Denmark'],
+      regions: ['Denmark'],
       fsi: {
         category: 1,
         hours: 600,
@@ -956,7 +956,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'af',
       name: 'Afrikaans',
       nativeName: 'Afrikaans',
-      countries: ['South Africa', 'Namibia'],
+      regions: ['South Africa', 'Namibia'],
       fsi: {
         category: 1,
         hours: 600,
@@ -986,7 +986,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'fi',
       name: 'Finnish',
       nativeName: 'Suomi',
-      countries: ['Finland'],
+      regions: ['Finland'],
       fsi: {
         category: 2,
         hours: 900,
@@ -1016,7 +1016,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'hu',
       name: 'Hungarian',
       nativeName: 'Magyar',
-      countries: ['Hungary'],
+      regions: ['Hungary'],
       fsi: {
         category: 2,
         hours: 900,
@@ -1046,7 +1046,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'et',
       name: 'Estonian',
       nativeName: 'Eesti keel',
-      countries: ['Estonia'],
+      regions: ['Estonia'],
       fsi: {
         category: 2,
         hours: 900,
@@ -1076,7 +1076,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'el',
       name: 'Greek',
       nativeName: 'Ελληνικά',
-      countries: ['Greece', 'Cyprus'],
+      regions: ['Greece', 'Cyprus'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1106,7 +1106,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'cs',
       name: 'Czech',
       nativeName: 'Čeština',
-      countries: ['Czech Republic'],
+      regions: ['Czech Republic'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1136,7 +1136,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'sk',
       name: 'Slovak',
       nativeName: 'Slovenčina',
-      countries: ['Slovakia'],
+      regions: ['Slovakia'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1166,7 +1166,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'hr',
       name: 'Croatian',
       nativeName: 'Hrvatski',
-      countries: ['Croatia'],
+      regions: ['Croatia'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1196,7 +1196,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'bg',
       name: 'Bulgarian',
       nativeName: 'Български',
-      countries: ['Bulgaria'],
+      regions: ['Bulgaria'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1226,7 +1226,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'lv',
       name: 'Latvian',
       nativeName: 'Latviešu valoda',
-      countries: ['Latvia'],
+      regions: ['Latvia'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1256,7 +1256,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'lt',
       name: 'Lithuanian',
       nativeName: 'Lietuvių kalba',
-      countries: ['Lithuania'],
+      regions: ['Lithuania'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1286,7 +1286,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'sl',
       name: 'Slovenian',
       nativeName: 'Slovenščina',
-      countries: ['Slovenia'],
+      regions: ['Slovenia'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1316,7 +1316,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'uk',
       name: 'Ukrainian',
       nativeName: 'Українська',
-      countries: ['Ukraine'],
+      regions: ['Ukraine'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1346,7 +1346,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'am',
       name: 'Amharic',
       nativeName: 'አማርኛ',
-      countries: ['Ethiopia'],
+      regions: ['Ethiopia'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1376,7 +1376,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'mn',
       name: 'Mongolian',
       nativeName: 'Монгол хэл',
-      countries: ['Mongolia', 'China'],
+      regions: ['Mongolia', 'China'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1406,7 +1406,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'ta',
       name: 'Tamil',
       nativeName: 'தமிழ்',
-      countries: ['India', 'Sri Lanka', 'Singapore'],
+      regions: ['India', 'Sri Lanka', 'Singapore'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1436,7 +1436,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'te',
       name: 'Telugu',
       nativeName: 'తెలుగు',
-      countries: ['India'],
+      regions: ['India'],
       fsi: {
         category: 3,
         hours: 1100,
@@ -1466,7 +1466,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'hau',
       name: 'Hausa',
       nativeName: 'Harshen Hausa',
-      countries: ['Nigeria', 'Niger'],
+      regions: ['Nigeria', 'Niger'],
       fsi: {
         category: 2,
         hours: 900,
@@ -1496,7 +1496,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'yo',
       name: 'Yoruba',
       nativeName: 'Èdè Yorùbá',
-      countries: ['Nigeria', 'Benin'],
+      regions: ['Nigeria', 'Benin'],
       fsi: {
         category: 2,
         hours: 900,
@@ -1526,7 +1526,7 @@ export const FSI_LANGUAGE_DATA: LanguageData = {
       id: 'zu',
       name: 'Zulu',
       nativeName: 'isiZulu',
-      countries: ['South Africa'],
+      regions: ['South Africa'],
       fsi: {
         category: 2,
         hours: 900,
