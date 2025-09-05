@@ -134,11 +134,11 @@ export function getAllLanguages(): Language[] {
 
 /**
  * 根据ID获取语言详情
+ * 只匹配精确的语言ID，避免重复路由问题
  */
 export function getLanguageById(id: string): Language | null {
   const rawLanguage = FSI_LANGUAGE_DATA.languages.find((lang) => {
-    const langId = lang.name.toLowerCase().replace(/\s+/g, '-');
-    return langId === id || lang.id === id;
+    return lang.id === id; // 只匹配精确的ID，避免名称匹配导致的重复路由
   });
 
   return rawLanguage ? adaptLanguageData(rawLanguage as unknown as Record<string, unknown>) : null;

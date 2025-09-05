@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production', // 生产环境移除 console
   },
-  // 重定向配置 - 处理www重定向
+  // 重定向配置 - 处理www重定向和重复语言路由
   async redirects() {
     return [
       {
@@ -55,6 +55,27 @@ const nextConfig: NextConfig = {
         ],
         destination: 'https://easiestlanguage.site/:path*',
         permanent: true, // 301重定向
+      },
+      // 重定向重复的语言路由到标准ID
+      {
+        source: '/language/spanish',
+        destination: '/language/es',
+        permanent: true, // 301重定向，避免重复内容
+      },
+      {
+        source: '/language/french',
+        destination: '/language/fr',
+        permanent: true, // 301重定向，避免重复内容
+      },
+      {
+        source: '/language/german',
+        destination: '/language/de',
+        permanent: true, // 301重定向，避免重复内容
+      },
+      {
+        source: '/language/mandarin',
+        destination: '/language/zh',
+        permanent: true, // 301重定向，避免重复内容
       },
     ];
   },
