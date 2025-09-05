@@ -15,7 +15,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const language = getLanguageDetailData(id);
-  
+
   if (!language) {
     return {
       title: 'Language Not Found',
@@ -28,17 +28,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const fsiCategory = language.fsi.category;
-  const difficultyText = fsiCategory === 1 ? 'easiest' : 
-                        fsiCategory === 2 ? 'relatively easy' :
-                        fsiCategory === 3 ? 'moderately difficult' :
-                        fsiCategory === 4 ? 'challenging' : 'very challenging';
+  const difficultyText =
+    fsiCategory === 1
+      ? 'easiest'
+      : fsiCategory === 2
+        ? 'relatively easy'
+        : fsiCategory === 3
+          ? 'moderately difficult'
+          : fsiCategory === 4
+            ? 'challenging'
+            : 'very challenging';
 
   const primaryRegions = language.geography.primaryRegions.slice(0, 3).join(', ');
   const languageFamily = language.family;
   const writingSystem = language.writingSystem;
 
+  // 生成优化的标题，确保长度符合SEO最佳实践
+  const baseTitle = `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${fsiCategory}`;
+  const optimizedTitle = baseTitle.length > 70 
+    ? `Learn ${language.name} - ${language.fsi.hours}h | FSI Cat ${fsiCategory}`
+    : baseTitle;
+
   return {
-    title: `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${fsiCategory}`,
+    title: optimizedTitle,
     description: `${language.name} (${language.nativeName}) is ${difficultyText} for English speakers. FSI Category ${fsiCategory}, ${language.fsi.hours} hours study time. Spoken by ${language.speakers.total} people in ${primaryRegions}. Part of the ${languageFamily} family with ${writingSystem} writing system.`,
     keywords: [
       `learn ${language.name.toLowerCase()}`,
@@ -52,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       `${language.name.toLowerCase()} pronunciation`,
       `how to learn ${language.name.toLowerCase()}`,
       `${language.name.toLowerCase()} vs English`,
-      `${language.name.toLowerCase()} resources`
+      `${language.name.toLowerCase()} resources`,
     ],
     authors: [{ name: 'Easiest Language Team' }],
     alternates: {
@@ -120,44 +132,45 @@ export default async function LanguageDetailPage({ params }: PageProps) {
 
   // Generate structured data
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "EducationalOccupationalCredential",
-    "name": `Learn ${language.name}`,
-    "description": `${language.name} language learning guide for English speakers`,
-    "educationalLevel": `FSI Category ${language.fsi.category}`,
-    "timeRequired": `PT${language.fsi.hours}H`,
-    "competencyRequired": {
-      "@type": "Competency",
-      "name": "English Language Proficiency",
-      "description": "Native or fluent English speaker"
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOccupationalCredential',
+    name: `Learn ${language.name}`,
+    description: `${language.name} language learning guide for English speakers`,
+    educationalLevel: `FSI Category ${language.fsi.category}`,
+    timeRequired: `PT${language.fsi.hours}H`,
+    competencyRequired: {
+      '@type': 'Competency',
+      name: 'English Language Proficiency',
+      description: 'Native or fluent English speaker',
     },
-    "about": {
-      "@type": "Language",
-      "name": language.name,
-      "alternateName": language.nativeName,
-      "inLanguage": language.id,
-      "speakingPopulation": language.speakers.total,
-      "writingSystem": language.writingSystem,
-      "languageFamily": language.family
+    about: {
+      '@type': 'Language',
+      name: language.name,
+      alternateName: language.nativeName,
+      inLanguage: language.id,
+      speakingPopulation: language.speakers.total,
+      writingSystem: language.writingSystem,
+      languageFamily: language.family,
     },
-    "provider": {
-      "@type": "Organization",
-      "name": "Easiest Language to Learn",
-      "url": "https://easiestlanguage.site"
+    provider: {
+      '@type': 'Organization',
+      name: 'Easiest Language to Learn',
+      url: 'https://easiestlanguage.site',
     },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock"
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": Math.max(1, 5 - language.fsi.category + 1), // Calculate rating based on FSI category
-      "bestRating": 5,
-      "worstRating": 1,
-      "ratingCount": Math.floor(language.speakers.native / 1000000) // Estimate rating count based on speaker count
-    }
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: Math.max(1, 5 - language.fsi.category + 1), // Calculate rating based on FSI category
+      bestRating: 5,
+      worstRating: 1,
+      ratingCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000), // Estimate rating count based on speaker count
+      reviewCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000), // Estimate review count based on speaker count
+    },
   };
 
   return (

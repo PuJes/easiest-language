@@ -304,7 +304,7 @@ const InternalLinks: React.FC<InternalLinksProps> = ({
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <Link
-          href="/language/spanish"
+          href="/language/es"
           className="group flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-lg border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-600 transition-all duration-200 hover:shadow-md"
         >
           <div className="flex items-center gap-3">
@@ -320,7 +320,7 @@ const InternalLinks: React.FC<InternalLinksProps> = ({
         </Link>
 
         <Link
-          href="/language/french"
+          href="/language/fr"
           className="group flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 hover:shadow-md"
         >
           <div className="flex items-center gap-3">
@@ -336,7 +336,7 @@ const InternalLinks: React.FC<InternalLinksProps> = ({
         </Link>
 
         <Link
-          href="/language/german"
+          href="/language/de"
           className="group flex items-center justify-between p-3 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:border-yellow-300 dark:hover:border-yellow-600 transition-all duration-200 hover:shadow-md"
         >
           <div className="flex items-center gap-3">
@@ -379,7 +379,7 @@ const InternalLinks: React.FC<InternalLinksProps> = ({
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Link
-          href="/compare?languages=spanish,french,german"
+          href="/compare?languages=es,fr,de"
           className="group flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600 transition-colors"
         >
           <div className="flex items-center gap-3">

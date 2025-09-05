@@ -6,7 +6,7 @@ import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Language Learning Difficulty Comparison | Easiest Language',
+  title: 'Language Difficulty Comparison | Easiest Language',
   description:
     'Compare different languages side-by-side for learning difficulty, time estimates, and characteristics. Based on official FSI data to help you choose the best language learning path.',
   keywords: [
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     'language difficulty analysis',
   ],
   openGraph: {
-    title: 'Language Learning Difficulty Comparison | Easiest Language',
+    title: 'Language Difficulty Comparison | Easiest Language',
     description:
       'Compare different languages side-by-side for learning difficulty, time estimates, and characteristics. Based on official FSI data to help you choose the best language learning path.',
     url: 'https://easiestlanguage.site/compare',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Language Learning Difficulty Comparison | Easiest Language',
+    title: 'Language Difficulty Comparison | Easiest Language',
     description:
       'Compare different languages side-by-side for learning difficulty, time estimates, and characteristics. Based on official FSI data to help you choose the best language learning path.',
     images: ['/og?type=compare'],

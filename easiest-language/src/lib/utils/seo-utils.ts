@@ -21,10 +21,31 @@ export function getDifficultyDescription(category: number): string {
 
 /**
  * 生成语言页面的SEO标题
+ * 优化版本：确保标题长度符合SEO最佳实践（70字符以内）
  */
 export function generateLanguageTitle(language: ExtendedLanguageDetail): string {
   const difficulty = getDifficultyDescription(language.fsi.category);
-  return `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${language.fsi.category}`;
+  const baseTitle = `Learn ${language.name} - ${language.fsi.hours}h Study Time | FSI Category ${language.fsi.category}`;
+  
+  // 检查标题长度，如果超过70字符则优化
+  if (baseTitle.length > 70) {
+    // 优化策略1：简化FSI类别描述
+    const optimizedTitle = `Learn ${language.name} - ${language.fsi.hours}h | FSI Cat ${language.fsi.category}`;
+    if (optimizedTitle.length <= 70) {
+      return optimizedTitle;
+    }
+    
+    // 优化策略2：进一步简化
+    const minimalTitle = `Learn ${language.name} - ${language.fsi.hours}h Study Time`;
+    if (minimalTitle.length <= 70) {
+      return minimalTitle;
+    }
+    
+    // 优化策略3：最简化版本
+    return `Learn ${language.name} - FSI Category ${language.fsi.category}`;
+  }
+  
+  return baseTitle;
 }
 
 /**
@@ -103,44 +124,45 @@ function getLanguageSpecificKeywords(language: ExtendedLanguageDetail): string[]
  */
 export function generateLanguageStructuredData(language: ExtendedLanguageDetail) {
   return {
-    "@context": "https://schema.org",
-    "@type": "EducationalOccupationalCredential",
-    "name": `Learn ${language.name}`,
-    "description": `${language.name} language learning guide for English speakers`,
-    "educationalLevel": `FSI Category ${language.fsi.category}`,
-    "timeRequired": `PT${language.fsi.hours}H`,
-    "competencyRequired": {
-      "@type": "Competency",
-      "name": "English Language Proficiency",
-      "description": "Native or fluent English speaker"
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOccupationalCredential',
+    name: `Learn ${language.name}`,
+    description: `${language.name} language learning guide for English speakers`,
+    educationalLevel: `FSI Category ${language.fsi.category}`,
+    timeRequired: `PT${language.fsi.hours}H`,
+    competencyRequired: {
+      '@type': 'Competency',
+      name: 'English Language Proficiency',
+      description: 'Native or fluent English speaker',
     },
-    "about": {
-      "@type": "Language",
-      "name": language.name,
-      "alternateName": language.nativeName,
-      "inLanguage": language.id,
-      "speakingPopulation": language.speakers.total,
-      "writingSystem": language.writingSystem,
-      "languageFamily": language.family
+    about: {
+      '@type': 'Language',
+      name: language.name,
+      alternateName: language.nativeName,
+      inLanguage: language.id,
+      speakingPopulation: language.speakers.total,
+      writingSystem: language.writingSystem,
+      languageFamily: language.family,
     },
-    "provider": {
-      "@type": "Organization",
-      "name": "Easiest Language to Learn",
-      "url": "https://easiestlanguage.site"
+    provider: {
+      '@type': 'Organization',
+      name: 'Easiest Language to Learn',
+      url: 'https://easiestlanguage.site',
     },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock"
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": Math.max(1, 5 - language.fsi.category + 1),
-      "bestRating": 5,
-      "worstRating": 1,
-      "ratingCount": Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000)
-    }
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: Math.max(1, 5 - language.fsi.category + 1),
+      bestRating: 5,
+      worstRating: 1,
+      ratingCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 1000000),
+      reviewCount: Math.floor(parseInt(language.speakers.native.replace(/[^\d]/g, '')) / 2000000),
+    },
   };
 }
 

@@ -13,7 +13,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/admin/',      // 禁止访问管理页面
           '/api/',        // 禁止访问API路由
-          '/_next/',      // 禁止访问Next.js内部文件
+          '/_next/static/chunks/pages/', // 禁止访问页面代码chunks
+          '/_next/static/chunks/framework/', // 禁止访问框架代码
+          '/_next/static/chunks/main/', // 禁止访问主要应用代码
           '/static/',     // 禁止访问静态文件目录
         ],
       },

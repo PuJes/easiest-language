@@ -5,7 +5,7 @@ import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'All Languages - Complete Language Database | FSI Difficulty Ratings',
+  title: 'All Languages - FSI Difficulty Ratings | Easiest Language',
   description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers. Compare learning time, difficulty levels, and find your perfect language to learn.',
   keywords: [
     'all languages',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     'language learning time'
   ],
   openGraph: {
-    title: 'All Languages - Complete Language Database',
+    title: 'All Languages - FSI Difficulty Ratings',
     description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
     url: 'https://easiestlanguage.site/languages',
     siteName: 'Easiest Language to Learn',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'All Languages - Complete Language Database',
+    title: 'All Languages - FSI Difficulty Ratings',
     description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
     images: ['/og?type=languages'],
   },

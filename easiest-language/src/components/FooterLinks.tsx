@@ -223,7 +223,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({
                 </Link>
                 
                 <Link
-                  href="/compare?languages=spanish,french,german"
+                  href="/compare?languages=es,fr,de"
                   className="group flex items-center justify-between p-2 rounded-lg hover:bg-white dark:hover:bg-gray-800 transition-colors"
                 >
                   <div className="flex items-center gap-2">
