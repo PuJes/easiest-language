@@ -16,14 +16,16 @@ import { getAllLanguages } from '@/lib/data/data-adapters';
 
 interface LanguageListProps {
   availableLanguages?: Language[];
+  initialCategory?: string | null; // 添加初始分类参数
 }
 
 const LanguageList: React.FC<LanguageListProps> = memo(({
   availableLanguages,
+  initialCategory,
 }) => {
   const [allLanguages] = useState<Language[]>(() => availableLanguages || getAllLanguages());
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all'); // 使用初始分类参数
   const [sortBy, setSortBy] = useState<'name' | 'difficulty' | 'speakers'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [showFilters, setShowFilters] = useState(false);

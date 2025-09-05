@@ -1,58 +1,63 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import LanguageList from '@/components/LanguageList';
 import InternalLinks from '@/components/InternalLinks';
 import BreadcrumbNavigation from '@/components/BreadcrumbNavigation';
 import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'All Languages - FSI Difficulty Ratings | Easiest Language',
-  description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers. Compare learning time, difficulty levels, and find your perfect language to learn.',
-  keywords: [
-    'all languages',
-    'language database',
-    'FSI difficulty ratings',
-    'language comparison',
-    'easiest languages to learn',
-    'language learning guide',
-    'foreign language difficulty',
-    'language learning time'
-  ],
-  openGraph: {
-    title: 'All Languages - FSI Difficulty Ratings',
-    description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
-    url: 'https://easiestlanguage.site/languages',
-    siteName: 'Easiest Language to Learn',
-    images: [
-      {
-        url: '/og?type=languages',
-        width: 1200,
-        height: 630,
-        alt: 'All Languages - Complete Language Database',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'All Languages - FSI Difficulty Ratings',
-    description: 'Explore all 50+ languages with official FSI difficulty ratings for English speakers.',
-    images: ['/og?type=languages'],
-  },
-  alternates: {
-    canonical: '/languages',
-  },
-};
+import { useEffect, useCallback } from 'react';
 
 export default function LanguagesPage() {
+  const searchParams = useSearchParams(); // 获取 URL 查询参数
+  const category = searchParams.get('category'); // 获取 category 参数
+
+  // 根据 category 参数设置页面标题和描述
+  const getPageTitle = useCallback(() => {
+    switch (category) {
+      case '1':
+        return 'Category I Languages - Easiest to Learn | Easiest Language';
+      case '2':
+        return 'Category II Languages - Relatively Easy | Easiest Language';
+      case '3':
+        return 'Category III Languages - Moderately Difficult | Easiest Language';
+      case '4':
+        return 'Category IV Languages - Challenging | Easiest Language';
+      case '5':
+        return 'Category V Languages - Most Challenging | Easiest Language';
+      default:
+        return 'All Languages - FSI Difficulty Ratings | Easiest Language';
+    }
+  }, [category]);
+
+  const getPageDescription = useCallback(() => {
+    switch (category) {
+      case '1':
+        return 'Explore Category I languages - the easiest languages for English speakers to learn. 600-750 hours to achieve professional proficiency.';
+      case '2':
+        return 'Explore Category II languages - relatively easy languages for English speakers. 900 hours to achieve professional proficiency.';
+      case '3':
+        return 'Explore Category III languages - moderately difficult languages for English speakers. 1100 hours to achieve professional proficiency.';
+      case '4':
+        return 'Explore Category IV languages - challenging languages for English speakers. 1800 hours to achieve professional proficiency.';
+      case '5':
+        return 'Explore Category V languages - the most challenging languages for English speakers. 2200 hours to achieve professional proficiency.';
+      default:
+        return 'Explore all 50+ languages with official FSI difficulty ratings for English speakers. Compare learning time, difficulty levels, and find your perfect language to learn.';
+    }
+  }, [category]);
+
+  // 动态设置页面标题
+  useEffect(() => {
+    document.title = getPageTitle();
+  }, [getPageTitle]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
       <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           {/* Breadcrumb Navigation with integrated back button */}
-          <BreadcrumbNavigation 
-            items={generateBreadcrumbs.languages()} 
+          <BreadcrumbNavigation
+            items={generateBreadcrumbs.languages()}
             showBackButton={true}
             backButtonLabel="Back to Home"
             backButtonHref="/home"
@@ -63,10 +68,10 @@ export default function LanguagesPage() {
       {/* Page Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Complete Language Database</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-            Explore all 50+ languages with FSI difficulty ratings optimized for English speakers
-          </p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            {category ? `Category ${category} Languages` : 'Complete Language Database'}
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">{getPageDescription()}</p>
         </div>
 
         {/* Additional content section */}
@@ -76,15 +81,17 @@ export default function LanguagesPage() {
               Understanding FSI Language Difficulty Categories
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              The Foreign Service Institute (FSI) has classified languages into 5 categories based on the time 
-              required for native English speakers to achieve professional working proficiency. This classification 
+              The Foreign Service Institute (FSI) has classified languages into 5 categories based on the time
+              required for native English speakers to achieve professional working proficiency. This classification
               is based on decades of research and real-world teaching experience.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-blue-600 mb-2">Category I</div>
                 <div className="text-sm text-blue-700 dark:text-blue-300 mb-2">600-750 hours</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">Easiest for English speakers</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  Easiest for English speakers
+                </div>
               </div>
               <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-green-600 mb-2">Category II</div>
@@ -115,7 +122,9 @@ export default function LanguagesPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Consider Your Goals</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Consider Your Goals
+                </h3>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">•</span>
@@ -136,7 +145,9 @@ export default function LanguagesPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Evaluate Your Resources</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Evaluate Your Resources
+                </h3>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-400">
                   <li className="flex items-start">
                     <span className="text-blue-500 mr-2 mt-1">•</span>
@@ -166,26 +177,32 @@ export default function LanguagesPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-3xl mb-3">📚</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Consistent Practice</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Consistent Practice
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Regular daily practice, even for just 15-30 minutes, is more effective than 
+                  Regular daily practice, even for just 15-30 minutes, is more effective than
                   occasional long study sessions.
                 </p>
               </div>
               <div className="text-center">
                 <div className="text-3xl mb-3">🎧</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Immerse Yourself</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Immerse Yourself
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Listen to music, watch movies, and read books in your target language to 
-                  improve comprehension and cultural understanding.
+                  Listen to music, watch movies, and read books in your target language to improve
+                  comprehension and cultural understanding.
                 </p>
               </div>
               <div className="text-center">
                 <div className="text-3xl mb-3">💬</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Practice Speaking</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Practice Speaking
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Find language exchange partners or join conversation groups to practice 
-                  speaking and build confidence.
+                  Find language exchange partners or join conversation groups to practice speaking
+                  and build confidence.
                 </p>
               </div>
             </div>
@@ -193,11 +210,11 @@ export default function LanguagesPage() {
         </div>
 
         {/* Language List */}
-        <LanguageList />
-        
+        <LanguageList initialCategory={category} />
+
         {/* 内部链接区域 */}
         <div className="mt-16">
-          <InternalLinks 
+          <InternalLinks
             pageType="languages"
             showLearningResources={true}
             showComparisonLinks={true}
