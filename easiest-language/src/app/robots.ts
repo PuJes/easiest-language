@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
 
 /**
  * 生成robots.txt文件
@@ -9,18 +9,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: [
+          '/', // 允许访问根目录
+          '/_next/static/', // 允许所有Next.js静态资源
+        ],
         disallow: [
-          '/admin/',      // 禁止访问管理页面
-          '/api/',        // 禁止访问API路由
-          '/_next/static/chunks/pages/', // 禁止访问页面代码chunks
-          '/_next/static/chunks/framework/', // 禁止访问框架代码
-          '/_next/static/chunks/main/', // 禁止访问主要应用代码
-          '/static/',     // 禁止访问静态文件目录
+          '/admin/', // 禁止访问管理页面
+          '/api/', // 禁止访问API路由
+          '/static/', // 禁止访问静态文件目录
         ],
       },
       {
-        userAgent: 'GPTBot',     // 禁止ChatGPT爬虫
+        userAgent: 'GPTBot', // 禁止ChatGPT爬虫
         disallow: '/',
       },
       {
@@ -28,7 +28,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/',
       },
       {
-        userAgent: 'CCBot',      // 禁止Common Crawl
+        userAgent: 'CCBot', // 禁止Common Crawl
         disallow: '/',
       },
       {
@@ -42,5 +42,5 @@ export default function robots(): MetadataRoute.Robots {
     ],
     sitemap: 'https://easiestlanguage.site/sitemap.xml', // 您的实际域名
     host: 'https://easiestlanguage.site', // 您的实际域名
-  }
+  };
 }

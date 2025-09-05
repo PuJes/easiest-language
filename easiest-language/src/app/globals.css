@@ -5,10 +5,44 @@
   /* 防止布局偏移的基础样式 */
   html {
     scroll-behavior: smooth; /* 平滑滚动 */
+    /* 性能优化：启用硬件加速 */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
   
   body {
     font-display: swap; /* 字体显示优化，防止文字闪烁 */
+    /* 性能优化：减少重绘和重排 */
+    will-change: auto;
+    /* 优化字体渲染 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+  }
+
+  /* 优化图片加载性能 */
+  img {
+    content-visibility: auto; /* 延迟加载非关键图片 */
+    contain-intrinsic-size: 200px 200px; /* 预设尺寸防止布局偏移 */
+  }
+
+  /* 优化动画性能 */
+  * {
+    /* 启用硬件加速 */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  /* 减少动画对性能的影响 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -87,6 +121,26 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+/* 浅色主题滚动条样式 - 用于模态框等浅色背景 */
+.scrollbar-light::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-light::-webkit-scrollbar-track {
+  background: #f1f5f9; /* 浅灰色轨道 */
+  border-radius: 4px;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* 浅灰色滑块 */
+  border-radius: 4px;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* 悬停时稍深的灰色 */
 }
 
 /* 全局动画类 */

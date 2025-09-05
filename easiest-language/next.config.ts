@@ -14,6 +14,19 @@ const nextConfig: NextConfig = {
   // 性能优化配置
   compress: true, // 启用 gzip 压缩
   poweredByHeader: false, // 移除 X-Powered-By 头部
+  // 实验性功能优化
+  experimental: {
+    optimizeCss: true, // 优化 CSS
+    optimizePackageImports: ['framer-motion', '@heroicons/react'], // 优化包导入
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
   // 图片优化配置
   images: {
     unoptimized: false, // 启用图片优化
@@ -21,6 +34,8 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // 响应式图片尺寸
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // 图标尺寸
     minimumCacheTTL: 60, // 图片缓存时间（秒）
+    dangerouslyAllowSVG: true, // 允许 SVG 优化
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // SVG 安全策略
   },
   // 编译器优化
   compiler: {
@@ -42,16 +57,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Turbopack 配置（替代已废弃的 experimental.turbo）
-  turbopack: {
-    root: __dirname, // 明确指定根目录，解决多 lockfile 警告
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
+  // 移除重复的 turbopack 配置，已在 experimental 中配置
 };
 
 export default nextConfig;

@@ -75,6 +75,83 @@ export default function ComparePage() {
 
       {/* 主要内容区域 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Additional content section */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Why Compare Languages Before Learning?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Choosing the right language to learn is a crucial decision that can impact your
+              learning journey for years to come. By comparing languages based on official FSI
+              difficulty ratings, you can make an informed decision that aligns with your goals,
+              available time, and learning preferences.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl mb-3">⏰</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Time Investment
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Compare study time requirements to choose a language that fits your schedule
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-3">🎯</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Learning Goals</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Match language difficulty with your learning objectives and career goals
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-3">🌍</div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Global Impact</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Consider speaker count and geographic distribution for maximum utility
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              How to Use This Language Comparison Tool
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Step 1: Select Languages
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Choose 2-3 languages you&apos;re considering learning. You can select from our
+                  comprehensive database of 50+ languages with official FSI difficulty ratings.
+                </p>
+                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>Click &quot;Add Language to Compare&quot; button</li>
+                  <li>Browse through available languages</li>
+                  <li>Select up to 3 languages for comparison</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Step 2: Analyze Results
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Review the comparison across multiple dimensions including difficulty, study time,
+                  speaker count, and business value.
+                </p>
+                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>Compare FSI difficulty categories</li>
+                  <li>Analyze study time requirements</li>
+                  <li>Consider global speaker distribution</li>
+                  <li>Evaluate business and career opportunities</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+
         <Suspense fallback={<div>Loading...</div>}>
           <LanguageComparison />
         </Suspense>

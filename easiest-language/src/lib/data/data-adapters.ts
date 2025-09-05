@@ -227,6 +227,13 @@ export function getLanguageDetailData(id: string): ExtendedLanguageDetail | null
   const baseLanguage = getLanguageById(id);
   if (!baseLanguage) return null;
 
+  // 验证语言数据完整性
+  if (!baseLanguage.id || !baseLanguage.name || !baseLanguage.fsi || 
+      baseLanguage.fsi.category === undefined || baseLanguage.fsi.hours === undefined) {
+    console.warn(`Invalid language data for ID: ${id}`);
+    return null;
+  }
+
   const validCategory = baseLanguage.fsi.category; // 获取语言的FSI分类
 
   return {

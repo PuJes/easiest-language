@@ -293,6 +293,36 @@ export const LEARNING_RESOURCES_BY_LANGUAGE: Record<string, LearningResource[]> 
       free: true,
     },
   ],
+  yue: [
+    {
+      title: 'CantoneseClass101',
+      type: 'podcast',
+      url: 'https://www.cantoneseclass101.com',
+      description:
+        'Comprehensive Cantonese language podcast with pronunciation guides and cultural insights',
+      free: false,
+    },
+    {
+      title: 'Cantonese Learning App',
+      type: 'app',
+      description:
+        'Beginner-friendly Cantonese learning app with traditional characters and tone practice',
+      free: true,
+    },
+    {
+      title: 'Cantonese Dictionary',
+      type: 'app',
+      description: 'Comprehensive Cantonese dictionary with pronunciation and example sentences',
+      free: true,
+    },
+    {
+      title: 'Learn Cantonese Online',
+      type: 'website',
+      url: 'https://www.cantonese.sheik.co.uk',
+      description: 'Free Cantonese learning website with grammar lessons and vocabulary',
+      free: true,
+    },
+  ],
 };
 
 export default LEARNING_RESOURCES_BY_LANGUAGE;

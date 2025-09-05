@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -14,6 +14,8 @@ import BreadcrumbNavigation from './BreadcrumbNavigation';
 import { generateBreadcrumbs } from '@/lib/utils/breadcrumb-utils';
 import { Language } from '@/lib/types/language';
 import { getFeaturedLanguages } from '@/lib/data/data-adapters';
+
+// 移除未使用的懒加载组件
 
 const PLATFORM_STATS = [
   {
@@ -337,49 +339,65 @@ const HomePage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredLanguages.map((language, index) => (
-              <Link key={language.id} href={`/language/${language.id}`} title={`Learn ${language.name} - ${language.fsi.hours}h Study Time`}>
-                <motion.div
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer h-full"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.03, y: -4 }}
+              <Suspense
+                key={language.id}
+                fallback={
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg h-full animate-pulse">
+                    <div className="text-center mb-4">
+                      <div className="text-4xl mb-2">🌐</div>
+                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    </div>
+                  </div>
+                }
+              >
+                <Link
+                  href={`/language/${language.id}`}
+                  title={`Learn ${language.name} - ${language.fsi.hours}h Study Time`}
                 >
-                  <div className="text-center mb-4">
-                    <div className="text-4xl mb-2">{language.flagEmoji}</div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      {language.name}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      {language.nativeName}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-center mb-4">
-                    <FSIBadge category={language.fsi.category} size="md" showLabel />
-                  </div>
-
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-3 text-center mb-4">
-                    <div className="text-lg font-bold text-gray-900 dark:text-white">
-                      {language.fsi.hours}h
+                  <motion.div
+                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer h-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.03, y: -4 }}
+                  >
+                    <div className="text-center mb-4">
+                      <div className="text-4xl mb-2">{language.flagEmoji}</div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {language.name}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        {language.nativeName}
+                      </p>
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-300">
-                      for English speakers
-                    </div>
-                  </div>
 
-                  <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <span>
-                      👥{' '}
-                      {language.speakers >= 1000000
-                        ? `${Math.round(language.speakers / 1000000)}M`
-                        : `${Math.round(language.speakers / 1000)}K`}
-                    </span>
-                    <span>🌍 {language.regions.length} regions</span>
-                  </div>
-                </motion.div>
-              </Link>
+                    <div className="flex justify-center mb-4">
+                      <FSIBadge category={language.fsi.category} size="md" showLabel />
+                    </div>
+
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-3 text-center mb-4">
+                      <div className="text-lg font-bold text-gray-900 dark:text-white">
+                        {language.fsi.hours}h
+                      </div>
+                      <div className="text-xs text-gray-600 dark:text-gray-300">
+                        for English speakers
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                      <span>
+                        👥{' '}
+                        {language.speakers >= 1000000
+                          ? `${Math.round(language.speakers / 1000000)}M`
+                          : `${Math.round(language.speakers / 1000)}K`}
+                      </span>
+                      <span>🌍 {language.regions.length} regions</span>
+                    </div>
+                  </motion.div>
+                </Link>
+              </Suspense>
             ))}
           </div>
 

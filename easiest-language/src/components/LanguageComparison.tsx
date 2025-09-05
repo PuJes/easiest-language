@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, memo } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
-  ArrowLeftIcon,
   XMarkIcon,
   PlusIcon,
   ChartBarIcon,
@@ -15,6 +14,7 @@ import {
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 import FSIBadge from './FSIBadge';
+import LanguageSelector from './LanguageSelector';
 import { Language } from '@/lib/types/language';
 import { getAllLanguages } from '@/lib/data/data-adapters';
 
@@ -23,10 +23,8 @@ interface LanguageComparisonProps {
   initialLanguages?: Language[];
 }
 
-const LanguageComparison: React.FC<LanguageComparisonProps> = ({
-  availableLanguages,
-  initialLanguages = [],
-}) => {
+const LanguageComparison: React.FC<LanguageComparisonProps> = memo(
+  ({ availableLanguages, initialLanguages = [] }) => {
   const searchParams = useSearchParams(); // Get URL parameters
   const [allLanguages] = useState<Language[]>(() => availableLanguages || getAllLanguages());
   const [selectedLanguages, setSelectedLanguages] = useState<Language[]>(initialLanguages);
@@ -60,18 +58,24 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
     }
   }, [selectedLanguages]);
 
-  const addLanguage = (language: Language) => {
-    if (selectedLanguages.length < 3 && !selectedLanguages.find((l) => l.id === language.id)) {
-      setSelectedLanguages([...selectedLanguages, language]);
-      setShowLanguageSelector(false);
-    }
-  };
+  const addLanguage = useCallback(
+    (language: Language) => {
+      if (selectedLanguages.length < 3 && !selectedLanguages.find((l) => l.id === language.id)) {
+        setSelectedLanguages([...selectedLanguages, language]);
+        setShowLanguageSelector(false);
+      }
+    },
+    [selectedLanguages]
+  );
 
-  const removeLanguage = (languageId: string) => {
-    setSelectedLanguages(selectedLanguages.filter((l) => l.id !== languageId));
-  };
+  const removeLanguage = useCallback(
+    (languageId: string) => {
+      setSelectedLanguages(selectedLanguages.filter((l) => l.id !== languageId));
+    },
+    [selectedLanguages]
+  );
 
-  const generateAIInsight = () => {
+  const generateAIInsight = useCallback(() => {
     const languages = selectedLanguages;
     if (languages.length < 2) return;
 
@@ -101,9 +105,9 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
     insight += `${mostBusiness.name} offers the highest business value among your selections.`;
 
     setAiInsight(insight);
-  };
+  }, [selectedLanguages]);
 
-  const exportComparison = () => {
+  const exportComparison = useCallback(() => {
     const data = {
       comparisonDate: new Date().toISOString(),
       languages: selectedLanguages.map((l) => ({
@@ -129,7 +133,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
+  }, [selectedLanguages, aiInsight]);
 
   const renderOverviewMode = () => (
     <div className="grid grid-cols-1 gap-6">
@@ -141,7 +145,7 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
             className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
+            transition={{ duration: 0.4, delay: Math.min(index * 0.1, 0.3) }} // 限制最大延迟
           >
             <button
               onClick={() => removeLanguage(language.id)}
@@ -450,249 +454,86 @@ const LanguageComparison: React.FC<LanguageComparisonProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Header */}
-      <div className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/languages">
-              <motion.button
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                whileHover={{ x: -4 }}
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-                Back to Languages
-              </motion.button>
-            </Link>
-
-            <div className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
-              <span className="text-lg">🇺🇸</span>
-              <span>English Native Speaker</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Title & Controls */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Language Learning Difficulty Comparison
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-            Compare up to 3 languages side by side to make the best learning decision based on FSI
-            difficulty ratings
-          </p>
-        </motion.div>
-
-        {/* Additional content section */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Why Compare Languages Before Learning?
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Choosing the right language to learn is a crucial decision that can impact your
-              learning journey for years to come. By comparing languages based on official FSI
-              difficulty ratings, you can make an informed decision that aligns with your goals,
-              available time, and learning preferences.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-3xl mb-3">⏰</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Time Investment
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Compare study time requirements to choose a language that fits your schedule
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl mb-3">🎯</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Learning Goals</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Match language difficulty with your learning objectives and career goals
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl mb-3">🌍</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Global Impact</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Consider speaker count and geographic distribution for maximum utility
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              How to Use This Language Comparison Tool
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Step 1: Select Languages
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Choose 2-3 languages you&apos;re considering learning. You can select from our
-                  comprehensive database of 50+ languages with official FSI difficulty ratings.
-                </p>
-                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  <li>Click &quot;Add Language to Compare&quot; button</li>
-                  <li>Browse through available languages</li>
-                  <li>Select up to 3 languages for comparison</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Step 2: Analyze Results
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Review the comparison across multiple dimensions including difficulty, study time,
-                  speaker count, and business value.
-                </p>
-                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  <li>Compare FSI difficulty categories</li>
-                  <li>Analyze study time requirements</li>
-                  <li>Consider global speaker distribution</li>
-                  <li>Evaluate business and career opportunities</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        {/* Mode Tabs & Export */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <div className="flex bg-white dark:bg-gray-800 rounded-xl p-1 shadow-lg">
-            {[
-              { id: 'overview', label: 'Overview', icon: GlobeAltIcon },
-              { id: 'detailed', label: 'Detailed', icon: BookOpenIcon },
-              { id: 'chart', label: 'Charts', icon: ChartBarIcon },
-            ].map((mode) => (
-              <button
-                key={mode.id}
-                onClick={() => setComparisonMode(mode.id as 'overview' | 'detailed' | 'chart')}
-                className={`${
-                  comparisonMode === mode.id
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                } px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2`}
-              >
-                <mode.icon className="h-4 w-4" />
-                {mode.label}
-              </button>
-            ))}
-          </div>
-
-          {selectedLanguages.length >= 2 && (
+    <div className="w-full">
+      {/* Mode Tabs & Export */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+        <div className="flex bg-white dark:bg-gray-800 rounded-xl p-1 shadow-lg">
+          {[
+            { id: 'overview', label: 'Overview', icon: GlobeAltIcon },
+            { id: 'detailed', label: 'Detailed', icon: BookOpenIcon },
+            { id: 'chart', label: 'Charts', icon: ChartBarIcon },
+          ].map((mode) => (
             <button
-              onClick={exportComparison}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-medium shadow-lg flex items-center gap-2"
+              key={mode.id}
+              onClick={() => setComparisonMode(mode.id as 'overview' | 'detailed' | 'chart')}
+              className={`${
+                comparisonMode === mode.id
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              } px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2`}
             >
-              <DocumentArrowDownIcon className="h-5 w-5" />
-              Export Comparison
+              <mode.icon className="h-4 w-4" />
+              {mode.label}
             </button>
-          )}
+          ))}
         </div>
 
-        {/* Content */}
-        <motion.div
-          key={comparisonMode}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          {selectedLanguages.length === 0 ? (
-            <div className="text-center py-16">
-              <GlobeAltIcon className="h-24 w-24 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                No Languages Selected
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">
-                Choose 2-3 languages to start comparing
-              </p>
-              <button
-                onClick={() => setShowLanguageSelector(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
-              >
-                Select Languages
-              </button>
-            </div>
-          ) : (
-            <>
-              {comparisonMode === 'overview' && renderOverviewMode()}
-              {comparisonMode === 'detailed' && renderDetailedMode()}
-              {comparisonMode === 'chart' && renderChartMode()}
-            </>
-          )}
-        </motion.div>
+        {selectedLanguages.length >= 2 && (
+          <button
+            onClick={exportComparison}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-medium shadow-lg flex items-center gap-2"
+          >
+            <DocumentArrowDownIcon className="h-5 w-5" />
+            Export Comparison
+          </button>
+        )}
       </div>
+
+      {/* Content */}
+      <motion.div
+        key={comparisonMode}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        {selectedLanguages.length === 0 ? (
+          <div className="text-center py-16">
+            <GlobeAltIcon className="h-24 w-24 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              No Languages Selected
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
+              Choose 2-3 languages to start comparing
+            </p>
+            <button
+              onClick={() => setShowLanguageSelector(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
+            >
+              Select Languages
+            </button>
+          </div>
+        ) : (
+          <>
+            {comparisonMode === 'overview' && renderOverviewMode()}
+            {comparisonMode === 'detailed' && renderDetailedMode()}
+            {comparisonMode === 'chart' && renderChartMode()}
+          </>
+        )}
+      </motion.div>
 
       {/* Language Selector Modal */}
-      <AnimatePresence>
-        {showLanguageSelector && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto"
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 50 }}
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Select a Language
-                </h3>
-                <button
-                  onClick={() => setShowLanguageSelector(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  <XMarkIcon className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {allLanguages
-                  .filter((lang) => !selectedLanguages.find((s) => s.id === lang.id))
-                  .map((language) => (
-                    <motion.button
-                      key={language.id}
-                      onClick={() => addLanguage(language)}
-                      className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-left hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-2xl">{language.flagEmoji}</span>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white">
-                            {language.name}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {language.nativeName}
-                          </p>
-                        </div>
-                      </div>
-                      <FSIBadge category={language.fsi.category} size="sm" showLabel />
-                    </motion.button>
-                  ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <LanguageSelector
+        isOpen={showLanguageSelector}
+        onClose={() => setShowLanguageSelector(false)}
+        onSelect={addLanguage}
+        availableLanguages={allLanguages}
+        selectedLanguages={selectedLanguages}
+        maxSelections={3}
+      />
     </div>
   );
-};
+});
+
+LanguageComparison.displayName = 'LanguageComparison';
 
 export default LanguageComparison;

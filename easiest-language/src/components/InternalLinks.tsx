@@ -12,6 +12,22 @@ import {
 } from '@heroicons/react/24/outline';
 import { Language } from '@/lib/types/language';
 
+// 辅助函数：验证语言数据完整性
+function validateLanguageData(language: Language): boolean {
+  return !!(
+    language &&
+    language.id &&
+    language.name &&
+    language.fsi &&
+    language.fsi.category !== undefined &&
+    language.fsi.hours !== undefined &&
+    language.family &&
+    language.subfamily &&
+    language.writingSystem &&
+    language.flagEmoji
+  );
+}
+
 interface InternalLinksProps {
   /** 当前语言对象，用于推荐相关语言 */
   currentLanguage?: Language;
@@ -53,7 +69,10 @@ const InternalLinks: React.FC<InternalLinksProps> = ({
               Related Languages
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {relatedLanguages.slice(0, 6).map((lang) => (
+              {relatedLanguages
+                .filter(lang => validateLanguageData(lang)) // 过滤掉无效的语言数据
+                .slice(0, 6)
+                .map((lang) => (
                 <Link
                   key={lang.id}
                   href={`/language/${lang.id}`}

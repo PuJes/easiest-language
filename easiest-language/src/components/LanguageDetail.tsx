@@ -111,12 +111,30 @@ function getDifferences(language: ExtendedLanguageDetail): string[] {
   return differences.length > 0 ? differences : ['Different vocabulary and cultural context'];
 }
 
+// 辅助函数：验证语言数据完整性
+function validateLanguageData(language: Language): boolean {
+  return !!(
+    language &&
+    language.id &&
+    language.name &&
+    language.fsi &&
+    language.fsi.category !== undefined &&
+    language.fsi.hours !== undefined &&
+    language.family &&
+    language.subfamily &&
+    language.writingSystem &&
+    language.flagEmoji
+  );
+}
+
 // 辅助函数：获取相关语言推荐
 function getRelatedLanguages(currentLanguage: ExtendedLanguageDetail): Language[] {
   const allLanguages = getAllLanguages();
   
-  // 过滤掉当前语言
-  const otherLanguages = allLanguages.filter(lang => lang.id !== currentLanguage.id);
+  // 过滤掉当前语言，并验证语言数据完整性
+  const otherLanguages = allLanguages.filter(lang => 
+    lang.id !== currentLanguage.id && validateLanguageData(lang)
+  );
   
   // 按相关性排序
   const relatedLanguages = otherLanguages

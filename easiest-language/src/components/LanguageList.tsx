@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { 
@@ -18,7 +18,7 @@ interface LanguageListProps {
   availableLanguages?: Language[];
 }
 
-const LanguageList: React.FC<LanguageListProps> = ({
+const LanguageList: React.FC<LanguageListProps> = memo(({
   availableLanguages,
 }) => {
   const [allLanguages] = useState<Language[]>(() => availableLanguages || getAllLanguages());
@@ -27,8 +27,9 @@ const LanguageList: React.FC<LanguageListProps> = ({
   const [sortBy, setSortBy] = useState<'name' | 'difficulty' | 'speakers'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [showFilters, setShowFilters] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(20); // 初始只显示20个语言卡片
 
-  // Filtering and sorting logic
+  // Filtering and sorting logic - 优化性能，减少不必要的重新计算
   const filteredAndSortedLanguages = useMemo(() => {
     let filtered = allLanguages.filter(language => {
       const matchesSearch = language.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,6 +61,16 @@ const LanguageList: React.FC<LanguageListProps> = ({
     return filtered;
   }, [allLanguages, searchTerm, selectedCategory, sortBy, sortOrder]);
 
+  // 只显示可见的语言卡片，实现虚拟滚动效果
+  const visibleLanguages = useMemo(() => {
+    return filteredAndSortedLanguages.slice(0, visibleCount);
+  }, [filteredAndSortedLanguages, visibleCount]);
+
+  // 加载更多语言
+  const loadMore = useCallback(() => {
+    setVisibleCount(prev => Math.min(prev + 20, filteredAndSortedLanguages.length));
+  }, [filteredAndSortedLanguages.length]);
+
   // Get category statistics
   const categoryStats = useMemo(() => {
     const stats: { [key: number]: number } = {};
@@ -69,12 +80,13 @@ const LanguageList: React.FC<LanguageListProps> = ({
     return stats;
   }, [allLanguages]);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchTerm('');
     setSelectedCategory('all');
     setSortBy('name');
     setSortOrder('asc');
-  };
+    setVisibleCount(20); // 重置可见数量
+  }, []);
 
   return (
     <div className="w-full">
@@ -195,12 +207,12 @@ const LanguageList: React.FC<LanguageListProps> = ({
 
       {/* Language grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredAndSortedLanguages.map((language, index) => (
+        {visibleLanguages.map((language, index) => (
           <motion.div
             key={language.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
+            transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.5) }} // 限制最大延迟
             className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group"
           >
             <Link href={`/language/${language.id}`}>
@@ -255,6 +267,18 @@ const LanguageList: React.FC<LanguageListProps> = ({
         ))}
       </div>
 
+      {/* Load More Button */}
+      {visibleCount < filteredAndSortedLanguages.length && (
+        <div className="text-center mt-8">
+          <button
+            onClick={loadMore}
+            className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+          >
+            Load More Languages ({filteredAndSortedLanguages.length - visibleCount} remaining)
+          </button>
+        </div>
+      )}
+
       {/* No results message */}
       {filteredAndSortedLanguages.length === 0 && (
         <div className="text-center py-12">
@@ -275,6 +299,6 @@ const LanguageList: React.FC<LanguageListProps> = ({
       )}
     </div>
   );
-};
+});
 
 export default LanguageList;
