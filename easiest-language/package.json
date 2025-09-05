@@ -14,11 +14,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run",
-
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint-staged": "lint-staged",
-
     "deploy:cloudbase": "bash scripts/deploy-cloudbase.sh",
     "deploy:quick": "bash quick-deploy.sh",
     "deploy:docker": "bash docker-build.sh deploy",
@@ -33,9 +31,9 @@
     "build:cloudbase": "cloudbase framework deploy",
     "preview:cloudbase": "cloudbase hosting deploy -e $CLOUDBASE_ENV_ID"
   },
-
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "critters": "^0.0.23",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.4",
     "framer-motion": "^12.23.12",

@@ -18,12 +18,13 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true, // 优化 CSS
     optimizePackageImports: ['framer-motion', '@heroicons/react'], // 优化包导入
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+  // Turbopack 配置
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
